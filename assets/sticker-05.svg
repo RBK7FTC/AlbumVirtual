@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" role="img" aria-label="Final Whistle sticker">
+  <rect width="180" height="230" rx="16" fill="#fff"/>
+  <rect x="12" y="12" width="156" height="206" rx="12" fill="#ffd166"/>
+  <circle cx="90" cy="104" r="60" fill="#fff7df"/>
+  <path d="M56 106h54c18 0 18 28 0 28H75" fill="none" stroke="#1f2633" stroke-width="12" stroke-linecap="round"/>
+  <path d="M116 106l25-22" stroke="#d64550" stroke-width="12" stroke-linecap="round"/>
+  <path d="M44 184h92" stroke="#087e8b" stroke-width="14" stroke-linecap="round"/>
+</svg>

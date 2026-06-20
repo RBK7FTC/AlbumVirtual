@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" role="img" aria-label="Neon Striker sticker">
+  <rect width="180" height="230" rx="16" fill="#101828"/>
+  <rect x="12" y="12" width="156" height="206" rx="12" fill="#22223b"/>
+  <path d="M90 28l54 31v62c0 36-24 63-54 78-30-15-54-42-54-78V59z" fill="#ef476f"/>
+  <path d="M59 105l31-49 31 49-31 58z" fill="#06d6a0"/>
+  <circle cx="90" cy="105" r="19" fill="#fff"/>
+</svg>

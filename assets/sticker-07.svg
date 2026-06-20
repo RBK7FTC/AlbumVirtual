@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" role="img" aria-label="Home Colors sticker">
+  <rect width="180" height="230" rx="16" fill="#eef6f6"/>
+  <rect x="12" y="12" width="156" height="206" rx="12" fill="#fff"/>
+  <path d="M42 44h96v72c0 32-21 56-48 70-27-14-48-38-48-70z" fill="#087e8b"/>
+  <path d="M66 44v120M90 44v142M114 44v120" stroke="#fff" stroke-width="10"/>
+  <circle cx="90" cy="104" r="22" fill="#ffd166"/>
+</svg>

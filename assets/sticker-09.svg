@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" role="img" aria-label="Stadium Lights sticker">
+  <rect width="180" height="230" rx="16" fill="#edf2f7"/>
+  <rect x="12" y="12" width="156" height="206" rx="12" fill="#27496d"/>
+  <path d="M30 160c36-32 84-32 120 0v34H30z" fill="#2f8f61"/>
+  <path d="M28 70h44M108 70h44" stroke="#fff7df" stroke-width="18" stroke-linecap="round"/>
+  <path d="M50 82l-24 72M130 82l24 72" stroke="#ffd166" stroke-width="7" stroke-linecap="round"/>
+  <path d="M44 184h92" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+</svg>

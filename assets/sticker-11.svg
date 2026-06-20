@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" role="img" aria-label="Derby Night sticker">
+  <rect width="180" height="230" rx="16" fill="#101828"/>
+  <rect x="12" y="12" width="156" height="206" rx="12" fill="#111827"/>
+  <path d="M28 164c38-44 86-44 124 0" fill="none" stroke="#ef476f" stroke-width="15" stroke-linecap="round"/>
+  <circle cx="58" cy="84" r="26" fill="#087e8b"/>
+  <circle cx="122" cy="84" r="26" fill="#ffd166"/>
+  <path d="M58 55v58M122 55v58" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M42 188h96" stroke="#06d6a0" stroke-width="12" stroke-linecap="round"/>
+</svg>

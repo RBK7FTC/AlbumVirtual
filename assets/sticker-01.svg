@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" role="img" aria-label="Opening Spark sticker">
+  <rect width="180" height="230" rx="16" fill="#fff7df"/>
+  <rect x="12" y="12" width="156" height="206" rx="12" fill="#d64550"/>
+  <circle cx="90" cy="82" r="46" fill="#ffd166"/>
+  <path d="M90 28l11 36 37-7-27 26 25 28-36-9-10 36-10-36-36 9 25-28-27-26 37 7z" fill="#fff7df"/>
+  <path d="M31 174h118v18H31z" fill="#1f2633"/>
+</svg>

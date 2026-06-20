@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" role="img" aria-label="Midfield Pulse sticker">
+  <rect width="180" height="230" rx="16" fill="#f2fbfc"/>
+  <rect x="12" y="12" width="156" height="206" rx="12" fill="#087e8b"/>
+  <circle cx="90" cy="72" r="34" fill="#ffd166"/>
+  <path d="M52 182c6-42 70-42 76 0z" fill="#1f2633"/>
+  <path d="M35 122h110M45 98h90M45 146h90" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+</svg>

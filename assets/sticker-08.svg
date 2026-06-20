@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 230" role="img" aria-label="Away Colors sticker">
+  <rect width="180" height="230" rx="16" fill="#fff7df"/>
+  <rect x="12" y="12" width="156" height="206" rx="12" fill="#1f2633"/>
+  <path d="M42 44h96v72c0 32-21 56-48 70-27-14-48-38-48-70z" fill="#ffd166"/>
+  <path d="M46 84h88M50 122h80" stroke="#d64550" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="90" cy="88" r="20" fill="#1f2633"/>
+</svg>
