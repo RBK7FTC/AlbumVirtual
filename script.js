@@ -94,7 +94,6 @@ async function authenticate(path) {
     authToken = payload.token;
     currentUser = payload.user.username;
     adminTools.classList.toggle("is-hidden", !payload.user.isAdmin);
-    console.log(payload.user.isAdmin);
     collected = new Set(payload.collected);
     sessionStorage.setItem("album-token", authToken);
     sessionStorage.setItem("album-user", currentUser);

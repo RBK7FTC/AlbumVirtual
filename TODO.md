@@ -1,4 +1,5 @@
-- Add available packs to open by user, and only let "Open pack" if there is any available pack to open.
+- Add available packs to open by user, and only let "Open pack" if there is any available packs to open.
+- Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
+- Add admin-tools button to obtain packs to open.
 - Add QR lector to obtain packs.
 - Think on other ways to obtain packs.
-- Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
