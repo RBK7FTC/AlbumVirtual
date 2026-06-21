@@ -23,6 +23,7 @@ let collected = new Set();
 let activeTeam = 0;
 let authToken = sessionStorage.getItem("album-token") || "";
 let currentUser = sessionStorage.getItem("album-user") || "";
+let availablePacks = sessionStorage.getItem("album-availablePacks");
 
 const grid = document.querySelector("#album-grid");
 const collectedCount = document.querySelector("#collected-count");
@@ -70,6 +71,7 @@ async function loadCollectedCards() {
   return new Set(payload.collected);
 }
 
+//TODO: Remove, users can query to update his collection
 async function saveCollectedCards(ids) {
   const payload = await apiRequest("/api/collection", {
     method: "PUT",
@@ -95,8 +97,10 @@ async function authenticate(path) {
     currentUser = payload.user.username;
     adminTools.classList.toggle("is-hidden", !payload.user.isAdmin);
     collected = new Set(payload.collected);
+    availablePacks = payload.user.availablePacks;
     sessionStorage.setItem("album-token", authToken);
     sessionStorage.setItem("album-user", currentUser);
+    sessionStorage.setItem("album-availablePacks", availablePacks);
     passwordInput.value = "";
     setSignedInState();
     renderAlbum();
@@ -165,6 +169,21 @@ async function persistAndRender() {
   renderAlbum();
 }
 
+function updatePackUI() {
+    let packCount = document.querySelector("#pack-count");
+    if(!packCount)
+        return;
+
+    packCount.textContent = availablePacks;
+
+    openPackButton.disabled = availablePacks <= 0;
+
+    openPackButton.classList.toggle(
+        "is-disabled",
+        availablePacks <= 0
+    );
+}
+
 function setControlsEnabled(isEnabled) {
   [openPackButton, completeAlbumButton, resetAlbumButton].forEach((button) => {
     button.disabled = !isEnabled;
@@ -176,8 +195,13 @@ function setSignedInState() {
   authFormPanel.classList.add("is-hidden");
   userPanel.classList.remove("is-hidden");
   currentUsername.textContent = currentUser;
-  databaseStatus.textContent = "Stored per user on Node server";
+  databaseStatus.textContent = "Packs available: ";
+  const newSpan = document.createElement('span');
+  newSpan.textContent = "0";
+  newSpan.id = 'pack-count';
+  databaseStatus.appendChild(newSpan);
   setControlsEnabled(true);
+  updatePackUI();
 }
 
 function setSignedOutState(message = "") {
@@ -205,8 +229,10 @@ async function startAlbum() {
   } catch {
     authToken = "";
     currentUser = "";
+    availablePacks = 0;
     sessionStorage.removeItem("album-token");
     sessionStorage.removeItem("album-user");
+    sessionStorage.removeItem("album-availablePacks");
     setSignedOutState("Session expired");
   }
 }
@@ -226,6 +252,7 @@ document.querySelector("#logout-button").addEventListener("click", async () => {
   } finally {
     authToken = "";
     currentUser = "";
+    sessionStorage.removeItem("album-availablePacks");
     sessionStorage.removeItem("album-token");
     sessionStorage.removeItem("album-user");
     setSignedOutState();
@@ -235,13 +262,26 @@ document.querySelector("#logout-button").addEventListener("click", async () => {
 const adminTools = document.querySelector("#admin-tools");
 
 openPackButton.addEventListener("click", async () => {
-  if (!authToken) return;
+    try{
+        if (!authToken) return;
 
-  const pack = pickPack();
-  pack.forEach((sticker) => collected.add(sticker.id));
-  packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
-  await persistAndRender();
-  packDialog.showModal();
+        const payload = await apiRequest(
+            "/api/open-pack",
+            { method: "POST" }
+        );
+
+        availablePacks = payload.availablePacks;
+
+        updatePackUI();
+
+          const pack = pickPack();
+          pack.forEach((sticker) => collected.add(sticker.id));
+          packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
+          await persistAndRender();
+          packDialog.showModal();
+    } catch(error) {
+        authMessage.textContent = error.message;
+    }
 });
 
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());

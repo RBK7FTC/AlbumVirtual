@@ -228,6 +228,7 @@ h2 {
 }
 
 #rarity-summary {
+    margin-top: 0;
   margin-bottom: 0;
   color: var(--muted);
   font-size: 0.92rem;

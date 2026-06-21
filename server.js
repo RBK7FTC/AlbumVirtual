@@ -181,7 +181,7 @@ async function handleUsersApi(request, response) {
       username,
       password: hashPassword(password),
       isAdmin: false,
-      availablePacks: 3,
+      availablePacks: 1,
       collected: initialCollected,
       createdAt: now,
       updatedAt: now
@@ -248,6 +248,7 @@ async function handleCollectionApi(request, response) {
     return;
   }
 
+  //TODO: Remove, users can query to update his collection
   if (request.method === "PUT") {
     try {
       const payload = await readJsonRequest(request);
@@ -263,6 +264,32 @@ async function handleCollectionApi(request, response) {
   }
 
   sendError(response, 405, "Method not allowed");
+}
+
+async function handleOpenPackApi(request, response) {
+    const auth = await getAuthenticatedUser(request);
+
+    if (!auth) {
+        sendError(response, 401, "Sign in required");
+        return;
+    }
+
+    if (auth.user.availablePacks <= 0) {
+        sendError(response, 403, "No packs available");
+        return;
+    }
+
+    auth.user.availablePacks--;
+
+    auth.user.updatedAt = new Date().toISOString();
+
+    auth.data.users[auth.username] = auth.user;
+
+    await writeData(auth.data);
+
+    sendJson(response, 200, {
+        availablePacks: auth.user.availablePacks
+    });
 }
 
 async function serveStaticFile(request, response) {
@@ -309,6 +336,11 @@ const server = http.createServer(async (request, response) => {
       await handleCollectionApi(request, response);
       return;
     }
+
+    if (requestUrl.pathname === "/api/open-pack") {
+        await handleOpenPackApi(request, response);
+    return;
+}
 
     await serveStaticFile(request, response);
   } catch {
