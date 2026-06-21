@@ -14,7 +14,7 @@ const stickers = [
 ];
 
 const initialCollected = new Set([1, 2, 4, 7]);
-let collected = new Set(JSON.parse(localStorage.getItem("virtual-album")) || [...initialCollected]);
+let collected = new Set();
 let activeFilter = "all";
 
 const grid = document.querySelector("#album-grid");
@@ -22,10 +22,38 @@ const collectedCount = document.querySelector("#collected-count");
 const totalCount = document.querySelector("#total-count");
 const progressBar = document.querySelector("#progress-bar");
 const raritySummary = document.querySelector("#rarity-summary");
+const databaseStatus = document.querySelector("#database-status");
 const packDialog = document.querySelector("#pack-dialog");
 const packResults = document.querySelector("#pack-results");
 
 totalCount.textContent = stickers.length;
+
+async function requestCollection(options = {}) {
+  const response = await fetch("/api/collection", {
+    headers: { "Content-Type": "application/json" },
+    ...options
+  });
+
+  if (!response.ok) {
+    throw new Error(`Collection API failed with ${response.status}`);
+  }
+
+  return response.json();
+}
+
+async function loadCollectedCards() {
+  const payload = await requestCollection();
+  return new Set(payload.collected);
+}
+
+async function saveCollectedCards(ids) {
+  const payload = await requestCollection({
+    method: "PUT",
+    body: JSON.stringify({ collected: ids })
+  });
+
+  return new Set(payload.collected);
+}
 
 function cardTemplate(sticker, forceCollected = false) {
   const isCollected = forceCollected || collected.has(sticker.id);
@@ -66,7 +94,6 @@ function renderAlbum() {
   collectedCount.textContent = owned;
   progressBar.style.width = `${(owned / stickers.length) * 100}%`;
   raritySummary.textContent = `${rareOwned}/${rareTotal} rare stickers collected`;
-  localStorage.setItem("virtual-album", JSON.stringify([...collected]));
 }
 
 function pickPack() {
@@ -85,25 +112,43 @@ function pickPack() {
   return [...pack.values()];
 }
 
-document.querySelector("#open-pack").addEventListener("click", () => {
-  const pack = pickPack();
-  pack.forEach((sticker) => collected.add(sticker.id));
-  packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
+async function persistAndRender() {
+  collected = await saveCollectedCards([...collected]);
   renderAlbum();
-  packDialog.showModal();
-});
+}
+
+async function startAlbum() {
+  try {
+    collected = await loadCollectedCards();
+    databaseStatus.textContent = "Stored on Node server";
+    renderAlbum();
+
+    document.querySelector("#open-pack").addEventListener("click", async () => {
+      const pack = pickPack();
+      pack.forEach((sticker) => collected.add(sticker.id));
+      packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
+      await persistAndRender();
+      packDialog.showModal();
+    });
+
+    document.querySelector("#complete-album").addEventListener("click", async () => {
+      collected = new Set(stickers.map((sticker) => sticker.id));
+      await persistAndRender();
+    });
+
+    document.querySelector("#reset-album").addEventListener("click", async () => {
+      collected = new Set(initialCollected);
+      await persistAndRender();
+    });
+  } catch (error) {
+    databaseStatus.textContent = "Server unavailable";
+    raritySummary.textContent = "Start the server to load your collection";
+    grid.innerHTML = "";
+    console.error(error);
+  }
+}
 
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());
-
-document.querySelector("#complete-album").addEventListener("click", () => {
-  collected = new Set(stickers.map((sticker) => sticker.id));
-  renderAlbum();
-});
-
-document.querySelector("#reset-album").addEventListener("click", () => {
-  collected = new Set(initialCollected);
-  renderAlbum();
-});
 
 document.querySelectorAll(".filter-button").forEach((button) => {
   button.addEventListener("click", () => {
@@ -114,4 +159,4 @@ document.querySelectorAll(".filter-button").forEach((button) => {
   });
 });
 
-renderAlbum();
+startAlbum();
