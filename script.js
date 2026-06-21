@@ -1,16 +1,16 @@
 const stickers = [
-  { id: 1, name: "Opening Spark", rarity: "common", category: "Moment", image: "assets/sticker-01.svg" },
-  { id: 2, name: "Midfield Pulse", rarity: "common", category: "Player", image: "assets/sticker-02.svg" },
-  { id: 3, name: "Golden Save", rarity: "rare", category: "Highlight", image: "assets/sticker-03.svg" },
-  { id: 4, name: "Street Captain", rarity: "common", category: "Player", image: "assets/sticker-04.svg" },
-  { id: 5, name: "Final Whistle", rarity: "rare", category: "Moment", image: "assets/sticker-05.svg" },
-  { id: 6, name: "Neon Striker", rarity: "epic", category: "Legend", image: "assets/sticker-06.svg" },
-  { id: 7, name: "Home Colors", rarity: "common", category: "Crest", image: "assets/sticker-07.svg" },
-  { id: 8, name: "Away Colors", rarity: "common", category: "Crest", image: "assets/sticker-08.svg" },
-  { id: 9, name: "Stadium Lights", rarity: "rare", category: "Arena", image: "assets/sticker-09.svg" },
-  { id: 10, name: "Rising Star", rarity: "common", category: "Player", image: "assets/sticker-10.svg" },
-  { id: 11, name: "Derby Night", rarity: "epic", category: "Moment", image: "assets/sticker-11.svg" },
-  { id: 12, name: "Trophy Lift", rarity: "rare", category: "Legend", image: "assets/sticker-12.svg" }
+  { id: 1, name: "Opening Spark", rarity: "common", team: "RBK7FTC", image: "assets/sticker-01.svg" },
+  { id: 2, name: "Midfield Pulse", rarity: "common", team: "RBK7FTC", image: "assets/sticker-02.svg" },
+  { id: 3, name: "Golden Save", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-03.svg" },
+  { id: 4, name: "Street Captain", rarity: "common", team: "RBK7FTC", image: "assets/sticker-04.svg" },
+  { id: 5, name: "Final Whistle", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-05.svg" },
+  { id: 6, name: "Neon Striker", rarity: "epic", team: "RBK7FTC", image: "assets/sticker-06.svg" },
+  { id: 7, name: "Home Colors", rarity: "common", team: "DINAMITA", image: "assets/sticker-07.svg" },
+  { id: 8, name: "Away Colors", rarity: "common", team: "DINAMITA", image: "assets/sticker-08.svg" },
+  { id: 9, name: "Stadium Lights", rarity: "rare", team: "DINAMITA", image: "assets/sticker-09.svg" },
+  { id: 10, name: "Rising Star", rarity: "common", team: "ShadowFox", image: "assets/sticker-10.svg" },
+  { id: 11, name: "Derby Night", rarity: "epic", team: "ShadowFox", image: "assets/sticker-11.svg" },
+  { id: 12, name: "Trophy Lift", rarity: "rare", team: "ShadowFox", image: "assets/sticker-12.svg" }
 ];
 
 const initialCollected = new Set([1, 2, 4, 7]);
@@ -113,7 +113,7 @@ function cardTemplate(sticker, forceCollected = false) {
       <div class="sticker-meta">
         <span class="rarity ${sticker.rarity}">${sticker.rarity}</span>
         <h3>${isCollected ? sticker.name : "Missing sticker"}</h3>
-        <p>${isCollected ? sticker.category : "Empty slot"}</p>
+        <p>${isCollected ? sticker.team : "Empty slot"}</p>
       </div>
     </article>
   `;
