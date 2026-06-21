@@ -1,4 +1,7 @@
-1- Render cards as "Team" sections.
-2- Add available packs to open by user, and only let "Open pack" if there is any available pack to open.
-3- Add QR lector to obtain packs.
-4- Think on other ways to obtain packs.
+- Render cards as "Team" sections check: filteredStickers() and .filter-button.
+- Add next-team button to filter cards by next "Team" index.
+- Add available packs to open by user, and only let "Open pack" if there is any available pack to open.
+- Add QR lector to obtain packs.
+- Think on other ways to obtain packs.
+- Only enable complete-album and reset-album on admin users -> add admin tag to users.
+- Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
