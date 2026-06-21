@@ -34,6 +34,17 @@ button {
   font: inherit;
 }
 
+input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(31, 38, 51, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  padding: 0 12px;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
@@ -79,6 +90,75 @@ button {
   border-radius: 8px;
   background: #ffd166;
   font-weight: 900;
+}
+
+.auth-panel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfe;
+}
+
+.auth-form {
+  display: grid;
+  gap: 10px;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.auth-actions,
+.user-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.secondary-action {
+  min-height: 42px;
+  border: 1px solid rgba(31, 38, 51, 0.18);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.auth-message {
+  min-height: 18px;
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+.user-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.user-row strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.is-disabled {
+  opacity: 0.52;
+  pointer-events: none;
 }
 
 .eyebrow {
@@ -207,7 +287,8 @@ h2 {
 
 .primary-action,
 .filter-button,
-.tool-button {
+.tool-button,
+.secondary-action {
   border: 1px solid rgba(31, 38, 51, 0.18);
   border-radius: 8px;
   cursor: pointer;
@@ -291,7 +372,8 @@ h2 {
 
 .tool-button:hover,
 .filter-button:hover,
-.primary-action:hover {
+.primary-action:hover,
+.secondary-action:hover {
   transform: translateY(-1px);
   border-color: rgba(31, 38, 51, 0.35);
 }

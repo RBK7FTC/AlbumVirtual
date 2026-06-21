@@ -16,6 +16,8 @@ const stickers = [
 const initialCollected = new Set([1, 2, 4, 7]);
 let collected = new Set();
 let activeFilter = "all";
+let authToken = sessionStorage.getItem("album-token") || "";
+let currentUser = sessionStorage.getItem("album-user") || "";
 
 const grid = document.querySelector("#album-grid");
 const collectedCount = document.querySelector("#collected-count");
@@ -25,34 +27,76 @@ const raritySummary = document.querySelector("#rarity-summary");
 const databaseStatus = document.querySelector("#database-status");
 const packDialog = document.querySelector("#pack-dialog");
 const packResults = document.querySelector("#pack-results");
+const authForm = document.querySelector("#auth-form");
+const authFormPanel = document.querySelector("#auth-form-panel");
+const authMessage = document.querySelector("#auth-message");
+const currentUsername = document.querySelector("#current-username");
+const userPanel = document.querySelector("#user-panel");
+const usernameInput = document.querySelector("#username-input");
+const passwordInput = document.querySelector("#password-input");
+const openPackButton = document.querySelector("#open-pack");
+const completeAlbumButton = document.querySelector("#complete-album");
+const resetAlbumButton = document.querySelector("#reset-album");
 
 totalCount.textContent = stickers.length;
 
-async function requestCollection(options = {}) {
-  const response = await fetch("/api/collection", {
-    headers: { "Content-Type": "application/json" },
-    ...options
-  });
+async function apiRequest(path, options = {}) {
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {})
+  };
 
-  if (!response.ok) {
-    throw new Error(`Collection API failed with ${response.status}`);
+  if (authToken) {
+    headers.Authorization = `Bearer ${authToken}`;
   }
 
-  return response.json();
+  const response = await fetch(path, { ...options, headers });
+  const payload = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(payload.error || `Request failed with ${response.status}`);
+  }
+
+  return payload;
 }
 
 async function loadCollectedCards() {
-  const payload = await requestCollection();
+  const payload = await apiRequest("/api/collection");
   return new Set(payload.collected);
 }
 
 async function saveCollectedCards(ids) {
-  const payload = await requestCollection({
+  const payload = await apiRequest("/api/collection", {
     method: "PUT",
     body: JSON.stringify({ collected: ids })
   });
 
   return new Set(payload.collected);
+}
+
+async function authenticate(path) {
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
+
+  authMessage.textContent = "";
+
+  try {
+    const payload = await apiRequest(path, {
+      method: "POST",
+      body: JSON.stringify({ username, password })
+    });
+
+    authToken = payload.token;
+    currentUser = payload.user.username;
+    collected = new Set(payload.collected);
+    sessionStorage.setItem("album-token", authToken);
+    sessionStorage.setItem("album-user", currentUser);
+    passwordInput.value = "";
+    setSignedInState();
+    renderAlbum();
+  } catch (error) {
+    authMessage.textContent = error.message;
+  }
 }
 
 function cardTemplate(sticker, forceCollected = false) {
@@ -117,38 +161,97 @@ async function persistAndRender() {
   renderAlbum();
 }
 
+function setControlsEnabled(isEnabled) {
+  [openPackButton, completeAlbumButton, resetAlbumButton].forEach((button) => {
+    button.disabled = !isEnabled;
+    button.classList.toggle("is-disabled", !isEnabled);
+  });
+}
+
+function setSignedInState() {
+  authFormPanel.classList.add("is-hidden");
+  userPanel.classList.remove("is-hidden");
+  currentUsername.textContent = currentUser;
+  databaseStatus.textContent = "Stored per user on Node server";
+  setControlsEnabled(true);
+}
+
+function setSignedOutState(message = "") {
+  authFormPanel.classList.remove("is-hidden");
+  userPanel.classList.add("is-hidden");
+  currentUsername.textContent = "";
+  authMessage.textContent = message;
+  databaseStatus.textContent = "Sign in to save cards";
+  collected = new Set();
+  setControlsEnabled(false);
+  renderAlbum();
+}
+
 async function startAlbum() {
+  if (!authToken) {
+    setSignedOutState();
+    return;
+  }
+
   try {
     collected = await loadCollectedCards();
-    databaseStatus.textContent = "Stored on Node server";
+    setSignedInState();
     renderAlbum();
-
-    document.querySelector("#open-pack").addEventListener("click", async () => {
-      const pack = pickPack();
-      pack.forEach((sticker) => collected.add(sticker.id));
-      packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
-      await persistAndRender();
-      packDialog.showModal();
-    });
-
-    document.querySelector("#complete-album").addEventListener("click", async () => {
-      collected = new Set(stickers.map((sticker) => sticker.id));
-      await persistAndRender();
-    });
-
-    document.querySelector("#reset-album").addEventListener("click", async () => {
-      collected = new Set(initialCollected);
-      await persistAndRender();
-    });
-  } catch (error) {
-    databaseStatus.textContent = "Server unavailable";
-    raritySummary.textContent = "Start the server to load your collection";
-    grid.innerHTML = "";
-    console.error(error);
+  } catch {
+    authToken = "";
+    currentUser = "";
+    sessionStorage.removeItem("album-token");
+    sessionStorage.removeItem("album-user");
+    setSignedOutState("Session expired");
   }
 }
 
+authForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  authenticate("/api/sessions");
+});
+
+document.querySelector("#register-button").addEventListener("click", () => {
+  authenticate("/api/users");
+});
+
+document.querySelector("#logout-button").addEventListener("click", async () => {
+  try {
+    await apiRequest("/api/sessions", { method: "DELETE" });
+  } finally {
+    authToken = "";
+    currentUser = "";
+    sessionStorage.removeItem("album-token");
+    sessionStorage.removeItem("album-user");
+    setSignedOutState();
+  }
+});
+
+openPackButton.addEventListener("click", async () => {
+  if (!authToken) return;
+
+  const pack = pickPack();
+  pack.forEach((sticker) => collected.add(sticker.id));
+  packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
+  await persistAndRender();
+  packDialog.showModal();
+});
+
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());
+
+completeAlbumButton.addEventListener("click", async () => {
+  if (!authToken) return;
+
+  collected = new Set(stickers.map((sticker) => sticker.id));
+  await persistAndRender();
+});
+
+resetAlbumButton.addEventListener("click", async () => {
+  if (!authToken) return;
+
+  collected = new Set(initialCollected);
+  await persistAndRender();
+});
 
 document.querySelectorAll(".filter-button").forEach((button) => {
   button.addEventListener("click", () => {

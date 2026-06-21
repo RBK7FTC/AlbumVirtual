@@ -17,6 +17,41 @@
           </div>
         </div>
 
+        <section class="auth-panel" aria-label="Account">
+          <div id="auth-form-panel">
+            <p class="eyebrow">Account</p>
+            <form id="auth-form" class="auth-form">
+              <label>
+                Username
+                <input id="username-input" name="username" type="text" autocomplete="username" required />
+              </label>
+              <label>
+                Password
+                <input
+                  id="password-input"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                />
+              </label>
+              <div class="auth-actions">
+                <button id="login-button" class="primary-action" type="submit">Sign in</button>
+                <button id="register-button" class="secondary-action" type="button">Register</button>
+              </div>
+              <p id="auth-message" class="auth-message" role="status"></p>
+            </form>
+          </div>
+
+          <div id="user-panel" class="user-panel is-hidden">
+            <p class="eyebrow">Signed in</p>
+            <div class="user-row">
+              <strong id="current-username"></strong>
+              <button id="logout-button" class="secondary-action" type="button">Sign out</button>
+            </div>
+          </div>
+        </section>
+
         <section class="progress-block" aria-label="Collection progress">
           <div class="progress-copy">
             <span id="collected-count">0</span>

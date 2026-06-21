@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const http = require("http");
 const fs = require("fs");
 const fsp = require("fs/promises");
@@ -8,6 +9,7 @@ const port = Number(process.env.PORT || 8000);
 const dataPath = path.join(root, "album-data.json");
 const initialCollected = [1, 2, 4, 7];
 const maxStickerId = 12;
+const sessions = new Map();
 
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",
@@ -21,32 +23,74 @@ async function ensureDataFile() {
   try {
     await fsp.access(dataPath, fs.constants.F_OK);
   } catch {
-    await writeCollection(initialCollected);
+    await writeData({ users: {} });
   }
 }
 
-async function readCollection() {
+async function readData() {
   await ensureDataFile();
 
   try {
     const raw = await fsp.readFile(dataPath, "utf8");
     const data = JSON.parse(raw);
-    return sanitizeCollection(data.collected);
+    return data && data.users ? data : { users: {} };
   } catch {
-    await writeCollection(initialCollected);
-    return initialCollected;
+    return { users: {} };
   }
 }
 
-async function writeCollection(cardIds) {
-  const collected = sanitizeCollection(cardIds);
-  const payload = {
-    collected,
-    updatedAt: new Date().toISOString()
-  };
+async function writeData(data) {
+  await fsp.writeFile(dataPath, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+}
 
-  await fsp.writeFile(dataPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
-  return collected;
+function normalizeUsername(username) {
+  return String(username || "").trim().toLowerCase();
+}
+
+function validateUsername(username) {
+  return /^[a-z0-9_-]{3,20}$/.test(username);
+}
+
+function validatePassword(password) {
+  return typeof password === "string" && password.length >= 6 && password.length <= 128;
+}
+
+function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
+  const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+  return { salt, hash };
+}
+
+function verifyPassword(password, passwordRecord) {
+  const candidate = hashPassword(password, passwordRecord.salt);
+  const stored = Buffer.from(passwordRecord.hash, "hex");
+  const incoming = Buffer.from(candidate.hash, "hex");
+
+  return stored.length === incoming.length && crypto.timingSafeEqual(stored, incoming);
+}
+
+function createToken(username) {
+  const token = crypto.randomBytes(32).toString("hex");
+  sessions.set(token, username);
+  return token;
+}
+
+function getBearerToken(request) {
+  const header = request.headers.authorization || "";
+  const [scheme, token] = header.split(" ");
+  return scheme === "Bearer" ? token : "";
+}
+
+async function getAuthenticatedUser(request) {
+  const token = getBearerToken(request);
+  const username = sessions.get(token);
+
+  if (!username) {
+    return null;
+  }
+
+  const data = await readData();
+  const user = data.users[username];
+  return user ? { data, username, user, token } : null;
 }
 
 function sanitizeCollection(cardIds) {
@@ -57,6 +101,10 @@ function sanitizeCollection(cardIds) {
   return [...new Set(cardIds.map(Number))]
     .filter((cardId) => Number.isInteger(cardId) && cardId >= 1 && cardId <= maxStickerId)
     .sort((a, b) => a - b);
+}
+
+function publicUser(user) {
+  return { username: user.username };
 }
 
 function readRequestBody(request) {
@@ -77,6 +125,11 @@ function readRequestBody(request) {
   });
 }
 
+async function readJsonRequest(request) {
+  const body = await readRequestBody(request);
+  return JSON.parse(body || "{}");
+}
+
 function sendJson(response, status, payload) {
   const body = JSON.stringify(payload);
 
@@ -92,19 +145,112 @@ function sendError(response, status, message) {
   sendJson(response, status, { error: message });
 }
 
+async function handleUsersApi(request, response) {
+  if (request.method !== "POST") {
+    sendError(response, 405, "Method not allowed");
+    return;
+  }
+
+  try {
+    const payload = await readJsonRequest(request);
+    const username = normalizeUsername(payload.username);
+    const password = payload.password;
+
+    if (!validateUsername(username)) {
+      sendError(response, 400, "Username must be 3-20 letters, numbers, hyphens, or underscores");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      sendError(response, 400, "Password must be at least 6 characters");
+      return;
+    }
+
+    const data = await readData();
+
+    if (data.users[username]) {
+      sendError(response, 409, "Username already exists");
+      return;
+    }
+
+    const now = new Date().toISOString();
+    data.users[username] = {
+      username,
+      password: hashPassword(password),
+      collected: initialCollected,
+      createdAt: now,
+      updatedAt: now
+    };
+
+    await writeData(data);
+
+    const token = createToken(username);
+    sendJson(response, 201, {
+      token,
+      user: publicUser(data.users[username]),
+      collected: data.users[username].collected
+    });
+  } catch {
+    sendError(response, 400, "Invalid user payload");
+  }
+}
+
+async function handleSessionsApi(request, response) {
+  if (request.method === "POST") {
+    try {
+      const payload = await readJsonRequest(request);
+      const username = normalizeUsername(payload.username);
+      const password = payload.password;
+      const data = await readData();
+      const user = data.users[username];
+
+      if (!user || !validatePassword(password) || !verifyPassword(password, user.password)) {
+        sendError(response, 401, "Invalid username or password");
+        return;
+      }
+
+      const token = createToken(username);
+      sendJson(response, 200, {
+        token,
+        user: publicUser(user),
+        collected: sanitizeCollection(user.collected)
+      });
+    } catch {
+      sendError(response, 400, "Invalid session payload");
+    }
+    return;
+  }
+
+  if (request.method === "DELETE") {
+    sessions.delete(getBearerToken(request));
+    sendJson(response, 200, { ok: true });
+    return;
+  }
+
+  sendError(response, 405, "Method not allowed");
+}
+
 async function handleCollectionApi(request, response) {
+  const auth = await getAuthenticatedUser(request);
+
+  if (!auth) {
+    sendError(response, 401, "Sign in required");
+    return;
+  }
+
   if (request.method === "GET") {
-    const collected = await readCollection();
-    sendJson(response, 200, { collected });
+    sendJson(response, 200, { collected: sanitizeCollection(auth.user.collected) });
     return;
   }
 
   if (request.method === "PUT") {
     try {
-      const body = await readRequestBody(request);
-      const payload = JSON.parse(body || "{}");
-      const collected = await writeCollection(payload.collected);
-      sendJson(response, 200, { collected });
+      const payload = await readJsonRequest(request);
+      auth.user.collected = sanitizeCollection(payload.collected);
+      auth.user.updatedAt = new Date().toISOString();
+      auth.data.users[auth.username] = auth.user;
+      await writeData(auth.data);
+      sendJson(response, 200, { collected: auth.user.collected });
     } catch {
       sendError(response, 400, "Invalid collection payload");
     }
@@ -119,8 +265,9 @@ async function serveStaticFile(request, response) {
   const pathname = requestUrl.pathname === "/" ? "/index.html" : requestUrl.pathname;
   const decodedPath = decodeURIComponent(pathname);
   const filePath = path.resolve(root, `.${decodedPath}`);
+  const relativePath = path.relative(root, filePath);
 
-  if (!filePath.startsWith(root)) {
+  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
     sendError(response, 403, "Forbidden");
     return;
   }
@@ -142,6 +289,16 @@ async function serveStaticFile(request, response) {
 const server = http.createServer(async (request, response) => {
   try {
     const requestUrl = new URL(request.url, `http://${request.headers.host}`);
+
+    if (requestUrl.pathname === "/api/users") {
+      await handleUsersApi(request, response);
+      return;
+    }
+
+    if (requestUrl.pathname === "/api/sessions") {
+      await handleSessionsApi(request, response);
+      return;
+    }
 
     if (requestUrl.pathname === "/api/collection") {
       await handleCollectionApi(request, response);
