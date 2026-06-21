@@ -7,18 +7,15 @@
         "hash": "5a45e93f798e9e527a94a35344d3e252fedd18b9de2297f13dbdc6b7a416b2dc21779943e24dca84a91dfd84570062c4a199dedf656641c1696a1a216f0f31a2"
       },
       "isAdmin": true,
-      "availablePacks": 2,
+      "availablePacks": 3,
       "collected": [
         1,
         2,
         4,
-        7,
-        8,
-        9,
-        10
+        7
       ],
       "createdAt": "2026-06-21T13:31:54.914Z",
-      "updatedAt": "2026-06-21T16:26:28.187Z"
+      "updatedAt": "2026-06-21T16:36:41.986Z"
     },
     "pepe": {
       "username": "pepe",

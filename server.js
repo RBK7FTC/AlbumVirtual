@@ -292,6 +292,27 @@ async function handleOpenPackApi(request, response) {
     });
 }
 
+async function handleGetPackApi(request, response) {
+    const auth = await getAuthenticatedUser(request);
+
+    if (!auth) {
+        sendError(response, 401, "Sign in required");
+        return;
+    }
+
+    auth.user.availablePacks++;
+
+    auth.user.updatedAt = new Date().toISOString();
+
+    auth.data.users[auth.username] = auth.user;
+
+    await writeData(auth.data);
+
+    sendJson(response, 200, {
+        availablePacks: auth.user.availablePacks
+    });
+}
+
 async function serveStaticFile(request, response) {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
   const pathname = requestUrl.pathname === "/" ? "/index.html" : requestUrl.pathname;
@@ -339,8 +360,13 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/open-pack") {
         await handleOpenPackApi(request, response);
-    return;
-}
+        return;
+    }
+
+    if (requestUrl.pathname === "/api/get-pack") {
+        await handleGetPackApi(request, response);
+        return;
+    }
 
     await serveStaticFile(request, response);
   } catch {

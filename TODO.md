@@ -1,4 +1,3 @@
 - Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
-- Add admin-tools button to obtain packs to open.
 - Add QR lector to obtain packs.
 - Think on other ways to obtain packs.

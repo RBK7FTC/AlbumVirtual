@@ -43,6 +43,7 @@ const passwordInput = document.querySelector("#password-input");
 const openPackButton = document.querySelector("#open-pack");
 const completeAlbumButton = document.querySelector("#complete-album");
 const resetAlbumButton = document.querySelector("#reset-album");
+const getPackButton = document.querySelector("#get-pack");
 
 totalCount.textContent = stickers.length;
 
@@ -185,7 +186,7 @@ function updatePackUI() {
 }
 
 function setControlsEnabled(isEnabled) {
-  [openPackButton, completeAlbumButton, resetAlbumButton].forEach((button) => {
+  [openPackButton, completeAlbumButton, resetAlbumButton, getPackButton].forEach((button) => {
     button.disabled = !isEnabled;
     button.classList.toggle("is-disabled", !isEnabled);
   });
@@ -298,6 +299,14 @@ resetAlbumButton.addEventListener("click", async () => {
 
   collected = new Set(initialCollected);
   await persistAndRender();
+});
+
+getPackButton.addEventListener("click", async () => {
+  if (!authToken) return;
+
+  const payload = await apiRequest("/api/get-pack");
+  availablePacks = payload.availablePacks;
+  updatePackUI();
 });
 
 document.querySelectorAll(".filter-button").forEach((button) => {
