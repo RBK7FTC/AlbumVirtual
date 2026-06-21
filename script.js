@@ -93,6 +93,8 @@ async function authenticate(path) {
 
     authToken = payload.token;
     currentUser = payload.user.username;
+    adminTools.classList.toggle("is-hidden", !payload.user.isAdmin);
+    console.log(payload.user.isAdmin);
     collected = new Set(payload.collected);
     sessionStorage.setItem("album-token", authToken);
     sessionStorage.setItem("album-user", currentUser);
@@ -185,6 +187,7 @@ function setSignedOutState(message = "") {
   currentUsername.textContent = "";
   authMessage.textContent = message;
   databaseStatus.textContent = "Sign in to save cards";
+  adminTools.classList.add("is-hidden");
   collected = new Set();
   setControlsEnabled(false);
   renderAlbum();
@@ -229,6 +232,8 @@ document.querySelector("#logout-button").addEventListener("click", async () => {
     setSignedOutState();
   }
 });
+
+const adminTools = document.querySelector("#admin-tools");
 
 openPackButton.addEventListener("click", async () => {
   if (!authToken) return;

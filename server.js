@@ -104,7 +104,10 @@ function sanitizeCollection(cardIds) {
 }
 
 function publicUser(user) {
-  return { username: user.username };
+  return { username: user.username,
+    isAdmin: !!user.isAdmin,
+    availablePacks: user.availablePacks ?? 0
+  };
 }
 
 function readRequestBody(request) {
@@ -177,6 +180,8 @@ async function handleUsersApi(request, response) {
     data.users[username] = {
       username,
       password: hashPassword(password),
+      isAdmin: false,
+      availablePacks: 3,
       collected: initialCollected,
       createdAt: now,
       updatedAt: now
