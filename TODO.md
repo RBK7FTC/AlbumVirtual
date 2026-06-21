@@ -1,5 +1,5 @@
+- Only enable complete-album and reset-album on admin users -> add admin tag to users.
 - Add available packs to open by user, and only let "Open pack" if there is any available pack to open.
 - Add QR lector to obtain packs.
 - Think on other ways to obtain packs.
-- Only enable complete-album and reset-album on admin users -> add admin tag to users.
 - Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
