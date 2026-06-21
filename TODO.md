@@ -1,5 +1,3 @@
-- Render cards as "Team" sections check: filteredStickers() and .filter-button.
-- Add next-team button to filter cards by next "Team" index.
 - Add available packs to open by user, and only let "Open pack" if there is any available pack to open.
 - Add QR lector to obtain packs.
 - Think on other ways to obtain packs.

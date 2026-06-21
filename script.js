@@ -1,3 +1,8 @@
+const teams = [ "RBK7FTC",
+    "DINAMITA",
+    "ShadowFox"
+]
+
 const stickers = [
   { id: 1, name: "Opening Spark", rarity: "common", team: "RBK7FTC", image: "assets/sticker-01.svg" },
   { id: 2, name: "Midfield Pulse", rarity: "common", team: "RBK7FTC", image: "assets/sticker-02.svg" },
@@ -15,7 +20,7 @@ const stickers = [
 
 const initialCollected = new Set([1, 2, 4, 7]);
 let collected = new Set();
-let activeFilter = "all";
+let activeTeam = 0;
 let authToken = sessionStorage.getItem("album-token") || "";
 let currentUser = sessionStorage.getItem("album-user") || "";
 
@@ -113,7 +118,7 @@ function cardTemplate(sticker, forceCollected = false) {
       <div class="sticker-meta">
         <span class="rarity ${sticker.rarity}">${sticker.rarity}</span>
         <h3>${isCollected ? sticker.name : "Missing sticker"}</h3>
-        <p>${isCollected ? sticker.team : "Empty slot"}</p>
+        <p>${sticker.team}</p>
       </div>
     </article>
   `;
@@ -121,9 +126,7 @@ function cardTemplate(sticker, forceCollected = false) {
 
 function filteredStickers() {
   return stickers.filter((sticker) => {
-    if (activeFilter === "collected") return collected.has(sticker.id);
-    if (activeFilter === "missing") return !collected.has(sticker.id);
-    if (activeFilter === "rare") return sticker.rarity !== "common";
+    return (sticker.team === teams[activeTeam]); //collected.has(sticker.id) &&
     return true;
   });
 }
@@ -257,7 +260,8 @@ document.querySelectorAll(".filter-button").forEach((button) => {
   button.addEventListener("click", () => {
     document.querySelector(".filter-button.is-active").classList.remove("is-active");
     button.classList.add("is-active");
-    activeFilter = button.dataset.filter;
+    if(button.dataset.filter === "next" && activeTeam<teams.length-1) activeTeam++; 
+    if(button.dataset.filter === "prev" && activeTeam>0) activeTeam--;
     renderAlbum();
   });
 });
