@@ -75,6 +75,28 @@
       ],
       "createdAt": "2026-06-27T14:30:39.140Z",
       "updatedAt": "2026-06-27T14:42:05.959Z"
+    },
+    "machugoat": {
+      "username": "machugoat",
+      "password": {
+        "salt": "77e2ea6adedc3a1514fd887159b3932c",
+        "hash": "86b43f96c4ba18fd5697edf0d79d56ade1b0d82444920aba8a6eb1ad5253c14481162709ef03703fcb89044044ef41ea8790572c2f9f9aa8d15f9d49ef08742b"
+      },
+      "isAdmin": false,
+      "availablePacks": 0,
+      "collected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        9,
+        10,
+        12
+      ],
+      "createdAt": "2026-06-27T17:04:49.828Z",
+      "updatedAt": "2026-06-27T18:46:53.202Z"
     }
   }
 }

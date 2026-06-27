@@ -15,7 +15,7 @@ const stickers = [
   { id: 9, name: "Stadium Lights", rarity: "rare", team: "DINAMITA", image: "assets/sticker-09.svg" },
   { id: 10, name: "Rising Star", rarity: "common", team: "ShadowFox", image: "assets/sticker-10.svg" },
   { id: 11, name: "Derby Night", rarity: "epic", team: "ShadowFox", image: "assets/sticker-11.svg" },
-  { id: 12, name: "Trophy Lift", rarity: "rare", team: "ShadowFox", image: "assets/sticker-12.svg" }
+  { id: 12, name: "Trophy Lift", rarity: "legendary", team: "ShadowFox", image: "assets/sticker-12.svg" }
 ];
 
 const initialCollected = new Set([1, 2, 4, 7]);
@@ -27,6 +27,11 @@ let availablePacks = sessionStorage.getItem("album-availablePacks");
 
 const grid = document.querySelector("#album-grid");
 const teamTitle = document.querySelector("#teams");
+
+const homeButton = document.querySelector("#albumSection");
+const rankingButton = document.querySelector("#rankingSection");
+
+
 const collectedCount = document.querySelector("#collected-count");
 const totalCount = document.querySelector("#total-count");
 const progressBar = document.querySelector("#progress-bar");
@@ -98,6 +103,7 @@ async function authenticate(path) {
     authToken = payload.token;
     currentUser = payload.user.username;
     adminTools.classList.toggle("is-hidden", !payload.user.isAdmin);
+    console.log(!payload.user.isAdmin);
     collected = new Set(payload.collected);
     availablePacks = payload.user.availablePacks;
     sessionStorage.setItem("album-token", authToken);
@@ -285,6 +291,14 @@ openPackButton.addEventListener("click", async () => {
     } catch(error) {
         authMessage.textContent = error.message;
     }
+});
+
+homeButton.addEventListener("click", async () => {
+  console.log("Home");
+});
+
+rankingButton.addEventListener("click", async () => {
+  console.log("Rankings");
 });
 
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());
