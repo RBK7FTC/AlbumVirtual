@@ -33,6 +33,35 @@
       ],
       "createdAt": "2026-06-21T15:24:31.791Z",
       "updatedAt": "2026-06-21T15:24:31.791Z"
+    },
+    "pepito1234": {
+      "username": "pepito1234",
+      "password": {
+        "salt": "79893681d9d438668e725e5a4b91b15d",
+        "hash": "5a787b1263341cdf222f55a441d2f070bec6d4e8d2e8857375ff590921bfdff315eda78ac095927bb080288dd4b66cd9b53dcf453c59141802dba309375d1cb8"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "collected": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "createdAt": "2026-06-27T14:25:38.650Z",
+      "updatedAt": "2026-06-27T14:25:38.650Z"
+    },
+    "pepito2": {
+      "username": "pepito2",
+      "password": {
+        "salt": "3a02c1d0f50c5142302f8dfb9b5c498a",
+        "hash": "82f3b3d226ebad5e6c997202ffa525db90f078f53162b53853a120e881b3ab3894b2e0c5b1913d275f8801f82ba5dd7407d874e4328c54480b89a14b29e1df69"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "collected": [],
+      "createdAt": "2026-06-27T14:30:39.140Z",
+      "updatedAt": "2026-06-27T14:30:39.140Z"
     }
   }
 }

@@ -7,7 +7,7 @@ const path = require("path");
 const root = __dirname;
 const port = Number(process.env.PORT || 8000);
 const dataPath = path.join(root, "album-data.json");
-const initialCollected = [1, 2, 4, 7];
+const initialCollected = [];
 const maxStickerId = 12;
 const sessions = new Map();
 
