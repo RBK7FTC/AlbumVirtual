@@ -78,24 +78,23 @@
                 Open pack
             </button>
         </div>
-
-        <nav class="filter-list" aria-label="Album filters">
-            <button class="filter-button is-active" type="button" data-filter="next">Next team</button>
-            <button class="filter-button" type="button" data-filter="prev">Previous team</button>
-        </nav>
       </aside>
 
       <section class="album-stage" aria-label="Sticker album">
         <header class="stage-header">
           <div>
             <p class="eyebrow">Gallery</p>
-            <h2>Legends & Moments</h2>
+            <h2 id="teams" >Legends & Moments</h2>
           </div>
           <div id="admin-tools" class="view-tools" aria-label="Album tools">
               <button id="complete-album" class="tool-button" type="button" title="Complete album">OK</button>
               <button id="reset-album" class="tool-button" type="button" title="Reset album">R</button>
               <button id="get-pack" class="tool-button" type="button" title="Get pack">P</button>
           </div>
+          <nav class="filter-list" aria-label="Album filters">
+            <button class="filter-button is-active" type="button" data-filter="next">Next team</button>
+            <button class="filter-button" type="button" data-filter="prev">Previous team</button>
+        </nav>
         </header>
 
         <div id="album-grid" class="album-grid" aria-live="polite"></div>

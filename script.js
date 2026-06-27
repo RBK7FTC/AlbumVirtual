@@ -26,6 +26,7 @@ let currentUser = sessionStorage.getItem("album-user") || "";
 let availablePacks = sessionStorage.getItem("album-availablePacks");
 
 const grid = document.querySelector("#album-grid");
+const teamTitle = document.querySelector("#teams");
 const collectedCount = document.querySelector("#collected-count");
 const totalCount = document.querySelector("#total-count");
 const progressBar = document.querySelector("#progress-bar");
@@ -143,6 +144,7 @@ function renderAlbum() {
   const owned = collected.size;
   const rareOwned = stickers.filter((sticker) => sticker.rarity !== "common" && collected.has(sticker.id)).length;
   const rareTotal = stickers.filter((sticker) => sticker.rarity !== "common").length;
+  teamTitle.textContent = teams[activeTeam];
 
   collectedCount.textContent = owned;
   progressBar.style.width = `${(owned / stickers.length) * 100}%`;
