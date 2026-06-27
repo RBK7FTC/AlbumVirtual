@@ -1,3 +1,6 @@
 - Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
 - Add QR lector to obtain packs.
 - Think on other ways to obtain packs.
+- Automatically get a sticker of you team.
+- Add page with all users showing their stats.
+- Add trade system.
