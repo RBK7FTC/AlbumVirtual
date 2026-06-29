@@ -293,12 +293,36 @@ openPackButton.addEventListener("click", async () => {
     }
 });
 
+async function switchTo(targetId) {
+  const albumStage = document.querySelector('.album-stage');
+  const rankingStage = document.getElementById('ranking-stage');
+
+  if (!document.startViewTransition) {
+    toggleVisibility(targetId, albumStage, rankingStage);
+    return;
+  }
+
+  document.startViewTransition(() => {
+    toggleVisibility(targetId, albumStage, rankingStage);
+  });
+}
+
+function toggleVisibility(targetId, album, ranking) {
+  if (targetId === 'albumSection') {
+    album.classList.remove('is-hidden');
+    ranking.classList.add('is-hidden');
+  } else {
+    album.classList.add('is-hidden');
+    ranking.classList.remove('is-hidden');
+  }
+}
+
 homeButton.addEventListener("click", async () => {
-  console.log("Home");
+  switchTo("albumSection");
 });
 
 rankingButton.addEventListener("click", async () => {
-  console.log("Rankings");
+  switchTo("rankingSection")
 });
 
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());

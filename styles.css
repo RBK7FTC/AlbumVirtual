@@ -45,6 +45,14 @@ input {
   padding: 0 12px;
 }
 
+.toggle-css{
+   .is-hidden { display: none !important; }
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.3s;
+    }
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
@@ -67,7 +75,7 @@ input {
   position: sticky;
   top: 24px;
   display: flex;
-  height: calc(100vh - 48px);
+  height: auto; /*calc(100vh - 48px);*/
   min-height: 640px;
   flex-direction: column;
   gap: 28px;
