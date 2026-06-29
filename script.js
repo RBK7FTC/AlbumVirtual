@@ -28,6 +28,7 @@ let availablePacks = sessionStorage.getItem("album-availablePacks");
 const grid = document.querySelector("#album-grid");
 const teamTitle = document.querySelector("#teams");
 
+const qrScannerButton = document.querySelector("#qrScannerButton");
 const homeButton = document.querySelector("#albumSection");
 const rankingButton = document.querySelector("#rankingSection");
 
@@ -293,36 +294,38 @@ openPackButton.addEventListener("click", async () => {
     }
 });
 
+function toggleVisibility(targetId) {
+  const stages = document.querySelectorAll('.stage');
+  
+  stages.forEach(stage => {
+    stage.classList.add('is-hidden');
+  });
+
+  document.getElementById(targetId).classList.remove('is-hidden');
+}
+
 async function switchTo(targetId) {
-  const albumStage = document.querySelector('.album-stage');
-  const rankingStage = document.getElementById('ranking-stage');
 
   if (!document.startViewTransition) {
-    toggleVisibility(targetId, albumStage, rankingStage);
+    toggleVisibility(targetId);
     return;
   }
 
   document.startViewTransition(() => {
-    toggleVisibility(targetId, albumStage, rankingStage);
+    toggleVisibility(targetId);
   });
 }
 
-function toggleVisibility(targetId, album, ranking) {
-  if (targetId === 'albumSection') {
-    album.classList.remove('is-hidden');
-    ranking.classList.add('is-hidden');
-  } else {
-    album.classList.add('is-hidden');
-    ranking.classList.remove('is-hidden');
-  }
-}
+qrScannerButton.addEventListener("click", async () => {
+  switchTo("qrScanner-stage");
+});
 
 homeButton.addEventListener("click", async () => {
-  switchTo("albumSection");
+  switchTo("album-stage");
 });
 
 rankingButton.addEventListener("click", async () => {
-  switchTo("rankingSection")
+  switchTo("ranking-stage");
 
   try {
     const data = await apiRequest("/api/get-leaderboard");

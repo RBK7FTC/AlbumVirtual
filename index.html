@@ -20,6 +20,7 @@
         <div class="">
           <button id="albumSection" class="primary-action" type="submit">Album</button>
           <button id="rankingSection" class="primary-action" type="submit">Ranking</button>
+          <button id="qrScannerButton" class="primary-action">Scan QR Code</button>
         </div>
 
         <section class="auth-panel" aria-label="Account">
@@ -85,7 +86,7 @@
         </div>
       </aside>
 
-      <section class="album-stage" aria-label="Sticker album">
+      <section id="album-stage" class="album-stage stage" aria-label="Sticker album">
         <header class="stage-header">
           <div>
             <p class="eyebrow">Stickers</p>
@@ -105,7 +106,7 @@
         <div id="album-grid" class="album-grid" aria-live="polite"></div>
       </section>
 
-      <section id="ranking-stage" class="ranking-stage is-hidden">
+      <section id="ranking-stage" class="ranking-stage stage is-hidden">
         <header class="stage-header">
           <div>
             <p class="eyebrow">Leaderboard</p>
@@ -116,6 +117,10 @@
           <!-- Ranking content goes here -->
           <p>Ranking content is coming soon...</p>
         </div>
+      </section>
+
+      <section id="qrScanner-stage" class="qrScanner-stage stage is-hidden">
+        <div id="reader" style="width: 600px"></div>
       </section>
     </main>
 
@@ -128,5 +133,6 @@
     </dialog>
 
     <script src="script.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
   </body>
 </html>

@@ -65,7 +65,8 @@ input {
 
 .album-panel,
 .album-stage,
-.ranking-stage {
+.ranking-stage,
+.qrScanner-stage {
   border: 1px solid rgba(31, 38, 51, 0.12);
   background: rgba(255, 255, 255, 0.82);
   box-shadow: var(--shadow);
@@ -73,7 +74,8 @@ input {
 }
 
 .album-panel,
-.ranking-stage {
+.ranking-stage,
+.qrScanner-stage {
   position: sticky;
   top: 24px;
   display: flex;
