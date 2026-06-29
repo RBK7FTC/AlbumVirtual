@@ -20,7 +20,7 @@
         <div class="">
           <button id="albumSection" class="primary-action" type="submit">Album</button>
           <button id="rankingSection" class="primary-action" type="submit">Ranking</button>
-          <button id="qrScannerButton" class="primary-action">Scan QR Code</button>
+          <button id="qrScannerButton" class="primary-action">Scan QR</button>
         </div>
 
         <section class="auth-panel" aria-label="Account">
@@ -121,6 +121,7 @@
 
       <section id="qrScanner-stage" class="qrScanner-stage stage is-hidden">
         <div id="reader" style="width: 600px"></div>
+        <div id="qrcode-container"></div>
       </section>
     </main>
 
@@ -134,5 +135,6 @@
 
     <script src="script.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   </body>
 </html>

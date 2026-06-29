@@ -350,6 +350,37 @@ rankingButton.addEventListener("click", async () => {
   
 });
 
+document.getElementById('qrScannerButton').addEventListener('click', () => {
+    const usernameQrCode = new QRCode(document.getElementById("qrcode-container"), {
+      text: "hola",
+      width: 256,
+      height: 256,
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    const html5QrCode = new Html5Qrcode("reader");
+
+    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        console.log(`Code matched = ${decodedText}`, decodedResult);
+
+        html5QrCode.stop().then((ignore) => {
+            
+        }).catch((err) => {
+            console.error("Stop failed: ", err);
+        });
+    };
+
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    html5QrCode.start(
+        { facingMode: "environment" }, 
+        config, 
+        qrCodeSuccessCallback
+    ).catch((err) => {
+        console.error("Unable to start scanning", err);
+    });
+});
+
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());
 
 completeAlbumButton.addEventListener("click", async () => {

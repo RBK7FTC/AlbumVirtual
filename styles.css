@@ -533,6 +533,11 @@ h2 {
   min-height: 158px;
 }
 
+#reader {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
 
 .ranking-list {
   display: flex;
