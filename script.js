@@ -28,9 +28,9 @@ let availablePacks = sessionStorage.getItem("album-availablePacks");
 const grid = document.querySelector("#album-grid");
 const teamTitle = document.querySelector("#teams");
 
-const qrScannerButton = document.querySelector("#qrScannerButton");
-const homeButton = document.querySelector("#albumSection");
-const rankingButton = document.querySelector("#rankingSection");
+const tradingStageButton = document.querySelector("#tradingStageBtn");
+const albumStageButton = document.querySelector("#albumStageBtn");
+const leaderboardStageButton = document.querySelector("#leaderboardStageBtn");
 
 
 const collectedCount = document.querySelector("#collected-count");
@@ -294,6 +294,43 @@ openPackButton.addEventListener("click", async () => {
     }
 });
 
+function generateUsernameQRCode(){
+    const container = document.getElementById("qrCode");
+    container.innerHTML = "";
+    const size = container.offsetWidth;
+    const text = sessionStorage.getItem("album-user") || "NULL";
+    const usernameQrCode = new QRCode(container, {
+      text: text,
+      width: size,
+      height: size,
+      correctLevel: QRCode.CorrectLevel.H
+    });
+}
+
+function startQRScanner(){
+    const html5QrCode = new Html5Qrcode("qrCode");
+
+    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        console.log(`Code matched = ${decodedText}`, decodedResult);
+
+        //html5QrCode.stop().then((ignore) => {
+            
+        //}).catch((err) => {
+        //    console.error("Stop failed: ", err);
+        //});
+    };
+
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    html5QrCode.start(
+        { facingMode: "environment" }, 
+        config, 
+        qrCodeSuccessCallback
+    ).catch((err) => {
+        console.error("Unable to start scanning", err);
+    });
+}
+
 function toggleVisibility(targetId) {
   const stages = document.querySelectorAll('.stage');
   
@@ -308,24 +345,36 @@ async function switchTo(targetId) {
 
   if (!document.startViewTransition) {
     toggleVisibility(targetId);
-    return;
+    return Promise.resolve();
   }
 
-  document.startViewTransition(() => {
+  const transition = document.startViewTransition(() => {
     toggleVisibility(targetId);
   });
+
+  return transition.finished;   
 }
 
-qrScannerButton.addEventListener("click", async () => {
-  switchTo("qrScanner-stage");
+tradingStageButton.addEventListener("click", async () => {
+  await switchTo("trading-stage");
+
+  generateUsernameQRCode();
 });
 
-homeButton.addEventListener("click", async () => {
+document.querySelector("#scanQRBtn").addEventListener("click", () => {
+  startQRScanner();
+});
+
+document.querySelector("#generateQRBtn").addEventListener("click", () => {
+  generateUsernameQRCode();
+});
+
+albumStageButton.addEventListener("click", async () => {
   switchTo("album-stage");
 });
 
-rankingButton.addEventListener("click", async () => {
-  switchTo("ranking-stage");
+leaderboardStageButton.addEventListener("click", async () => {
+  switchTo("leaderboard-stage");
 
   try {
     const data = await apiRequest("/api/get-leaderboard");
@@ -348,37 +397,6 @@ rankingButton.addEventListener("click", async () => {
     console.error("Failed to load leaderboard:", error);
   }
   
-});
-
-document.getElementById('qrScannerButton').addEventListener('click', () => {
-    const usernameQrCode = new QRCode(document.getElementById("qrcode-container"), {
-      text: "hola",
-      width: 256,
-      height: 256,
-      correctLevel: QRCode.CorrectLevel.H
-    });
-
-    const html5QrCode = new Html5Qrcode("reader");
-
-    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        console.log(`Code matched = ${decodedText}`, decodedResult);
-
-        html5QrCode.stop().then((ignore) => {
-            
-        }).catch((err) => {
-            console.error("Stop failed: ", err);
-        });
-    };
-
-    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-
-    html5QrCode.start(
-        { facingMode: "environment" }, 
-        config, 
-        qrCodeSuccessCallback
-    ).catch((err) => {
-        console.error("Unable to start scanning", err);
-    });
 });
 
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());

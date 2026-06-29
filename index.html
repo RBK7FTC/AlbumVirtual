@@ -18,9 +18,9 @@
         </div>
 
         <div class="">
-          <button id="albumSection" class="primary-action" type="submit">Album</button>
-          <button id="rankingSection" class="primary-action" type="submit">Ranking</button>
-          <button id="qrScannerButton" class="primary-action">Scan QR</button>
+          <button id="albumStageBtn" class="primary-action" type="submit">Album</button>
+          <button id="leaderboardStageBtn" class="primary-action" type="submit">Leaderboard</button>
+          <button id="tradingStageBtn" class="primary-action">Trading</button>
         </div>
 
         <section class="auth-panel" aria-label="Account">
@@ -106,7 +106,7 @@
         <div id="album-grid" class="album-grid" aria-live="polite"></div>
       </section>
 
-      <section id="ranking-stage" class="ranking-stage stage is-hidden">
+      <section id="leaderboard-stage" class="leaderboard-stage stage is-hidden">
         <header class="stage-header">
           <div>
             <p class="eyebrow">Leaderboard</p>
@@ -119,9 +119,10 @@
         </div>
       </section>
 
-      <section id="qrScanner-stage" class="qrScanner-stage stage is-hidden">
-        <div id="reader" style="width: 600px"></div>
-        <div id="qrcode-container"></div>
+      <section id="trading-stage" class="trading-stage stage is-hidden">
+        <div id="qrCode"></div>
+        <button id="scanQRBtn" class="primary-action" type="submit">Scan QR code</button>
+        <button id="generateQRBtn" class="primary-action">Generate QR code</button>
       </section>
     </main>
 
