@@ -323,6 +323,28 @@ homeButton.addEventListener("click", async () => {
 
 rankingButton.addEventListener("click", async () => {
   switchTo("rankingSection")
+
+  try {
+    const data = await apiRequest("/api/get-leaderboard");
+    
+    const rankingData = data.map(user => ({
+      username: user.username,
+      stickerCount: user.stickerCount
+    })).sort((a, b) => b.stickerCount - a.stickerCount);
+
+    const rankingList = document.querySelector(".ranking-list");
+    rankingList.innerHTML = rankingData.map((user, index) => `
+      <div class="ranking-item ${user.username === currentUser ? 'is-current-user' : ''}">
+        <span class="rank-number">#${index + 1}</span>
+        <strong class="username">${user.username}</strong>
+        <span class="sticker-count">${user.stickerCount} stickers</span>
+      </div>
+    `).join("");
+
+  } catch (error) {
+    console.error("Failed to load leaderboard:", error);
+  }
+  
 });
 
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());

@@ -313,6 +313,28 @@ async function handleGetPackApi(request, response) {
     });
 }
 
+async function handleGetLeaderboard(request, response) {
+    //const auth = await getAuthenticatedUser(request);
+
+    /*
+    if (!auth) {
+        sendError(response, 401, "Sign in required");
+        return;
+    }
+    */
+
+    const data = await readData();
+
+    const ranking = Object.values(data.users).map(user => ({
+      username: user.username,
+      stickerCount: user.collected.length
+    }));
+
+    ranking.sort((a, b) => b.stickerCount - a.stickerCount);
+
+    sendJson(response, 200, ranking);
+}
+
 async function serveStaticFile(request, response) {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
   const pathname = requestUrl.pathname === "/" ? "/index.html" : requestUrl.pathname;
@@ -365,6 +387,11 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/get-pack") {
         await handleGetPackApi(request, response);
+        return;
+    }
+
+    if (requestUrl.pathname === "/api/get-leaderboard") {
+        await handleGetLeaderboard(request, response);
         return;
     }
 

@@ -2,6 +2,5 @@
 - Add QR lector to obtain packs.
 - Think on other ways to obtain packs.
 - Automatically get a sticker of you team.
-- Add page with all users showing their stats.
 - Add trade system.
 - Give repeated cards? or avoid it?

@@ -64,14 +64,16 @@ input {
 }
 
 .album-panel,
-.album-stage {
+.album-stage,
+.ranking-stage {
   border: 1px solid rgba(31, 38, 51, 0.12);
   background: rgba(255, 255, 255, 0.82);
   box-shadow: var(--shadow);
   backdrop-filter: blur(18px);
 }
 
-.album-panel {
+.album-panel,
+.ranking-stage {
   position: sticky;
   top: 24px;
   display: flex;
@@ -527,6 +529,66 @@ h2 {
 
 .pack-results .sticker-image {
   min-height: 158px;
+}
+
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: var(--ink);
+}
+
+.ranking-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent-2);
+}
+
+.ranking-item .rank-number {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--muted);
+  width: 40px;
+  margin-right: 16px;
+}
+
+.ranking-item:nth-child(1) .rank-number { color: var(--gold); } /* Gold */
+.ranking-item:nth-child(2) .rank-number { color: #A8A8A8; }   /* Silver */
+.ranking-item:nth-child(3) .rank-number { color: #B08D57; }   /* Bronze */
+
+.ranking-item .username {
+  flex-grow: 1;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-transform: capitalize;
+}
+
+.ranking-item .sticker-count {
+  background-color: var(--paper);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  border: 1px solid var(--line);
+}
+
+.ranking-item.is-current-user {
+  background-color: rgba(8, 126, 139, 0.05);
+  border: 2px solid var(--accent-2);
 }
 
 @media (max-width: 840px) {
