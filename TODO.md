@@ -2,5 +2,7 @@
 - Add QR lector to obtain packs.
 - Think on other ways to obtain packs.
 - Automatically get a sticker of you team.
+- Render team image next to username on leaderboard.
+- Add team logo image to album stage.
 - Add trade system.
 - Give repeated cards? or avoid it?

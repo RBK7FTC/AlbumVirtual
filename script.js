@@ -124,6 +124,8 @@ function cardTemplate(sticker, forceCollected = false) {
   const stateClass = isCollected ? "is-collected" : "is-missing";
   const altText = isCollected ? sticker.name : `Missing sticker ${sticker.id}`;
 
+  console.log("Converting sticker: ", sticker);
+
   return `
     <article class="sticker-card ${stateClass}" data-rarity="${sticker.rarity}">
       <span class="card-number">#${String(sticker.id).padStart(2, "0")}</span>
@@ -295,30 +297,34 @@ openPackButton.addEventListener("click", async () => {
     }
 });
 
+var html5QrCode;
+
 function generateUsernameQRCode(){
-    const container = document.getElementById("qrCode");
-    container.innerHTML = "";
-    const size = container.offsetWidth;
-    const text = sessionStorage.getItem("album-user") || "NULL";
-    const usernameQrCode = new QRCode(container, {
-      text: text,
-      width: size,
-      height: size,
-      correctLevel: QRCode.CorrectLevel.H
-    });
+  const container = document.getElementById("qrCode");
+  container.innerHTML = "";
+  const size = container.offsetWidth;
+  //const text = sessionStorage.getItem("album-user") || "NULL";
+  const text = '{"username": "pepe"}';
+  const usernameQrCode = new QRCode(container, {
+    text: text,
+    width: size,
+    height: size,
+    correctLevel: QRCode.CorrectLevel.H
+  });
 }
 
 function startQRScanner(){
-    const html5QrCode = new Html5Qrcode("qrCode");
+    html5QrCode = new Html5Qrcode("qrCode");
 
-    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        console.log(`Code matched = ${decodedText}`, decodedResult);
+    const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
+      const data = JSON.parse(decodedText);
+      
+      if(Object.hasOwn(data, 'username')){
+        handleStartTrade(data);
+      } else if(Object.hasOwn(data, 'code')){
 
-        //html5QrCode.stop().then((ignore) => {
-            
-        //}).catch((err) => {
-        //    console.error("Stop failed: ", err);
-        //});
+      }
+ 
     };
 
     const config = { fps: 10, qrbox: { width: 250, height: 250 } };
@@ -330,6 +336,44 @@ function startQRScanner(){
     ).catch((err) => {
         console.error("Unable to start scanning", err);
     });
+}
+
+async function handleStartTrade(data){
+  try{
+    if (!authToken){
+      alert("Sing-in required");
+      return;
+    } 
+
+    const payload = await apiRequest("/api/start-trade", {
+      method: "PUT",
+      body: JSON.stringify({ username: data.username })
+    });
+
+    console.log("Received: ", payload);
+    
+    switchTo("trade-stage");
+
+    const ownContainer = document.getElementById("own-collection-trade-container");
+
+    ownContainer.innerHTML = "";
+
+    ownContainer.innerHTML = [...collected].map((stickerIndex) => cardTemplate(stickers[stickerIndex-1], false)).join("");
+
+    const otherContainer = document.getElementById("other-collection-trade-container");
+
+    otherContainer.innerHTML = "";
+
+    otherContainer.innerHTML = payload.collected.map((stickerIndex) => cardTemplate(stickers[stickerIndex-1], true)).join("");
+
+    html5QrCode.stop().then((ignore) => {
+    }).catch((err) => {
+        console.error("Stop failed: ", err);
+    });
+
+  } catch(error) {
+    alert(error.message);
+  }
 }
 
 function toggleVisibility(targetId) {
@@ -442,18 +486,17 @@ getPackButton.addEventListener("click", async () => {
 
     const targetDivs = document.getElementsByClassName('notifications-dropdown-item');
 
-    if (targetDivs) {
-      for(const div of targetDivs){
-        div.addEventListener('click', function(event) {
-          console.log('Notification item clicked:', this.textContent);
+    for(const div of targetDivs){
+      div.addEventListener('click', function(event) {
+        console.log('Notification item clicked:', this.textContent);
 
-          const dropdown = document.querySelector('div#notificationsDropdown');
-          if (dropdown) {
-            dropdown.style.display = 'none';
-          }
-        });
-      }
+        const dropdown = document.querySelector('div#notificationsDropdown');
+        if (dropdown) {
+          dropdown.style.display = 'none';
+        }
+      });
     }
+    
   };
 
   const closeDropdown = () => {

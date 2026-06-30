@@ -86,7 +86,7 @@
         </div>
       </aside>
 
-      <section id="album-stage" class="album-stage stage" aria-label="Sticker album">
+      <section id="album-stage" class="album-stage stage is-hidden" aria-label="Sticker album">
         <header class="stage-header">
           <div>
             <p class="eyebrow">Stickers</p>
@@ -128,14 +128,56 @@
             </div>
             <button id="tradingNotificationsBtn">
               <span class="notification-badge">3</span>
-              <div id="notificationsDropdown" style="display: none;">
-              </div>
+              <div id="notificationsDropdown" style="display: none;"></div>
             </button>
           </div>
         </header>
         <div id="qrCode"></div>
         <button id="scanQRBtn" class="primary-action" type="submit">Scan QR code</button>
         <button id="generateQRBtn" class="primary-action">Generate QR code</button>
+      </section>
+
+      <section id="trade-stage" class="trade-stage stage">
+        <div class="trade-stage-header-card">
+          <div>
+            <p class="eyebrow">Trade</p>
+            <h2>Swap stickers</h2>
+          </div>
+        </div>
+
+        <div class="trade-collection-panel">
+          <button class="trade-nav-button" type="button" aria-label="Previous stickers">‹</button>
+          <div class="trade-strickers-collection" id="own-collection-trade-container"></div>
+          <button class="trade-nav-button" type="button" aria-label="Next stickers">›</button>
+          <p class="trade-collection-label">Your stickers</p>
+        </div>
+
+        <div class="trade-center-panel">
+          <div class="trade-stickers-selection">
+            <p class="trade-panel-title">You give</p>
+            <div class="trade-sticker-slot">
+              <img src="assets/sticker-02.svg" alt="Sticker you offer">
+            </div>
+          </div>
+          <button class="trade-submit-button" type="button">Send trade</button>
+          <div class="trade-stickers-selection">
+            <p class="trade-panel-title">You want</p>
+            <div class="trade-sticker-slot">
+              <img src="assets/sticker-03.svg" alt="Sticker you want">
+            </div>
+          </div>
+        </div>
+
+        <div class="trade-collection-panel">
+          <button class="trade-nav-button" type="button" aria-label="Previous stickers">‹</button>
+          <div class="trade-strickers-collection" id="other-collection-trade-container">
+            <div class="trade-sticker-chip"><img src="assets/sticker-04.svg" alt="Other sticker"></div>
+            <div class="trade-sticker-chip"><img src="assets/sticker-04.svg" alt="Other sticker"></div>
+            <div class="trade-sticker-chip"><img src="assets/sticker-04.svg" alt="Other sticker"></div>
+          </div>
+          <button class="trade-nav-button" type="button" aria-label="Next stickers">›</button>
+          <p class="trade-collection-label">Other stickers</p>
+        </div>
       </section>
     </main>
 

@@ -335,6 +335,41 @@ async function handleGetLeaderboard(request, response) {
     sendJson(response, 200, ranking);
 }
 
+async function handleStartTrade(request, response) {
+
+    const auth = await getAuthenticatedUser(request);
+
+    if (!auth) {
+        sendError(response, 401, "Sign in required");
+        return;
+    }
+
+    if (request.method === "PUT") {
+      try {
+        const payload = await readJsonRequest(request);
+
+        console.log(payload);
+
+        const data = await readData();
+        const user = data.users[payload.username];
+        
+        if(!user){
+          sendError(response, 401, "Unknow target user");
+          return;
+        }
+        
+        sendJson(response, 200, {
+          collected: user.collected
+        });
+
+      } catch {
+        sendError(response, 400, "Invalid collection payload");
+      }
+
+      return;
+    }
+}
+
 async function serveStaticFile(request, response) {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
   const pathname = requestUrl.pathname === "/" ? "/index.html" : requestUrl.pathname;
@@ -392,6 +427,11 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/get-leaderboard") {
         await handleGetLeaderboard(request, response);
+        return;
+    }
+
+    if (requestUrl.pathname === "/api/start-trade") {
+        await handleStartTrade(request, response);
         return;
     }
 
