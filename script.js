@@ -425,11 +425,35 @@ getPackButton.addEventListener("click", async () => {
 });
 
 {
-  
+  const notificationsCount = 2;
+
   const toggleDropdown = (e) => {
     e.stopPropagation();
     const isVisible = notificationsDropdown.style.display === 'block';
     notificationsDropdown.style.display = isVisible ? 'none' : 'block';
+
+    notificationsDropdown.innerHTML = "<div style='font-weight: bold; border-bottom: 1px solid #eee; margin-bottom: 8px; padding-bottom: 4px;'>Notifications</div>";
+
+    for(let i=0; i<notificationsCount; i++){
+      notificationsDropdown.innerHTML += `
+        <div class="notifications-dropdown-item">No new notifications</div>
+      `;
+    }
+
+    const targetDivs = document.getElementsByClassName('notifications-dropdown-item');
+
+    if (targetDivs) {
+      for(const div of targetDivs){
+        div.addEventListener('click', function(event) {
+          console.log('Notification item clicked:', this.textContent);
+
+          const dropdown = document.querySelector('div#notificationsDropdown');
+          if (dropdown) {
+            dropdown.style.display = 'none';
+          }
+        });
+      }
+    }
   };
 
   const closeDropdown = () => {

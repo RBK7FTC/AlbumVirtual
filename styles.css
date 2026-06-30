@@ -147,6 +147,12 @@ input {
   color: rgb(51, 51, 51);
 }
 
+.notifications-dropdown-item{
+  font-size: 14px;
+  display: block;
+  font-variant: normal;
+}
+
 .brand-lockup {
   display: flex;
   align-items: center;
