@@ -31,7 +31,8 @@ const teamTitle = document.querySelector("#teams");
 const tradingStageButton = document.querySelector("#tradingStageBtn");
 const albumStageButton = document.querySelector("#albumStageBtn");
 const leaderboardStageButton = document.querySelector("#leaderboardStageBtn");
-
+const notificationsBtn = document.querySelector('#tradingNotificationsBtn');
+const notificationsDropdown = document.querySelector('#notificationsDropdown');
 
 const collectedCount = document.querySelector("#collected-count");
 const totalCount = document.querySelector("#total-count");
@@ -422,6 +423,28 @@ getPackButton.addEventListener("click", async () => {
   availablePacks = payload.availablePacks;
   updatePackUI();
 });
+
+{
+  
+  const toggleDropdown = (e) => {
+    e.stopPropagation();
+    const isVisible = notificationsDropdown.style.display === 'block';
+    notificationsDropdown.style.display = isVisible ? 'none' : 'block';
+  };
+
+  const closeDropdown = () => {
+    notificationsDropdown.style.display = 'none';
+  };
+
+  notificationsBtn.addEventListener('click', toggleDropdown);
+
+  notificationsDropdown.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  document.addEventListener('click', closeDropdown);
+
+}
 
 document.querySelectorAll(".filter-button").forEach((button) => {
   button.addEventListener("click", () => {
