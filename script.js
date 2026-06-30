@@ -25,6 +25,8 @@ let authToken = sessionStorage.getItem("album-token") || "";
 let currentUser = sessionStorage.getItem("album-user") || "";
 let availablePacks = sessionStorage.getItem("album-availablePacks");
 
+const TRADE_PAGE_SIZE = 4;
+
 const grid = document.querySelector("#album-grid");
 const teamTitle = document.querySelector("#teams");
 
@@ -105,7 +107,6 @@ async function authenticate(path) {
     authToken = payload.token;
     currentUser = payload.user.username;
     adminTools.classList.toggle("is-hidden", !payload.user.isAdmin);
-    console.log(!payload.user.isAdmin);
     collected = new Set(payload.collected);
     availablePacks = payload.user.availablePacks;
     sessionStorage.setItem("album-token", authToken);
@@ -119,15 +120,15 @@ async function authenticate(path) {
   }
 }
 
-function cardTemplate(sticker, forceCollected = false) {
+function cardTemplate(sticker, forceCollected = false, options = {}) {
   const isCollected = forceCollected || collected.has(sticker.id);
   const stateClass = isCollected ? "is-collected" : "is-missing";
   const altText = isCollected ? sticker.name : `Missing sticker ${sticker.id}`;
-
-  console.log("Converting sticker: ", sticker);
+  const variantClass = options.variant === "trade" ? "trade-card" : "";
+  const interactiveAttrs = options.variant === "trade" ? 'role="button" tabindex="0"' : "";
 
   return `
-    <article class="sticker-card ${stateClass}" data-rarity="${sticker.rarity}">
+    <article class="sticker-card ${stateClass} ${variantClass}" data-rarity="${sticker.rarity}" ${interactiveAttrs}>
       <span class="card-number">#${String(sticker.id).padStart(2, "0")}</span>
       <div class="sticker-image">
         <img src="${sticker.image}" alt="${altText}" />
@@ -139,6 +140,60 @@ function cardTemplate(sticker, forceCollected = false) {
       </div>
     </article>
   `;
+}
+
+function updateTradeNavButtons(panel, totalCount, currentIndex) {
+  const buttons = panel.querySelectorAll(".trade-nav-button");
+  const maxIndex = Math.max(0, totalCount - TRADE_PAGE_SIZE);
+
+  buttons.forEach((button) => {
+    const direction = button.dataset.direction;
+    const isDisabled =
+      (direction === "prev" && currentIndex === 0) ||
+      (direction === "next" && currentIndex >= maxIndex) ||
+      totalCount <= TRADE_PAGE_SIZE;
+
+    button.disabled = isDisabled;
+    button.classList.toggle("is-disabled", isDisabled);
+  });
+}
+
+function renderTradeCollection(container, stickerIndexes, forceCollected = false, startIndex = 0) {
+  const visibleIndexes = stickerIndexes.slice(startIndex, startIndex + TRADE_PAGE_SIZE);
+  container.dataset.tradeItems = JSON.stringify(stickerIndexes);
+  container.dataset.tradeIndex = String(startIndex);
+  container.dataset.tradeForceCollected = String(forceCollected);
+  container.innerHTML = visibleIndexes
+    .map((stickerIndex) => cardTemplate(stickers[stickerIndex - 1], forceCollected, { variant: "trade" }))
+    .join("");
+
+  const panel = container.closest(".trade-collection-panel");
+  updateTradeNavButtons(panel, stickerIndexes.length, startIndex);
+}
+
+function handleTradeNavClick(event) {
+  const button = event.target.closest("#trade-stage .trade-nav-button");
+  if (!button) {
+    return;
+  }
+
+  const panel = button.closest(".trade-collection-panel");
+  const container = panel?.querySelector(".trade-strickers-collection");
+  if (!container) {
+    return;
+  }
+
+  const stickerIndexes = JSON.parse(container.dataset.tradeItems || "[]");
+  const currentIndex = Number(container.dataset.tradeIndex || 0);
+  const direction = button.dataset.direction === "next" ? 1 : -1;
+  const nextIndex = Math.min(Math.max(currentIndex + direction, 0), Math.max(0, stickerIndexes.length - TRADE_PAGE_SIZE));
+
+  renderTradeCollection(
+    container,
+    stickerIndexes,
+    container.dataset.tradeForceCollected === "true",
+    nextIndex
+  );
 }
 
 function filteredStickers() {
@@ -349,22 +404,18 @@ async function handleStartTrade(data){
       method: "PUT",
       body: JSON.stringify({ username: data.username })
     });
-
-    console.log("Received: ", payload);
     
     switchTo("trade-stage");
 
     const ownContainer = document.getElementById("own-collection-trade-container");
+    const ownStickerIndexes = [...collected];
 
-    ownContainer.innerHTML = "";
-
-    ownContainer.innerHTML = [...collected].map((stickerIndex) => cardTemplate(stickers[stickerIndex-1], false)).join("");
+    renderTradeCollection(ownContainer, ownStickerIndexes, false, 0);
 
     const otherContainer = document.getElementById("other-collection-trade-container");
+    const otherStickerIndexes = payload.collected;
 
-    otherContainer.innerHTML = "";
-
-    otherContainer.innerHTML = payload.collected.map((stickerIndex) => cardTemplate(stickers[stickerIndex-1], true)).join("");
+    renderTradeCollection(otherContainer, otherStickerIndexes, true, 0);
 
     html5QrCode.stop().then((ignore) => {
     }).catch((err) => {
@@ -405,6 +456,8 @@ tradingStageButton.addEventListener("click", async () => {
 
   generateUsernameQRCode();
 });
+
+document.querySelector("#trade-stage").addEventListener("click", handleTradeNavClick);
 
 document.querySelector("#scanQRBtn").addEventListener("click", () => {
   startQRScanner();

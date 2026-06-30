@@ -663,6 +663,71 @@ h2 {
   background: #fff;
 }
 
+.trade-collection-panel .trade-strickers-collection {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 6px;
+  scrollbar-width: thin;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card {
+  width: min(96px, 100%);
+  min-height: 0;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card:hover,
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--accent-2);
+  box-shadow: 0 12px 24px rgba(31, 38, 51, 0.14);
+  outline: none;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card .card-number {
+  width: 28px;
+  height: 28px;
+  font-size: 0.66rem;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card .sticker-image {
+  min-height: 88px;
+  padding: 6px;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card .sticker-image img {
+  max-width: 100%;
+  max-height: 88px;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card .sticker-meta {
+  min-height: auto;
+  gap: 4px;
+  padding: 8px 6px 6px;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card .sticker-meta h3 {
+  font-size: 0.74rem;
+  line-height: 1.2;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card .sticker-meta p {
+  font-size: 0.7rem;
+}
+
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card .rarity {
+  padding: 2px 6px;
+  font-size: 0.58rem;
+}
+
 .sticker-card.is-missing {
   background:
     linear-gradient(135deg, rgba(31, 38, 51, 0.06) 25%, transparent 25%) 0 0 / 16px

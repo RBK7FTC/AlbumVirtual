@@ -86,7 +86,7 @@
         </div>
       </aside>
 
-      <section id="album-stage" class="album-stage stage is-hidden" aria-label="Sticker album">
+      <section id="album-stage" class="album-stage stage" aria-label="Sticker album">
         <header class="stage-header">
           <div>
             <p class="eyebrow">Stickers</p>
@@ -137,7 +137,7 @@
         <button id="generateQRBtn" class="primary-action">Generate QR code</button>
       </section>
 
-      <section id="trade-stage" class="trade-stage stage">
+      <section id="trade-stage" class="trade-stage stage is-hidden">
         <div class="trade-stage-header-card">
           <div>
             <p class="eyebrow">Trade</p>
@@ -146,9 +146,9 @@
         </div>
 
         <div class="trade-collection-panel">
-          <button class="trade-nav-button" type="button" aria-label="Previous stickers">‹</button>
+          <button class="trade-nav-button" type="button" data-direction="prev" aria-label="Previous stickers">‹</button>
           <div class="trade-strickers-collection" id="own-collection-trade-container"></div>
-          <button class="trade-nav-button" type="button" aria-label="Next stickers">›</button>
+          <button class="trade-nav-button" type="button" data-direction="next" aria-label="Next stickers">›</button>
           <p class="trade-collection-label">Your stickers</p>
         </div>
 
@@ -169,13 +169,9 @@
         </div>
 
         <div class="trade-collection-panel">
-          <button class="trade-nav-button" type="button" aria-label="Previous stickers">‹</button>
-          <div class="trade-strickers-collection" id="other-collection-trade-container">
-            <div class="trade-sticker-chip"><img src="assets/sticker-04.svg" alt="Other sticker"></div>
-            <div class="trade-sticker-chip"><img src="assets/sticker-04.svg" alt="Other sticker"></div>
-            <div class="trade-sticker-chip"><img src="assets/sticker-04.svg" alt="Other sticker"></div>
-          </div>
-          <button class="trade-nav-button" type="button" aria-label="Next stickers">›</button>
+          <button class="trade-nav-button" type="button" data-direction="prev" aria-label="Previous stickers">‹</button>
+          <div class="trade-strickers-collection" id="other-collection-trade-container"></div>
+          <button class="trade-nav-button" type="button" data-direction="next" aria-label="Next stickers">›</button>
           <p class="trade-collection-label">Other stickers</p>
         </div>
       </section>
