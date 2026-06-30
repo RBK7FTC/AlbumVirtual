@@ -379,9 +379,6 @@ async function handlePostTradeRequest(request, response) {
     if (request.method === "PUT") {
       try {
         const payload = await readJsonRequest(request);
-
-        console.log(payload);
-
         const data = await readData();
         const targetUser = data.users[payload.targetUser];
 
@@ -393,9 +390,6 @@ async function handlePostTradeRequest(request, response) {
           return;
         }
 
-        console.log("Collected: ", targetUser.collected);
-        console.log("otherStickerIndex: ", payload.otherStickerIndex);
-
         if(!targetUser.collected.includes(Number(payload.otherStickerIndex))){
           sendJson(response, 200, {
             state: false,
@@ -404,8 +398,6 @@ async function handlePostTradeRequest(request, response) {
           return;
         }
 
-        console.log("targetUser has stickerIndex: ", payload.otherStickerIndex);
-
         if(!auth.user.collected.includes(Number(payload.otherStickerIndex))){
           sendJson(response, 200, {
             state: false,
@@ -413,8 +405,6 @@ async function handlePostTradeRequest(request, response) {
           });
           return;
         }
-
-        console.log("user has stickerIndex: ", payload.ownStickerIndex);
 
         sendJson(response, 200, {
           state: true
