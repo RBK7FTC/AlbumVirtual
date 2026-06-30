@@ -347,9 +347,6 @@ async function handleStartTrade(request, response) {
     if (request.method === "PUT") {
       try {
         const payload = await readJsonRequest(request);
-
-        console.log(payload);
-
         const data = await readData();
         const user = data.users[payload.username];
         
@@ -364,6 +361,68 @@ async function handleStartTrade(request, response) {
 
       } catch {
         sendError(response, 400, "Invalid collection payload");
+      }
+
+      return;
+    }
+}
+
+async function handlePostTradeRequest(request, response) {
+
+    const auth = await getAuthenticatedUser(request);
+
+    if (!auth) {
+        sendError(response, 401, "Sign in required");
+        return;
+    }
+
+    if (request.method === "PUT") {
+      try {
+        const payload = await readJsonRequest(request);
+
+        console.log(payload);
+
+        const data = await readData();
+        const targetUser = data.users[payload.targetUser];
+
+        if(!targetUser){
+                    sendJson(response, 200, {
+            state: false,
+            error: "Target user not found"
+          });
+          return;
+        }
+
+        console.log("Collected: ", targetUser.collected);
+        console.log("otherStickerIndex: ", payload.otherStickerIndex);
+
+        if(!targetUser.collected.includes(Number(payload.otherStickerIndex))){
+          sendJson(response, 200, {
+            state: false,
+            error: "Target user does not have the required sticker"
+          });
+          return;
+        }
+
+        console.log("targetUser has stickerIndex: ", payload.otherStickerIndex);
+
+        if(!auth.user.collected.includes(Number(payload.otherStickerIndex))){
+          sendJson(response, 200, {
+            state: false,
+            error: "Current user does not have the required sticker"
+          });
+          return;
+        }
+
+        console.log("user has stickerIndex: ", payload.ownStickerIndex);
+
+        sendJson(response, 200, {
+          state: true
+        });
+
+      } catch(error) {
+        console.log(error);
+        sendError(response, 403, "Invalid collection payload");
       }
 
       return;
@@ -432,6 +491,11 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/start-trade") {
         await handleStartTrade(request, response);
+        return;
+    }
+
+    if (requestUrl.pathname === "/api/post-trade-request") {
+        await handlePostTradeRequest(request, response);
         return;
     }
 

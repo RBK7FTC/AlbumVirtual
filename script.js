@@ -128,7 +128,7 @@ function cardTemplate(sticker, forceCollected = false, options = {}) {
   const interactiveAttrs = options.variant === "trade" ? 'role="button" tabindex="0"' : "";
 
   return `
-    <article class="sticker-card ${stateClass} ${variantClass}" data-rarity="${sticker.rarity}" ${interactiveAttrs}>
+    <article class="sticker-card ${stateClass} ${variantClass}" data-rarity="${sticker.rarity}" data-sticker-index="${sticker.id}" ${interactiveAttrs}>
       <span class="card-number">#${String(sticker.id).padStart(2, "0")}</span>
       <div class="sticker-image">
         <img src="${sticker.image}" alt="${altText}" />
@@ -166,6 +166,63 @@ function renderTradeCollection(container, stickerIndexes, forceCollected = false
   container.innerHTML = visibleIndexes
     .map((stickerIndex) => cardTemplate(stickers[stickerIndex - 1], forceCollected, { variant: "trade" }))
     .join("");
+
+  const tradeStickers = container.querySelectorAll(".trade-card");
+  tradeStickers.forEach((tradeSticker) => {
+    if (tradeSticker.dataset.hasClickListener) {
+      return;
+    }
+
+    tradeSticker.dataset.hasClickListener = "true";
+    tradeSticker.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      const sourceImage = tradeSticker.querySelector("img");
+      if (!sourceImage) {
+        return;
+      }
+
+      const slot = container.id === "own-collection-trade-container"
+        ? document.querySelector(".trade-center-panel .trade-stickers-selection:first-child .trade-sticker-slot")
+        : document.querySelector(".trade-center-panel .trade-stickers-selection:last-child .trade-sticker-slot");
+
+      if (!slot) {
+        return;
+      }
+
+      slot.dataset.stickerIndex = tradeSticker.dataset.stickerIndex;
+
+      const clonedImage = sourceImage.cloneNode(true);
+      clonedImage.classList.add("trade-fly-image");
+      document.body.appendChild(clonedImage);
+
+      const sourceRect = tradeSticker.getBoundingClientRect();
+      const targetRect = slot.getBoundingClientRect();
+
+      clonedImage.style.position = "fixed";
+      clonedImage.style.left = `${sourceRect.left}px`;
+      clonedImage.style.top = `${sourceRect.top}px`;
+      clonedImage.style.width = `${sourceRect.width}px`;
+      clonedImage.style.height = `${sourceRect.height}px`;
+      clonedImage.style.zIndex = "2000";
+      clonedImage.style.pointerEvents = "none";
+      clonedImage.style.transition = "transform 0.45s ease, opacity 0.45s ease";
+      clonedImage.style.opacity = "1";
+
+      requestAnimationFrame(() => {
+        clonedImage.style.transform = `translate(${targetRect.left - sourceRect.left}px, ${targetRect.top - sourceRect.top}px) scale(0.65)`;
+        clonedImage.style.opacity = "0";
+      });
+
+      setTimeout(() => {
+        slot.innerHTML = "";
+        const finalImage = sourceImage.cloneNode(true);
+        finalImage.classList.add("trade-slot-image");
+        slot.appendChild(finalImage);
+        clonedImage.remove();
+      }, 450);
+    });
+  });
 
   const panel = container.closest(".trade-collection-panel");
   updateTradeNavButtons(panel, stickerIndexes.length, startIndex);
@@ -407,6 +464,8 @@ async function handleStartTrade(data){
     
     switchTo("trade-stage");
 
+    document.getElementById("trade-send-trade-button").dataset.username = data.username;
+
     const ownContainer = document.getElementById("own-collection-trade-container");
     const ownStickerIndexes = [...collected];
 
@@ -450,6 +509,38 @@ async function switchTo(targetId) {
 
   return transition.finished;   
 }
+
+document.getElementById("trade-send-trade-button").addEventListener("click", async () => {
+  try {
+    const sendTradeButton = document.getElementById("trade-send-trade-button");
+    if(!sendTradeButton) return;
+    const targetUsername = sendTradeButton.dataset.username;
+
+    const tradeSlots = document.getElementsByClassName("trade-sticker-slot");
+    if(!tradeSlots || tradeSlots.length != 2)
+      return;
+    const ownStickerIndex = tradeSlots[0].dataset.stickerIndex;
+    const otherStickerIndex = tradeSlots[1].dataset.stickerIndex;
+    
+    const data = await apiRequest("/api/post-trade-request", {
+      method: "PUT",
+      body: JSON.stringify({
+        targetUser: targetUsername,
+        ownStickerIndex: ownStickerIndex,
+        otherStickerIndex: otherStickerIndex  
+      })
+    });
+    
+    if(data.state == true){
+      await switchTo("trading-stage");
+
+      generateUsernameQRCode();
+    }
+
+  } catch (error) {
+    alert(error);
+  }
+});
 
 tradingStageButton.addEventListener("click", async () => {
   await switchTo("trading-stage");
