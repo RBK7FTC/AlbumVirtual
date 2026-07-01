@@ -15,10 +15,10 @@
         3,
         4,
         7,
-        8,
         9,
-        10,
-        12
+        7,
+        1,
+        8
       ],
       "createdAt": "2026-06-21T13:31:54.914Z",
       "updatedAt": "2026-07-01T14:26:17.391Z"
@@ -31,18 +31,12 @@
       },
       "isAdmin": false,
       "availablePacks": 0,
-      "tradeRequests": [
-        {
-          "ownStickerIndex": "4",
-          "otherStickerIndex": "3",
-          "username": "galo"
-        }
-      ],
+      "tradeRequests": [],
       "collected": [
-        1,
         2,
         4,
-        7
+        12,
+        10
       ],
       "createdAt": "2026-06-21T15:24:31.791Z",
       "updatedAt": "2026-06-21T15:24:31.791Z"

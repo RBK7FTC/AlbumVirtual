@@ -369,6 +369,45 @@ async function handleStartTrade(request, response) {
     }
 }
 
+function validateTradeRequest(tradeRequest, givesUser, wantsUser){
+  if(!givesUser.collected.includes(Number(tradeRequest.givesStickerIndex))){
+    sendJson(response, 200, {
+      state: false,
+      error: "Target user does not have the required sticker"
+    });
+    return false;
+  }
+
+  if(!wantsUser.collected.includes(Number(tradeRequest.wantsStickerIndex))){
+    sendJson(response, 200, {
+      state: false,
+      error: "Current user does not have the required sticker"
+    });
+    return false;
+  }
+
+  //Prohibit trade already owned stickers
+  /*
+  if(targetUser.collected.includes(Number(tradeRequest.ownStickerIndex))){
+    sendJson(response, 200, {
+      state: false,
+      error: "Target user already has the given sticker"
+    });
+    return;
+  }
+
+  if(user.collected.includes(Number(tradeRequest.otherStickerIndex))){
+    sendJson(response, 200, {
+      state: false,
+      error: "Current user already has the requested sticker"
+    });
+    return;
+  }
+  */
+
+  return true;
+}
+
 async function handlePostTradeRequest(request, response) {
 
     const auth = await getAuthenticatedUser(request);
@@ -392,44 +431,13 @@ async function handlePostTradeRequest(request, response) {
           return;
         }
 
-        if(!targetUser.collected.includes(Number(payload.otherStickerIndex))){
-          sendJson(response, 200, {
-            state: false,
-            error: "Target user does not have the required sticker"
-          });
+        if(!validateTradeRequest(payload, auth.user, targetUser)){
           return;
         }
-
-        if(!auth.user.collected.includes(Number(payload.ownStickerIndex))){
-          sendJson(response, 200, {
-            state: false,
-            error: "Current user does not have the required sticker"
-          });
-          return;
-        }
-
-        //Prohibit trade already owned stickers
-        /*
-        if(targetUser.collected.includes(Number(payload.ownStickerIndex))){
-          sendJson(response, 200, {
-            state: false,
-            error: "Target user already has the given sticker"
-          });
-          return;
-        }
-
-        if(auth.user.collected.includes(Number(payload.otherStickerIndex))){
-          sendJson(response, 200, {
-            state: false,
-            error: "Current user already has the requested sticker"
-          });
-          return;
-        }
-        */
 
         auth.data.users[payload.targetUser].tradeRequests.push({
-          ownStickerIndex: payload.otherStickerIndex,
-          otherStickerIndex: payload.ownStickerIndex,
+          givesStickerIndex: payload.givesStickerIndex,
+          wantsStickerIndex: payload.wantsStickerIndex,
           username: auth.username
         });
 
@@ -465,6 +473,121 @@ async function handleRequireTradeRequests(request, response){
     sendError(response, 403, "server error");
   }
   return;
+}
+
+function compareTradeRequests(t1, t2){
+
+  if(t1.username != t2.username){
+    console.log("Username mismatch");
+    return false;
+  }
+
+  if(t1.givesStickerIndex != t2.givesStickerIndex){
+    console.log("givesStickerIndex mismatch");
+    return false;
+  }
+
+  if(t1.wantsStickerIndex != t2.wantsStickerIndex){
+    console.log("wantsStickerIndex mismatch");
+    return false;
+  }
+
+  return true;
+}
+
+async function handleResponseToTradeRequests(request, response) {
+  
+    const auth = await getAuthenticatedUser(request);
+
+    if (!auth) {
+        sendError(response, 401, "Sign in required");
+        return;
+    }
+
+    if (request.method === "PUT") {
+      try {
+        const payload = await readJsonRequest(request);
+        const data = await readData();
+        const targetUser = data.users[payload.tradeRequest.username];
+
+        if(!targetUser){
+          sendJson(response, 200, {
+            state: false,
+            error: "Target user not found"
+          });
+          return;
+        }
+
+        if(auth.user.tradeRequests.length <= payload.tradeRequestIndex){
+          sendJson(response, 200, {
+            state: false,
+            error: "Trade request out of bounds"
+          });
+          return; 
+        }
+
+        if(!compareTradeRequests(auth.user.tradeRequests[payload.tradeRequestIndex], payload.tradeRequest)){
+          sendJson(response, 200, {
+            state: false,
+            error: "Trade request not found"
+          });
+          return;  
+        }
+
+        if(!validateTradeRequest(payload.tradeRequest, targetUser, auth.user)){
+          return;
+        }
+
+        let dataMyUser = auth.data.users[auth.username];
+        let dataOtherUser = auth.data.users[payload.tradeRequest.username];
+
+        auth.data.users[auth.username].tradeRequests.splice(payload.tradeRequestIndex, 1);
+
+        if(payload.accepted){
+          {
+            const index = dataMyUser.collected.indexOf(Number(payload.tradeRequest.wantsStickerIndex));
+
+            if (index > -1) {
+              dataMyUser.collected.splice(index, 1);
+            } else {
+              console.log("ERROR1");
+              return;
+            }
+          }
+
+          {
+            const index = dataOtherUser.collected.indexOf(Number(payload.tradeRequest.givesStickerIndex));
+
+            if (index > -1) {
+              dataOtherUser.collected.splice(index, 1);
+            } else {
+              console.log("ERROR2");
+              return;
+            }
+          }
+
+          dataMyUser.collected.push(Number(payload.tradeRequest.givesStickerIndex));
+
+          dataOtherUser.collected.push(Number(payload.tradeRequest.wantsStickerIndex));
+        }
+
+        await writeData(auth.data);
+
+        //Send collection update to otherUser: payload.tradeRequest.username
+       
+        sendJson(response, 200, {
+          state: true,
+          tradeRequests: auth.data.users[auth.username].tradeRequests,
+          collection: auth.data.users[auth.username].collected
+        });
+
+      } catch(error) {
+        console.log(error);
+        sendError(response, 403, "server error");
+      }
+
+      return;
+    }
 }
 
 async function serveStaticFile(request, response) {
@@ -539,6 +662,11 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/require-tradeRequests") {
         await handleRequireTradeRequests(request, response);
+        return;
+    }
+
+    if (requestUrl.pathname === "/api/response-to-trade-request") {
+        await handleResponseToTradeRequests(request, response);
         return;
     }
 

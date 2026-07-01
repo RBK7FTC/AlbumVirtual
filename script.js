@@ -129,6 +129,18 @@ function cardTemplate(sticker, forceCollected = false, options = {}) {
   const altText = isCollected ? sticker.name : `Missing sticker ${sticker.id}`;
   const variantClass = options.variant === "trade" ? "trade-card" : "";
   const interactiveAttrs = options.variant === "trade" ? 'role="button" tabindex="0"' : "";
+  const isMinimal = options.minimal === true;
+
+  if (isMinimal) {
+    return `
+      <article class="sticker-card sticker-card--minimal ${stateClass}" data-rarity="${sticker.rarity}" data-sticker-index="${sticker.id}">
+        <div class="sticker-image">
+          <img src="${sticker.image}" alt="${altText}" />
+        </div>
+        <span class="card-number">#${String(sticker.id).padStart(2, "0")}</span>
+      </article>
+    `;
+  }
 
   return `
     <article class="sticker-card ${stateClass} ${variantClass}" data-rarity="${sticker.rarity}" data-sticker-index="${sticker.id}" ${interactiveAttrs}>
@@ -360,6 +372,8 @@ function setSignedOutState(message = "") {
 }
 
 async function startAlbum() {
+  switchTo("album-stage");
+
   if (!authToken) {
     setSignedOutState();
     return;
@@ -383,6 +397,7 @@ async function startAlbum() {
 }
 
 authForm.addEventListener("submit", (event) => {
+  switchTo("album-stage");
   event.preventDefault();
   authenticate("/api/sessions");
 });
@@ -540,15 +555,15 @@ document.getElementById("trade-send-trade-button").addEventListener("click", asy
     const tradeSlots = document.getElementsByClassName("trade-sticker-slot");
     if(!tradeSlots || tradeSlots.length != 2)
       return;
-    const ownStickerIndex = tradeSlots[0].dataset.stickerIndex;
-    const otherStickerIndex = tradeSlots[1].dataset.stickerIndex;
+    const givesStickerIndex = tradeSlots[0].dataset.stickerIndex;
+    const wantsStickerIndex = tradeSlots[1].dataset.stickerIndex;
     
     const data = await apiRequest("/api/post-trade-request", {
       method: "PUT",
       body: JSON.stringify({
         targetUser: targetUsername,
-        ownStickerIndex: ownStickerIndex,
-        otherStickerIndex: otherStickerIndex  
+        givesStickerIndex: givesStickerIndex,
+        wantsStickerIndex: wantsStickerIndex  
       })
     });
     
@@ -564,17 +579,22 @@ document.getElementById("trade-send-trade-button").addEventListener("click", asy
 });
 
 async function switchToTradingStage(){
-  const data = await apiRequest("/api/require-tradeRequests");
+  try{
+    const data = await apiRequest("/api/require-tradeRequests");
 
-  await switchTo("trading-stage");
+    await switchTo("trading-stage");
 
-  const span = notificationsBtn.querySelector("span");
-  span.style.display = data.length ? "flex" : "none";
-  span.innerHTML = data.length;
-  tradeRequests = data;
-  sessionStorage.setItem("album-tradeRequests", tradeRequests);
+    const span = notificationsBtn.querySelector("span");
+    span.style.display = data.length ? "flex" : "none";
+    span.innerHTML = data.length;
+    tradeRequests = data;
+    sessionStorage.setItem("album-tradeRequests", tradeRequests);
 
-  generateUsernameQRCode();
+    generateUsernameQRCode();
+  } catch(error){
+    alert(error);
+  }
+
 }
 
 tradingStageButton.addEventListener("click", async () => {
@@ -654,22 +674,71 @@ getPackButton.addEventListener("click", async () => {
 
     notificationsDropdown.innerHTML = "<div style='font-weight: bold; border-bottom: 1px solid #eee; margin-bottom: 8px; padding-bottom: 4px;'>Notifications</div>";
 
+    if(tradeRequests.length == 0){
+      notificationsDropdown.innerHTML += " <div class='notifications-dropdown-item'>No available notifications</div>";
+    }
+
     for(let i=0; i<tradeRequests.length; i++){
+      const givesSticker = stickers[tradeRequests[i].givesStickerIndex - 1];
+      const wantsSticker = stickers[tradeRequests[i].wantsStickerIndex - 1];
+
       notificationsDropdown.innerHTML += `
-        <div class="notifications-dropdown-item">${tradeRequests[i].username}: Gives:${tradeRequests[i].otherStickerIndex} Receives:${tradeRequests[i].ownStickerIndex} </div>
+        <div class="notifications-dropdown-item" data-trade-request-index="${i}">
+          <div class="notification-content">
+            <strong>${tradeRequests[i].username}</strong>
+            <div class="notification-stickers">
+              ${givesSticker ? cardTemplate(givesSticker, true, { minimal: true }) : ""}
+              ${wantsSticker ? cardTemplate(wantsSticker, false, { minimal: true }) : ""}
+            </div>
+          </div>
+          <div class="notification-actions">
+            <button type="button" class="notification-action-btn notification-accept-btn" data-action="accept">Accept</button>
+            <button type="button" class="notification-action-btn notification-reject-btn" data-action="reject">Reject</button>
+          </div>
+        </div>
       `;
     }
 
     const targetDivs = document.getElementsByClassName('notifications-dropdown-item');
 
     for(const div of targetDivs){
-      div.addEventListener('click', function(event) {
-        console.log('Notification item clicked:', this.textContent);
+      const actionButtons = div.querySelectorAll('.notification-action-btn');
+      actionButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+          event.stopPropagation();
 
-        const dropdown = document.querySelector('div#notificationsDropdown');
-        if (dropdown) {
-          dropdown.style.display = 'none';
-        }
+          const dropdown = document.querySelector('div#notificationsDropdown');
+          if (dropdown) {
+            dropdown.style.display = 'none';
+          }
+
+          let responseAccepted = false;
+          if(button.dataset.action === "accept"){
+            responseAccepted = true;
+          } else if(button.dataset.action === "reject"){
+            responseAccepted = false;
+          } else {
+            return;
+          }
+
+          const data = await apiRequest("/api/response-to-trade-request", {
+            method: "PUT",
+            body: JSON.stringify({ 
+              accepted: responseAccepted,
+              tradeRequest: tradeRequests[div.dataset.tradeRequestIndex],
+              tradeRequestIndex: div.dataset.tradeRequestIndex })
+          });
+
+          if(data.state == true){
+            tradeRequests = data.tradeRequests;
+            collected = new Set(data.collection);
+
+            //update localStorage?
+            renderAlbum();
+            switchToTradingStage();
+          }
+
+        });
       });
     }
     

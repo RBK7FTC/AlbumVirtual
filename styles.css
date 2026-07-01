@@ -343,9 +343,107 @@ input {
 
 .notifications-dropdown-item{
   font-size: 14px;
-  display: block;
-  font-variant: normal;
-  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  background: #f8fafc;
+  margin-bottom: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.notifications-dropdown-item:last-child {
+  margin-bottom: 0;
+}
+
+.notifications-dropdown-item .notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notifications-dropdown-item .notification-content span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.notifications-dropdown-item .notification-stickers {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.notifications-dropdown-item .sticker-card--minimal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 64px;
+  min-height: auto;
+  padding: 4px;
+  overflow: visible;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.notifications-dropdown-item .sticker-card--minimal .sticker-image {
+  width: 100%;
+  min-height: auto;
+  padding: 0;
+}
+
+.notifications-dropdown-item .sticker-card--minimal .sticker-image img {
+  width: 56px;
+  height: 56px;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: 1;
+  object-fit: contain;
+  border-radius: 6px;
+  filter: none;
+}
+
+.notifications-dropdown-item .sticker-card--minimal .card-number {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  font-size: 9px;
+  margin-top: 0;
+}
+
+.notifications-dropdown-item .notification-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.notifications-dropdown-item .notification-action-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.notifications-dropdown-item .notification-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.notifications-dropdown-item .notification-accept-btn {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.notifications-dropdown-item .notification-reject-btn {
+  background: #ef4444;
+  color: #ffffff;
 }
 
 .brand-lockup {

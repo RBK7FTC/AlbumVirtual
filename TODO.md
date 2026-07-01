@@ -1,9 +1,8 @@
 - Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
-- Add QR lector to obtain packs.
+- Add QR to obtain packs.
 - Think on other ways to obtain packs.
 - Automatically get a sticker of you team.
 - Render team image next to username on leaderboard.
 - Add team logo image to album stage.
-- Add trade system.
-- Give repeated cards? or avoid it?
-- Sing-in should switchTo album-stage.
+- Trigger trade request notifications (received, accepted, rejected) on clients asynchronously.
+- #ID of sticker isn't rendered when sticker img is rendered.
