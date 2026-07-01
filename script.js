@@ -24,6 +24,7 @@ let activeTeam = 0;
 let authToken = sessionStorage.getItem("album-token") || "";
 let currentUser = sessionStorage.getItem("album-user") || "";
 let availablePacks = sessionStorage.getItem("album-availablePacks");
+let tradeRequests = sessionStorage.getItem("album-tradeRequests");
 
 const TRADE_PAGE_SIZE = 4;
 
@@ -109,9 +110,11 @@ async function authenticate(path) {
     adminTools.classList.toggle("is-hidden", !payload.user.isAdmin);
     collected = new Set(payload.collected);
     availablePacks = payload.user.availablePacks;
+    tradeRequests = payload.user.tradeRequests;
     sessionStorage.setItem("album-token", authToken);
     sessionStorage.setItem("album-user", currentUser);
     sessionStorage.setItem("album-availablePacks", availablePacks);
+    sessionStorage.setItem("album-tradeRequests", tradeRequests);
     passwordInput.value = "";
     setSignedInState();
     renderAlbum();
@@ -196,8 +199,23 @@ function renderTradeCollection(container, stickerIndexes, forceCollected = false
       clonedImage.classList.add("trade-fly-image");
       document.body.appendChild(clonedImage);
 
-      const sourceRect = tradeSticker.getBoundingClientRect();
+      const sourceImg = tradeSticker.querySelector('img');
+      const sourceRect = sourceImg.getBoundingClientRect();
       const targetRect = slot.getBoundingClientRect();
+      
+      //console.log(sourceImage);
+      //console.log(slot);
+
+      const scaleFactor = 1.5;
+      const finalSourceSize = [sourceRect.width * scaleFactor, sourceRect.height * scaleFactor];
+      const translation = [
+        targetRect.left - sourceRect.left + (targetRect.width / 2) - (finalSourceSize[0] / 2),
+        targetRect.top - sourceRect.top - (targetRect.height / 2) + (finalSourceSize[1] / 2)
+      ];
+
+      //console.log(sourceRect);
+      //console.log(targetRect);
+      //console.log(translation);
 
       clonedImage.style.position = "fixed";
       clonedImage.style.left = `${sourceRect.left}px`;
@@ -210,8 +228,8 @@ function renderTradeCollection(container, stickerIndexes, forceCollected = false
       clonedImage.style.opacity = "1";
 
       requestAnimationFrame(() => {
-        clonedImage.style.transform = `translate(${targetRect.left - sourceRect.left}px, ${targetRect.top - sourceRect.top}px) scale(0.65)`;
-        clonedImage.style.opacity = "0";
+        clonedImage.style.transform = `translate(${translation[0]}px, ${translation[1]}px) scale(${scaleFactor})`;
+        clonedImage.style.opacity = "0.4";
       });
 
       setTimeout(() => {
@@ -355,9 +373,11 @@ async function startAlbum() {
     authToken = "";
     currentUser = "";
     availablePacks = 0;
+    tradeRequests = [];
     sessionStorage.removeItem("album-token");
     sessionStorage.removeItem("album-user");
     sessionStorage.removeItem("album-availablePacks");
+    sessionStorage.removeItem("album-tradeRequests");
     setSignedOutState("Session expired");
   }
 }
@@ -377,6 +397,7 @@ document.querySelector("#logout-button").addEventListener("click", async () => {
   } finally {
     authToken = "";
     currentUser = "";
+    sessionStorage.removeItem("album-tradeRequests");
     sessionStorage.removeItem("album-availablePacks");
     sessionStorage.removeItem("album-token");
     sessionStorage.removeItem("album-user");
@@ -532,9 +553,9 @@ document.getElementById("trade-send-trade-button").addEventListener("click", asy
     });
     
     if(data.state == true){
-      await switchTo("trading-stage");
-
-      generateUsernameQRCode();
+      switchToTradingStage();
+    } else {
+      alert(data.error)
     }
 
   } catch (error) {
@@ -542,10 +563,22 @@ document.getElementById("trade-send-trade-button").addEventListener("click", asy
   }
 });
 
-tradingStageButton.addEventListener("click", async () => {
+async function switchToTradingStage(){
+  const data = await apiRequest("/api/require-tradeRequests");
+
   await switchTo("trading-stage");
 
+  const span = notificationsBtn.querySelector("span");
+  span.style.display = data.length ? "flex" : "none";
+  span.innerHTML = data.length;
+  tradeRequests = data;
+  sessionStorage.setItem("album-tradeRequests", tradeRequests);
+
   generateUsernameQRCode();
+}
+
+tradingStageButton.addEventListener("click", async () => {
+  switchToTradingStage();
 });
 
 document.querySelector("#trade-stage").addEventListener("click", handleTradeNavClick);
@@ -613,7 +646,6 @@ getPackButton.addEventListener("click", async () => {
 });
 
 {
-  const notificationsCount = 2;
 
   const toggleDropdown = (e) => {
     e.stopPropagation();
@@ -622,9 +654,9 @@ getPackButton.addEventListener("click", async () => {
 
     notificationsDropdown.innerHTML = "<div style='font-weight: bold; border-bottom: 1px solid #eee; margin-bottom: 8px; padding-bottom: 4px;'>Notifications</div>";
 
-    for(let i=0; i<notificationsCount; i++){
+    for(let i=0; i<tradeRequests.length; i++){
       notificationsDropdown.innerHTML += `
-        <div class="notifications-dropdown-item">No new notifications</div>
+        <div class="notifications-dropdown-item">${tradeRequests[i].username}: Gives:${tradeRequests[i].otherStickerIndex} Receives:${tradeRequests[i].ownStickerIndex} </div>
       `;
     }
 

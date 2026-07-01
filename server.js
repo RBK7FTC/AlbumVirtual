@@ -106,7 +106,8 @@ function sanitizeCollection(cardIds) {
 function publicUser(user) {
   return { username: user.username,
     isAdmin: !!user.isAdmin,
-    availablePacks: user.availablePacks ?? 0
+    availablePacks: user.availablePacks ?? 0,
+    tradeRequests: user.tradeRequests
   };
 }
 
@@ -182,6 +183,7 @@ async function handleUsersApi(request, response) {
       password: hashPassword(password),
       isAdmin: false,
       availablePacks: 1,
+      tradeRequests: [],
       collected: initialCollected,
       createdAt: now,
       updatedAt: now
@@ -398,7 +400,7 @@ async function handlePostTradeRequest(request, response) {
           return;
         }
 
-        if(!auth.user.collected.includes(Number(payload.otherStickerIndex))){
+        if(!auth.user.collected.includes(Number(payload.ownStickerIndex))){
           sendJson(response, 200, {
             state: false,
             error: "Current user does not have the required sticker"
@@ -406,17 +408,63 @@ async function handlePostTradeRequest(request, response) {
           return;
         }
 
+        //Prohibit trade already owned stickers
+        /*
+        if(targetUser.collected.includes(Number(payload.ownStickerIndex))){
+          sendJson(response, 200, {
+            state: false,
+            error: "Target user already has the given sticker"
+          });
+          return;
+        }
+
+        if(auth.user.collected.includes(Number(payload.otherStickerIndex))){
+          sendJson(response, 200, {
+            state: false,
+            error: "Current user already has the requested sticker"
+          });
+          return;
+        }
+        */
+
+        auth.data.users[payload.targetUser].tradeRequests.push({
+          ownStickerIndex: payload.otherStickerIndex,
+          otherStickerIndex: payload.ownStickerIndex,
+          username: auth.username
+        });
+
+        await writeData(auth.data);
+
         sendJson(response, 200, {
           state: true
         });
 
       } catch(error) {
         console.log(error);
-        sendError(response, 403, "Invalid collection payload");
+        sendError(response, 403, "server error");
       }
 
       return;
     }
+}
+
+async function handleRequireTradeRequests(request, response){
+  const auth = await getAuthenticatedUser(request);
+
+  if (!auth) {
+      sendError(response, 401, "Sign in required");
+      return;
+  }
+
+  try {
+
+    sendJson(response, 200, auth.user.tradeRequests);
+
+  } catch(error) {
+    console.log(error);
+    sendError(response, 403, "server error");
+  }
+  return;
 }
 
 async function serveStaticFile(request, response) {
@@ -486,6 +534,11 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/post-trade-request") {
         await handlePostTradeRequest(request, response);
+        return;
+    }
+
+    if (requestUrl.pathname === "/api/require-tradeRequests") {
+        await handleRequireTradeRequests(request, response);
         return;
     }
 

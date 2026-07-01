@@ -6,3 +6,4 @@
 - Add team logo image to album stage.
 - Add trade system.
 - Give repeated cards? or avoid it?
+- Sing-in should switchTo album-stage.
