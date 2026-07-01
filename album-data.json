@@ -7,8 +7,11 @@
         "hash": "5a45e93f798e9e527a94a35344d3e252fedd18b9de2297f13dbdc6b7a416b2dc21779943e24dca84a91dfd84570062c4a199dedf656641c1696a1a216f0f31a2"
       },
       "isAdmin": true,
-      "availablePacks": 1,
+      "availablePacks": 6,
       "tradeRequests": [],
+      "scannedQRCodes": [
+        "3OZA6ZF0LJL5XGGZIP32LM73806Q32OC"
+      ],
       "collected": [
         1,
         2,
@@ -30,13 +33,16 @@
         "hash": "9879fca6bab3f83e4a05f6e785dfd882591e01b4f84994145fe49df6efd5e9fe73eec39c1909846e254abd9ab90485ddac6a50d02b45f836095bc692de13bded"
       },
       "isAdmin": false,
-      "availablePacks": 0,
+      "availablePacks": 2,
       "tradeRequests": [
         {
           "givesStickerIndex": "4",
           "wantsStickerIndex": "12",
           "username": "galo"
         }
+      ],
+      "scannedQRCodes": [
+        "3OZA6ZF0LJL5XGGZIP32LM73806Q32OC"
       ],
       "collected": [
         2,
@@ -56,6 +62,7 @@
       "isAdmin": false,
       "availablePacks": 1,
       "tradeRequests": [],
+      "scannedQRCodes": [],
       "collected": [
         1,
         2,
@@ -74,6 +81,7 @@
       "isAdmin": false,
       "availablePacks": 6,
       "tradeRequests": [],
+      "scannedQRCodes": [],
       "collected": [
         1,
         2,
@@ -100,6 +108,7 @@
       "isAdmin": false,
       "availablePacks": 0,
       "tradeRequests": [],
+      "scannedQRCodes": [],
       "collected": [
         1,
         2,
@@ -123,6 +132,7 @@
       "isAdmin": false,
       "availablePacks": 1,
       "tradeRequests": [],
+      "scannedQRCodes": [],
       "collected": [],
       "createdAt": "2026-06-29T16:50:24.139Z",
       "updatedAt": "2026-06-29T16:50:24.139Z"

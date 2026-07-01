@@ -425,26 +425,26 @@ document.querySelector("#logout-button").addEventListener("click", async () => {
 const adminTools = document.querySelector("#admin-tools");
 
 openPackButton.addEventListener("click", async () => {
-    try{
-        if (!authToken) return;
+  try{
+    if (!authToken) return;
 
-        const payload = await apiRequest(
-            "/api/open-pack",
-            { method: "POST" }
-        );
+    const payload = await apiRequest(
+      "/api/open-pack",
+      { method: "POST" }
+    );
 
-        availablePacks = payload.availablePacks;
+    availablePacks = payload.availablePacks;
 
-        updatePackUI();
+    updatePackUI();
 
-          const pack = pickPack();
-          pack.forEach((sticker) => collected.add(sticker.id));
-          packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
-          await persistAndRender();
-          packDialog.showModal();
-    } catch(error) {
-        authMessage.textContent = error.message;
-    }
+    const pack = pickPack();
+    pack.forEach((sticker) => collected.add(sticker.id));
+    packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
+    await persistAndRender();
+    packDialog.showModal();
+  } catch(error) {
+    authMessage.textContent = error.message;
+  }
 });
 
 var html5QrCode;
@@ -469,10 +469,33 @@ function startQRScanner(){
     const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
       const data = JSON.parse(decodedText);
       
+      html5QrCode.pause();
+      setTimeout(() => {
+        html5QrCode.resume();
+      }, 1000);
+
       if(Object.hasOwn(data, 'username')){
         handleStartTrade(data);
       } else if(Object.hasOwn(data, 'code')){
+        const res = await apiRequest("/api/qrCodeScanned", {
+          method: "PUT",
+          body: JSON.stringify({ code: data.code })
+        });
 
+        console.log(res);
+
+        if(res.state == false){
+          if(res.codeID == -1){
+            console.error("Invalid QR Code: ", data.code);
+          } else {
+            console.error("QR Code: ", res.codeID ," already scanned");
+          }
+          return;
+        }
+
+
+        availablePacks = res.availablePacks;
+        updatePackUI();
       }
  
     };
@@ -484,7 +507,7 @@ function startQRScanner(){
         config, 
         qrCodeSuccessCallback
     ).catch((err) => {
-        console.error("Unable to start scanning", err);
+        alert("Unable to start scanning", err);
     });
 }
 

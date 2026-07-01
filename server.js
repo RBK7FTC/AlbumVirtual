@@ -10,6 +10,59 @@ const dataPath = path.join(root, "album-data.json");
 const initialCollected = [];
 const maxStickerId = 12;
 const sessions = new Map();
+const masterQRCode = "WIWIWIWIWIWIWIWIWIWIWIWIWI";
+const packQRCodes = [
+  "3OZA6ZF0LJL5XGGZIP32LM73806Q32OC",
+  "NCZOQXHX2S0EXTJGPRYDPBM8HNPLFVFU",
+  "472GCE7SL2Z6WWP9ZXOID1B9QHREG7I4",
+  "QIK4VTJ7S58VSN59USGZOJFUSLF4L0QM",
+  "7MNRVW9XRHB8NB2O08L0IAHE1E4MF1W2",
+  "64BYIIGYX1FKLF6P53CZAOYU6R9NNTYK",
+  "PEWJTNFEVEM6LBJ6NPOZTQ98042YH9OM",
+  "PD6MUSWGAKV9Q0AZOC5IMFM13O3G6FBK",
+  "2C35MH26B0CALSRQQDHQUN9MIG9V249L",
+  "LI73L2JREVILB25BNX6DM8FU76XM653C",
+  "QJSVF5MXV9N9ZH4OR2N2XJF3EX2VMFNN",
+  "APWCMT33N0ML6VFX9E2BA5PYJPPK50OV",
+  "KLNK8FGIPLIPDWC5QTJGTGXW5KBER2RD",
+  "JD0BLXXGG36JDBUHM7UT0WHNG6A7T2FC",
+  "ONOIOWN9T7DPC4J11SMG82X5J6FZ5IJT",
+  "MZB9RM3SWQOC2X8WCSEIP809TP0QOXN8",
+  "UK09D4NXA5LK60R3GB1Y1ZAOK6AHX0CA",
+  "1X2XPGPSPN8TWK6P2Q3NSY5FMWQ17CMF",
+  "OG20SGDHN7QZP3EEKA43LH2M3NJOFANO",
+  "QCU4DTFWJOZE6JUQ901DXEIM9FDB9QUG",
+  "XZ4O7VGRNYCWKE75TPWLVNXIGS2NTXUR",
+  "UBBU6SU7IAAKNJVEIGIYW0JERS8RNHYL",
+  "J8QRJNC38QGWZ0B3MHWLD2J1XG8BQLW6",
+  "CBPWIVC5N1CRY6JWUTPZAIEK9KGB01SS",
+  "WI0Z42OONQ1LRJTZMHHQ47BY8NYTCVQP",
+  "AW36K6P7NBBMUBHV50YN7GPQNLV83YYX",
+  "VMAL6BP0K24WWQXE2L0BYYYVS8K3WLVR",
+  "EF7FZEJTCA71CJWFHKSLOPIFRLRAQDNS",
+  "HR4OZ4UE8E7NKVR7F2YT5U6VO1JKAGSK",
+  "9T39KELF54X0E00XMCZ08VVAMO7RNM3Q",
+  "CJ18RY6LQFWKPTEJKFJ6ZLAVUOR26638",
+  "ITNKHUXILDQCB0IVEE1JAABLOABJAEYK",
+  "J35I7O5TB71W4292ZAFPSBU2EL2SKSU9",
+  "PLI8G5AH6ONRUPD2GB8A58GONMYU1TDZ",
+  "3Q10UW1GGHYI5M1POMAAV7O41KTO80UW",
+  "SSL660RKDB0X7M8V150A4LYTODL9HE52",
+  "09HKO3375O4WX9FA492NNY3582PQ2CGI",
+  "K1SYYGC4EEORVHMWLHB2H9XMJ9AOWR0M",
+  "7CX25IP59BTR3XKLKW9CAWD9VFMBJ81L",
+  "7665K5RQJ7WKH0NDN8CC6I2FOR02Z0YQ",
+  "IZR1102QBRG3HOM7ZTJG23M3A0L7GWKL",
+  "Q8T59V2CLOL6JHN0TZNQSFSRQHIUD6WM",
+  "NLN4K6DPL9LTM66KDI7JAR2UA4UL471G",
+  "DVTWLL3PQ95JL4YQDKLJHQIDRU8JA77Z",
+  "XD01X1P6L7WVBO1W3PKPFKLI4CVZ9K8V",
+  "EFY94QZXEO9DS3DFWPR8O2NYUOCKKCAH",
+  "ZXB6MILJ6RHQRCAHP6AOH7J05C13894D",
+  "CZ9W6Q9PYKOMM5Y9LTQUIEG4ZP6THGHN",
+  "KV2BJF510A218QOUQS8P3MLUIB4EQ8NC",
+  "QSZTYMUMWG2XX61QUX1BLHFV5SXS6OK8"
+];
 
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",
@@ -590,6 +643,58 @@ async function handleResponseToTradeRequests(request, response) {
     }
 }
 
+async function handleQRCodeScanned(request, response) {
+  const auth = await getAuthenticatedUser(request);
+
+  if (!auth) {
+      sendError(response, 401, "Sign in required");
+      return;
+  }
+
+  if (request.method === "PUT") {
+    try {
+      const payload = await readJsonRequest(request);
+      const data = await readData();
+
+      const codeIndex = packQRCodes.indexOf(payload.code);
+      const isMasterQRCode = masterQRCode === payload.code;
+
+      if(codeIndex == -1 && !isMasterQRCode){
+        sendJson(response, 200, {
+          state: false,
+          availablePacks: auth.user.availablePacks,
+          codeID: codeIndex
+        });
+        return;
+      }
+
+      if(auth.user.scannedQRCodes.includes(payload.code) && !isMasterQRCode){
+        sendJson(response, 200, {
+          state: false,
+          availablePacks: auth.user.availablePacks,
+          codeID: codeIndex
+        });
+        return;
+      }
+
+      if(!isMasterQRCode)
+        auth.user.scannedQRCodes.push(payload.code);
+      auth.user.availablePacks++;
+
+      await writeData(auth.data);
+      
+      sendJson(response, 200, {
+        state: true,
+        availablePacks: auth.user.availablePacks,
+        codeID: codeIndex
+      });
+    }catch(error){
+      console.log(error);
+      sendError(response, 403, "server error");
+    }
+  }
+}
+
 async function serveStaticFile(request, response) {
   const requestUrl = new URL(request.url, `http://${request.headers.host}`);
   const pathname = requestUrl.pathname === "/" ? "/index.html" : requestUrl.pathname;
@@ -636,38 +741,43 @@ const server = http.createServer(async (request, response) => {
     }
 
     if (requestUrl.pathname === "/api/open-pack") {
-        await handleOpenPackApi(request, response);
-        return;
+      await handleOpenPackApi(request, response);
+      return;
     }
 
     if (requestUrl.pathname === "/api/get-pack") {
-        await handleGetPackApi(request, response);
-        return;
+      await handleGetPackApi(request, response);
+      return;
     }
 
     if (requestUrl.pathname === "/api/get-leaderboard") {
-        await handleGetLeaderboard(request, response);
-        return;
+      await handleGetLeaderboard(request, response);
+      return;
     }
 
     if (requestUrl.pathname === "/api/start-trade") {
-        await handleStartTrade(request, response);
-        return;
+      await handleStartTrade(request, response);
+      return;
     }
 
     if (requestUrl.pathname === "/api/post-trade-request") {
-        await handlePostTradeRequest(request, response);
-        return;
+      await handlePostTradeRequest(request, response);
+      return;
     }
 
     if (requestUrl.pathname === "/api/require-tradeRequests") {
-        await handleRequireTradeRequests(request, response);
-        return;
+      await handleRequireTradeRequests(request, response);
+      return;
     }
 
     if (requestUrl.pathname === "/api/response-to-trade-request") {
-        await handleResponseToTradeRequests(request, response);
-        return;
+      await handleResponseToTradeRequests(request, response);
+      return;
+    }
+
+    if (requestUrl.pathname === "/api/qrCodeScanned") {
+      await handleQRCodeScanned(request, response);
+      return;
     }
 
     await serveStaticFile(request, response);

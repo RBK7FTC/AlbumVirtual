@@ -1,8 +1,8 @@
 **Asyncrhonous server updates**
-- Trigger trade request notifications (received, accepted, rejected) on clients asynchronously.
+- Trigger animations when trade request (received, accepted, rejected) on clients asynchronously.
 
 **Front-end style**
-- .
+- Trigger animation when pack is obtained.
 
 **User teams**
 - Automatically get a sticker of you team.
@@ -10,7 +10,6 @@
 - Add team logo image to album stage.
 
 **Obtaining packs**
-- Add QR to obtain packs.
 - Think on other ways to obtain packs.
 
 **Misc**
