@@ -2,7 +2,7 @@
 - Trigger trade request notifications (received, accepted, rejected) on clients asynchronously.
 
 **Front-end style**
-- #ID of sticker isn't rendered when sticker img is rendered.
+- .
 
 **User teams**
 - Automatically get a sticker of you team.

@@ -910,6 +910,7 @@ h2 {
 }
 
 .card-number {
+  z-index: 1;
   position: absolute;
   top: 10px;
   left: 10px;
