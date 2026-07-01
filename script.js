@@ -130,6 +130,7 @@ function cardTemplate(sticker, forceCollected = false, options = {}) {
   const variantClass = options.variant === "trade" ? "trade-card" : "";
   const interactiveAttrs = options.variant === "trade" ? 'role="button" tabindex="0"' : "";
   const isMinimal = options.minimal === true;
+  const isFirst = options.first === true;
 
   if (isMinimal) {
     return `
@@ -138,6 +139,7 @@ function cardTemplate(sticker, forceCollected = false, options = {}) {
           <img src="${sticker.image}" alt="${altText}" />
         </div>
         <span class="card-number">#${String(sticker.id).padStart(2, "0")}</span>
+        <span class="eyebrown">${isFirst ? "GIVES" : "WANTS"}</span>
       </article>
     `;
   }
@@ -687,13 +689,13 @@ getPackButton.addEventListener("click", async () => {
           <div class="notification-content">
             <strong>${tradeRequests[i].username}</strong>
             <div class="notification-stickers">
-              ${givesSticker ? cardTemplate(givesSticker, true, { minimal: true }) : ""}
-              ${wantsSticker ? cardTemplate(wantsSticker, false, { minimal: true }) : ""}
+              ${givesSticker ? cardTemplate(givesSticker, true, { minimal: true, first: true }) : ""}
+              ${wantsSticker ? cardTemplate(wantsSticker, false, { minimal: true, first: false }) : ""}
             </div>
           </div>
           <div class="notification-actions">
             <button type="button" class="notification-action-btn notification-accept-btn" data-action="accept">Accept</button>
-            <button type="button" class="notification-action-btn notification-reject-btn" data-action="reject">Reject</button>
+            <button type="button" class="notification-action-btn notification-reject-btn" data-action="reject" style='margin-left: auto; display:flex; justify-self:flex-end;'>Reject</button>
           </div>
         </div>
       `;

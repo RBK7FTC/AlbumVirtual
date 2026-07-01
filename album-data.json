@@ -31,7 +31,13 @@
       },
       "isAdmin": false,
       "availablePacks": 0,
-      "tradeRequests": [],
+      "tradeRequests": [
+        {
+          "givesStickerIndex": "4",
+          "wantsStickerIndex": "12",
+          "username": "galo"
+        }
+      ],
       "collected": [
         2,
         4,
