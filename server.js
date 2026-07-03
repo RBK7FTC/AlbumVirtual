@@ -73,6 +73,8 @@ const mimeTypes = {
   ".svg": "image/svg+xml"
 };
 
+let leaderboard;
+
 function broadcastToUser(username, event, payload) {
   try{
     const clients = eventClients.get(username);
@@ -86,6 +88,29 @@ function broadcastToUser(username, event, payload) {
     }
   } catch(e){
     console.log(e);
+  }
+}
+
+async function updateLeaderboard(data){
+  
+
+  leaderboard = Object.values(data.users).map(user => ({
+    username: user.username,
+    stickerCount: (new Set(user.collected).size)
+  }));
+
+  leaderboard.sort((a, b) => b.stickerCount - a.stickerCount);
+}
+
+async function broadcastLeaderboard(data) {
+  updateLeaderboard(data);
+  
+  for (const username of eventClients.keys()) {
+    broadcastToUser(
+        username,
+        "leaderboard",
+        leaderboard
+    );
   }
 }
 
@@ -334,6 +359,7 @@ async function handleCollectionApi(request, response) {
       auth.user.updatedAt = new Date().toISOString();
       auth.data.users[auth.username] = auth.user;
       await writeData(auth.data);
+      broadcastLeaderboard(auth.data);
       sendJson(response, 200, { collected: auth.user.collected });
     } catch {
       sendError(response, 400, "Invalid collection payload");
@@ -392,25 +418,21 @@ async function handleGetPackApi(request, response) {
 }
 
 async function handleGetLeaderboard(request, response) {
-    //const auth = await getAuthenticatedUser(request);
+  //const auth = await getAuthenticatedUser(request);
 
-    /*
-    if (!auth) {
-        sendError(response, 401, "Sign in required");
-        return;
-    }
-    */
-
+  /*
+  if (!auth) {
+      sendError(response, 401, "Sign in required");
+      return;
+  }
+  */
+  
+  if(!leaderboard){
     const data = await readData();
+    updateLeaderboard(data);
+  }
 
-    const ranking = Object.values(data.users).map(user => ({
-      username: user.username,
-      stickerCount: user.collected.length
-    }));
-
-    ranking.sort((a, b) => b.stickerCount - a.stickerCount);
-
-    sendJson(response, 200, ranking);
+  sendJson(response, 200, leaderboard);
 }
 
 async function handleStartTrade(request, response) {
@@ -652,10 +674,10 @@ async function handleResponseToTradeRequests(request, response) {
 
           dataOtherUser.collected.push(Number(payload.tradeRequest.wantsStickerIndex));
         
-          //Send collection update to both users clients
           broadcastToUser(auth.username, "collection-update", dataMyUser.collected);
           broadcastToUser(payload.tradeRequest.username, "collection-update", dataOtherUser.collected);
 
+          broadcastLeaderboard(auth.data);
         }
 
         //Send trade request response to both users clients

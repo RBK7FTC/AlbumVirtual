@@ -33,7 +33,7 @@
         "hash": "9879fca6bab3f83e4a05f6e785dfd882591e01b4f84994145fe49df6efd5e9fe73eec39c1909846e254abd9ab90485ddac6a50d02b45f836095bc692de13bded"
       },
       "isAdmin": false,
-      "availablePacks": 12,
+      "availablePacks": 8,
       "tradeRequests": [
         {
           "givesStickerIndex": "4",
@@ -46,12 +46,18 @@
       ],
       "collected": [
         2,
-        10,
+        3,
         4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
         12
       ],
       "createdAt": "2026-06-21T15:24:31.791Z",
-      "updatedAt": "2026-06-21T15:24:31.791Z"
+      "updatedAt": "2026-07-03T19:17:26.713Z"
     },
     "pepito1234": {
       "username": "pepito1234",

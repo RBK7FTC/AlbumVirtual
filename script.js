@@ -161,6 +161,14 @@ function startEvents() {
 
   });
 
+  eventSource.addEventListener("leaderboard", (event) => {
+
+    const payload = JSON.parse(event.data);
+
+    console.log("Leaderboard updated");
+    console.log(payload);
+    updateLeaderboardUI(payload);
+  });
 }
 
 async function loadCollectedCards() {
@@ -756,25 +764,29 @@ albumStageButton.addEventListener("click", async () => {
   switchTo("album-stage");
 });
 
+function updateLeaderboardUI(data){
+  const rankingData = data.map(user => ({
+    username: user.username,
+    stickerCount: user.stickerCount
+  })).sort((a, b) => b.stickerCount - a.stickerCount);
+
+  const rankingList = document.querySelector(".ranking-list");
+  rankingList.innerHTML = rankingData.map((user, index) => `
+    <div class="ranking-item ${user.username === currentUser ? 'is-current-user' : ''}">
+      <span class="rank-number">#${index + 1}</span>
+      <strong class="username">${user.username}</strong>
+      <span class="sticker-count">${user.stickerCount} stickers</span>
+    </div>
+  `).join("");
+}
+
 leaderboardStageButton.addEventListener("click", async () => {
   switchTo("leaderboard-stage");
 
   try {
     const data = await apiRequest("/api/get-leaderboard");
     
-    const rankingData = data.map(user => ({
-      username: user.username,
-      stickerCount: user.stickerCount
-    })).sort((a, b) => b.stickerCount - a.stickerCount);
-
-    const rankingList = document.querySelector(".ranking-list");
-    rankingList.innerHTML = rankingData.map((user, index) => `
-      <div class="ranking-item ${user.username === currentUser ? 'is-current-user' : ''}">
-        <span class="rank-number">#${index + 1}</span>
-        <strong class="username">${user.username}</strong>
-        <span class="sticker-count">${user.stickerCount} stickers</span>
-      </div>
-    `).join("");
+    updateLeaderboardUI(data);
 
   } catch (error) {
     console.error("Failed to load leaderboard:", error);
