@@ -1,12 +1,13 @@
 **Server Sent Events**
 - Trigger animations when:
-    Trade request received.
-    Trade request accepted.
-    Trade request rejected.
-    Pack is obtained.
     Update leaderboard.
 
 **Front-end style**
+- Enhance animation when:
+        Pack is obtained.
+        Trade request received.
+        Trade request accepted.
+        Trade request rejected.
 
 **User teams**
 - Automatically get a sticker of you team.

@@ -136,6 +136,31 @@ function startEvents() {
 
   });
 
+  eventSource.addEventListener("collection-update", (event) => {
+
+    const payload = JSON.parse(event.data);
+
+    console.log("Collection updated");
+    console.log(payload);
+    collected = new Set(payload);
+    renderAlbum();
+  });
+
+  eventSource.addEventListener("trade-request-response", (event) => {
+
+    const payload = JSON.parse(event.data);
+
+    console.log("Trade request response");
+    console.log(payload);
+
+    if(payload.accepted){
+      showEventFeedback("Trade request response", "Trade request accepted");
+    } else {
+      showEventFeedback("Pack received", "Trade request rejected");
+    }
+
+  });
+
 }
 
 async function loadCollectedCards() {
@@ -143,7 +168,7 @@ async function loadCollectedCards() {
   return new Set(payload.collected);
 }
 
-//TODO: Remove, users can query to update his collection
+//TODO: Remove, users can use this url to auto update his collection
 async function saveCollectedCards(ids) {
   const payload = await apiRequest("/api/collection", {
     method: "PUT",
@@ -544,7 +569,8 @@ function startQRScanner(){
       
       html5QrCode.pause();
       setTimeout(() => {
-        html5QrCode.resume();
+        if(html5QrCode)
+          html5QrCode.resume();
       }, 1000);
 
       if(Object.hasOwn(data, 'username')){
@@ -600,6 +626,16 @@ async function handleStartTrade(data){
       body: JSON.stringify({ username: data.username })
     });
     
+    const divs = document.getElementsByClassName("trade-stickers-selection");
+    for(const div of divs){
+      const img = div.querySelector('img');
+      img.alt = "Select a sticker";
+      img.removeAttribute('src'); 
+      for (const key in div.dataset) {
+        delete div.dataset[key];
+      }
+    }
+
     switchTo("trade-stage");
 
     document.getElementById("trade-send-trade-button").dataset.username = data.username;
@@ -837,8 +873,6 @@ getPackButton.addEventListener("click", async () => {
           if(data.state == true){
             tradeRequests = data.tradeRequests;
             collected = new Set(data.collection);
-
-            //update localStorage?
             renderAlbum();
             switchToTradingStage();
           }

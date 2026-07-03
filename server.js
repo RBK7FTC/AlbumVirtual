@@ -73,19 +73,19 @@ const mimeTypes = {
   ".svg": "image/svg+xml"
 };
 
-function sendEvent(response, event, payload) {
-
-}
-
 function broadcastToUser(username, event, payload) {
-  const clients = eventClients.get(username);
-
-  if (!clients)
-      return;
-
-  for (const client of clients){
-    client.write(`event: ${event}\n`);
-    client.write(`data: ${JSON.stringify(payload)}\n\n`);
+  try{
+    const clients = eventClients.get(username);
+  
+    if (!clients)
+        return;
+  
+    for (const client of clients){
+      client.write(`event: ${event}\n`);
+      client.write(`data: ${JSON.stringify(payload)}\n\n`);
+    }
+  } catch(e){
+    console.log(e);
   }
 }
 
@@ -651,11 +651,18 @@ async function handleResponseToTradeRequests(request, response) {
           dataMyUser.collected.push(Number(payload.tradeRequest.givesStickerIndex));
 
           dataOtherUser.collected.push(Number(payload.tradeRequest.wantsStickerIndex));
+        
+          //Send collection update to both users clients
+          broadcastToUser(auth.username, "collection-update", dataMyUser.collected);
+          broadcastToUser(payload.tradeRequest.username, "collection-update", dataOtherUser.collected);
+
         }
 
-        await writeData(auth.data);
+        //Send trade request response to both users clients
+        broadcastToUser(auth.username, "trade-request-response", payload);
+        broadcastToUser(payload.tradeRequest.username, "trade-request-response", payload);
 
-        //Send collection update to otherUser: payload.tradeRequest.username
+        await writeData(auth.data);
        
         sendJson(response, 200, {
           state: true,

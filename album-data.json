@@ -16,12 +16,12 @@
         1,
         2,
         3,
-        4,
-        7,
         9,
         7,
         1,
-        8
+        8,
+        4,
+        7
       ],
       "createdAt": "2026-06-21T13:31:54.914Z",
       "updatedAt": "2026-07-01T14:26:17.391Z"
@@ -39,11 +39,6 @@
           "givesStickerIndex": "4",
           "wantsStickerIndex": "12",
           "username": "galo"
-        },
-        {
-          "givesStickerIndex": "4",
-          "wantsStickerIndex": "12",
-          "username": "galo"
         }
       ],
       "scannedQRCodes": [
@@ -51,9 +46,9 @@
       ],
       "collected": [
         2,
+        10,
         4,
-        12,
-        10
+        12
       ],
       "createdAt": "2026-06-21T15:24:31.791Z",
       "updatedAt": "2026-06-21T15:24:31.791Z"
