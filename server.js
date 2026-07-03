@@ -80,14 +80,10 @@ function sendEvent(response, event, payload) {
 function broadcastToUser(username, event, payload) {
   const clients = eventClients.get(username);
 
-  console.log(clients);
-  console.log(username)
-
   if (!clients)
       return;
 
   for (const client of clients){
-    console.log("Broadcasting to client: ", client, ", event: ", event, ", payload: ", payload);
     client.write(`event: ${event}\n`);
     client.write(`data: ${JSON.stringify(payload)}\n\n`);
   }
@@ -526,7 +522,7 @@ async function handlePostTradeRequest(request, response) {
         broadcastToUser(
           targetUser.username,
           "trade-request-received",
-          payload
+          auth.data.users[targetUser.username].tradeRequests
         );
 
         sendJson(response, 200, {

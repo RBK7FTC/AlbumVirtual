@@ -26,6 +26,7 @@ let currentUser = sessionStorage.getItem("album-user") || "";
 let availablePacks = sessionStorage.getItem("album-availablePacks");
 let tradeRequests = sessionStorage.getItem("album-tradeRequests");
 let eventSource;
+let eventFeedbackTimer;
 
 const TRADE_PAGE_SIZE = 4;
 
@@ -79,6 +80,29 @@ async function apiRequest(path, options = {}) {
   return payload;
 }
 
+function showEventFeedback(title, message) {
+  const feedback = document.getElementById("event-feedback");
+  const feedbackTitle = document.getElementById("event-feedback-title");
+  const feedbackMessage = document.getElementById("event-feedback-message");
+
+  if (!feedback || !feedbackTitle || !feedbackMessage) {
+    return;
+  }
+
+  feedbackTitle.textContent = title;
+  feedbackMessage.textContent = message;
+  feedback.setAttribute("aria-hidden", "false");
+  feedback.classList.remove("is-visible");
+  void feedback.offsetWidth;
+  feedback.classList.add("is-visible");
+
+  window.clearTimeout(eventFeedbackTimer);
+  eventFeedbackTimer = window.setTimeout(() => {
+    feedback.classList.remove("is-visible");
+    feedback.setAttribute("aria-hidden", "true");
+  }, 2000);
+}
+
 function startEvents() {
 
   if (eventSource)
@@ -92,12 +116,11 @@ function startEvents() {
 
       const payload = JSON.parse(event.data);
 
-      document.getElementById("current-username").innerHTML = payload;
       console.log(payload);
 
       tradeRequests.push(payload);
-
-      updateNotifications();
+      showEventFeedback("Trade request", "A new trade request arrived");
+      updateNotificationsUI(payload);
 
   });
 
@@ -105,11 +128,10 @@ function startEvents() {
 
     const payload = JSON.parse(event.data);
 
-    document.getElementById("current-username").innerHTML = payload;
     console.log(payload);
 
     availablePacks = payload.availablePacks;
-
+    showEventFeedback("Pack received", "You received a new pack");
     updatePackUI();
 
   });
@@ -369,18 +391,20 @@ async function persistAndRender() {
 }
 
 function updatePackUI() {
-    let packCount = document.querySelector("#pack-count");
-    if(!packCount)
-        return;
+  sessionStorage.setItem("album-availablePacks", availablePacks);
+  
+  let packCount = document.querySelector("#pack-count");
+  if(!packCount)
+      return;
 
-    packCount.textContent = availablePacks;
+  packCount.textContent = availablePacks;
 
-    openPackButton.disabled = availablePacks <= 0;
+  openPackButton.disabled = availablePacks <= 0;
 
-    openPackButton.classList.toggle(
-        "is-disabled",
-        availablePacks <= 0
-    );
+  openPackButton.classList.toggle(
+      "is-disabled",
+      availablePacks <= 0
+  );
 }
 
 function setControlsEnabled(isEnabled) {
@@ -662,17 +686,20 @@ async function switchToTradingStage(){
 
     await switchTo("trading-stage");
 
-    const span = notificationsBtn.querySelector("span");
-    span.style.display = data.length ? "flex" : "none";
-    span.innerHTML = data.length;
-    tradeRequests = data;
-    sessionStorage.setItem("album-tradeRequests", tradeRequests);
+    updateNotificationsUI(data);
 
     generateUsernameQRCode();
   } catch(error){
     alert(error);
   }
+}
 
+function updateNotificationsUI(data){
+    const span = notificationsBtn.querySelector("span");
+    span.style.display = data.length ? "flex" : "none";
+    span.innerHTML = data.length;
+    tradeRequests = data;
+    sessionStorage.setItem("album-tradeRequests", tradeRequests);
 }
 
 tradingStageButton.addEventListener("click", async () => {

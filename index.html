@@ -186,6 +186,15 @@
       <div id="pack-results" class="pack-results"></div>
     </dialog>
 
+    <div id="event-feedback" class="event-feedback" aria-live="polite" aria-hidden="true">
+      <div class="event-feedback__pulse"></div>
+      <div class="event-feedback__content">
+        <span class="event-feedback__icon">✨</span>
+        <strong id="event-feedback-title">New update</strong>
+        <p id="event-feedback-message">Something happened</p>
+      </div>
+    </div>
+
     <script src="script.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
