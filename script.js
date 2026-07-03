@@ -25,6 +25,7 @@ let authToken = sessionStorage.getItem("album-token") || "";
 let currentUser = sessionStorage.getItem("album-user") || "";
 let availablePacks = sessionStorage.getItem("album-availablePacks");
 let tradeRequests = sessionStorage.getItem("album-tradeRequests");
+let eventSource;
 
 const TRADE_PAGE_SIZE = 4;
 
@@ -78,6 +79,43 @@ async function apiRequest(path, options = {}) {
   return payload;
 }
 
+function startEvents() {
+
+  if (eventSource)
+      eventSource.close();
+
+  eventSource = new EventSource(
+  `/api/events?token=${encodeURIComponent(authToken)}`
+  );
+
+  eventSource.addEventListener("trade-request-received", (event) => {
+
+      const payload = JSON.parse(event.data);
+
+      document.getElementById("current-username").innerHTML = payload;
+      console.log(payload);
+
+      tradeRequests.push(payload);
+
+      updateNotifications();
+
+  });
+
+  eventSource.addEventListener("pack-received", (event) => {
+
+    const payload = JSON.parse(event.data);
+
+    document.getElementById("current-username").innerHTML = payload;
+    console.log(payload);
+
+    availablePacks = payload.availablePacks;
+
+    updatePackUI();
+
+  });
+
+}
+
 async function loadCollectedCards() {
   const payload = await apiRequest("/api/collection");
   return new Set(payload.collected);
@@ -111,11 +149,15 @@ async function authenticate(path) {
     collected = new Set(payload.collected);
     availablePacks = payload.user.availablePacks;
     tradeRequests = payload.user.tradeRequests;
+    passwordInput.value = "";
+
+    startEvents();
+
     sessionStorage.setItem("album-token", authToken);
     sessionStorage.setItem("album-user", currentUser);
     sessionStorage.setItem("album-availablePacks", availablePacks);
     sessionStorage.setItem("album-tradeRequests", tradeRequests);
-    passwordInput.value = "";
+    
     setSignedInState();
     renderAlbum();
   } catch (error) {
@@ -383,6 +425,7 @@ async function startAlbum() {
 
   try {
     collected = await loadCollectedCards();
+    startEvents();
     setSignedInState();
     renderAlbum();
   } catch {
@@ -390,10 +433,12 @@ async function startAlbum() {
     currentUser = "";
     availablePacks = 0;
     tradeRequests = [];
-    sessionStorage.removeItem("album-token");
-    sessionStorage.removeItem("album-user");
+    eventSource?.close();
+    eventSource = null;
     sessionStorage.removeItem("album-availablePacks");
     sessionStorage.removeItem("album-tradeRequests");
+    sessionStorage.removeItem("album-token");
+    sessionStorage.removeItem("album-user");
     setSignedOutState("Session expired");
   }
 }
@@ -414,8 +459,12 @@ document.querySelector("#logout-button").addEventListener("click", async () => {
   } finally {
     authToken = "";
     currentUser = "";
-    sessionStorage.removeItem("album-tradeRequests");
+    availablePacks = 0;
+    tradeRequests = [];
+    eventSource?.close();
+    eventSource = null;
     sessionStorage.removeItem("album-availablePacks");
+    sessionStorage.removeItem("album-tradeRequests");
     sessionStorage.removeItem("album-token");
     sessionStorage.removeItem("album-user");
     setSignedOutState();
@@ -477,25 +526,7 @@ function startQRScanner(){
       if(Object.hasOwn(data, 'username')){
         handleStartTrade(data);
       } else if(Object.hasOwn(data, 'code')){
-        const res = await apiRequest("/api/qrCodeScanned", {
-          method: "PUT",
-          body: JSON.stringify({ code: data.code })
-        });
-
-        console.log(res);
-
-        if(res.state == false){
-          if(res.codeID == -1){
-            console.error("Invalid QR Code: ", data.code);
-          } else {
-            console.error("QR Code: ", res.codeID ," already scanned");
-          }
-          return;
-        }
-
-
-        availablePacks = res.availablePacks;
-        updatePackUI();
+        handlePackQRCodeScanned(data);
       }
  
     };
@@ -509,6 +540,28 @@ function startQRScanner(){
     ).catch((err) => {
         alert("Unable to start scanning", err);
     });
+}
+
+async function handlePackQRCodeScanned(data){
+  const res = await apiRequest("/api/qrCodeScanned", {
+    method: "PUT",
+    body: JSON.stringify({ code: data.code })
+  });
+
+  console.log(res);
+
+  if(res.state == false){
+    if(res.codeID == -1){
+      console.error("Invalid QR Code: ", data.code);
+    } else {
+      console.error("QR Code: ", res.codeID ," already scanned");
+    }
+    return;
+  }
+
+
+  availablePacks = res.availablePacks;
+  updatePackUI();
 }
 
 async function handleStartTrade(data){
@@ -782,6 +835,11 @@ getPackButton.addEventListener("click", async () => {
   document.addEventListener('click', closeDropdown);
 
 }
+
+document.getElementById("test-button").addEventListener('click', async () => {
+  const data = { code: "WIWIWIWIWIWIWIWIWIWIWIWIWI" };
+  handlePackQRCodeScanned(data);
+});
 
 document.querySelectorAll(".filter-button").forEach((button) => {
   button.addEventListener("click", () => {

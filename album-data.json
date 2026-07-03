@@ -33,10 +33,20 @@
         "hash": "9879fca6bab3f83e4a05f6e785dfd882591e01b4f84994145fe49df6efd5e9fe73eec39c1909846e254abd9ab90485ddac6a50d02b45f836095bc692de13bded"
       },
       "isAdmin": false,
-      "availablePacks": 2,
+      "availablePacks": 7,
       "tradeRequests": [
         {
           "givesStickerIndex": "4",
+          "wantsStickerIndex": "12",
+          "username": "galo"
+        },
+        {
+          "givesStickerIndex": "4",
+          "wantsStickerIndex": "10",
+          "username": "galo"
+        },
+        {
+          "givesStickerIndex": "1",
           "wantsStickerIndex": "12",
           "username": "galo"
         }

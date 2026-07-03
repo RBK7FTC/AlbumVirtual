@@ -10,6 +10,7 @@ const dataPath = path.join(root, "album-data.json");
 const initialCollected = [];
 const maxStickerId = 12;
 const sessions = new Map();
+const eventClients = new Map();
 const masterQRCode = "WIWIWIWIWIWIWIWIWIWIWIWIWI";
 const packQRCodes = [
   "3OZA6ZF0LJL5XGGZIP32LM73806Q32OC",
@@ -72,6 +73,26 @@ const mimeTypes = {
   ".svg": "image/svg+xml"
 };
 
+function sendEvent(response, event, payload) {
+
+}
+
+function broadcastToUser(username, event, payload) {
+  const clients = eventClients.get(username);
+
+  console.log(clients);
+  console.log(username)
+
+  if (!clients)
+      return;
+
+  for (const client of clients){
+    console.log("Broadcasting to client: ", client, ", event: ", event, ", payload: ", payload);
+    client.write(`event: ${event}\n`);
+    client.write(`data: ${JSON.stringify(payload)}\n\n`);
+  }
+}
+
 async function ensureDataFile() {
   try {
     await fsp.access(dataPath, fs.constants.F_OK);
@@ -127,14 +148,20 @@ function createToken(username) {
   return token;
 }
 
-function getBearerToken(request) {
+function getRequestToken(request) {
   const header = request.headers.authorization || "";
-  const [scheme, token] = header.split(" ");
-  return scheme === "Bearer" ? token : "";
+  const [scheme, bearerToken] = header.split(" ");
+
+  if (scheme === "Bearer" && bearerToken)
+      return bearerToken;
+
+  const url = new URL(request.url, `http://${request.headers.host}`);
+
+  return url.searchParams.get("token") || "";
 }
 
 async function getAuthenticatedUser(request) {
-  const token = getBearerToken(request);
+  const token = getRequestToken(request);
   const username = sessions.get(token);
 
   if (!username) {
@@ -282,7 +309,7 @@ async function handleSessionsApi(request, response) {
   }
 
   if (request.method === "DELETE") {
-    sessions.delete(getBearerToken(request));
+    sessions.delete(getRequestToken(request));
     sendJson(response, 200, { ok: true });
     return;
   }
@@ -477,7 +504,7 @@ async function handlePostTradeRequest(request, response) {
         const targetUser = data.users[payload.targetUser];
 
         if(!targetUser){
-                    sendJson(response, 200, {
+          sendJson(response, 200, {
             state: false,
             error: "Target user not found"
           });
@@ -495,6 +522,12 @@ async function handlePostTradeRequest(request, response) {
         });
 
         await writeData(auth.data);
+
+        broadcastToUser(
+          targetUser.username,
+          "trade-request-received",
+          payload
+        );
 
         sendJson(response, 200, {
           state: true
@@ -683,6 +716,12 @@ async function handleQRCodeScanned(request, response) {
 
       await writeData(auth.data);
       
+      broadcastToUser(
+        auth.username,
+        "pack-received",
+         { availablePacks: auth.user.availablePacks }
+      );
+
       sendJson(response, 200, {
         state: true,
         availablePacks: auth.user.availablePacks,
@@ -693,6 +732,42 @@ async function handleQRCodeScanned(request, response) {
       sendError(response, 403, "server error");
     }
   }
+}
+
+async function handleEventsApi(request, response) {
+
+    const auth = await getAuthenticatedUser(request);
+
+    if (!auth) {
+        sendError(response, 401, "Sign in required");
+        return;
+    }
+
+    response.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive"
+    });
+
+    response.write("\n");
+
+    let clients = eventClients.get(auth.username);
+
+    if (!clients) {
+        clients = new Set();
+        eventClients.set(auth.username, clients);
+    }
+
+    clients.add(response);
+
+    request.on("close", () => {
+
+        clients.delete(response);
+
+        if (clients.size === 0)
+            eventClients.delete(auth.username);
+
+    });
 }
 
 async function serveStaticFile(request, response) {
@@ -777,6 +852,11 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/qrCodeScanned") {
       await handleQRCodeScanned(request, response);
+      return;
+    }
+
+    if (requestUrl.pathname === "/api/events") {
+      await handleEventsApi(request, response);
       return;
     }
 
