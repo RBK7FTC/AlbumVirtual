@@ -924,6 +924,18 @@ h2 {
   font-size: 0.58rem;
 }
 
+img#team-logo-stage-header {
+  max-height: 64px;
+  width: auto;
+  object-fit: contain;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.stage-header {
+  align-items: center;
+}
+
 .sticker-card.is-missing {
   background:
     linear-gradient(135deg, rgba(31, 38, 51, 0.06) 25%, transparent 25%) 0 0 / 16px

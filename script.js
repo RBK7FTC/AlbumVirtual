@@ -1,6 +1,6 @@
 const teams = [ "RBK7FTC",
     "DINAMITA",
-    "ShadowFox"
+    "SHADOWFOX"
 ]
 
 const stickers = [
@@ -32,7 +32,7 @@ const TRADE_PAGE_SIZE = 4;
 
 const grid = document.querySelector("#album-grid");
 const teamTitle = document.querySelector("#teams");
-
+const teamLogo = document.querySelector("#team-logo-stage-header");
 const tradingStageButton = document.querySelector("#tradingStageBtn");
 const albumStageButton = document.querySelector("#albumStageBtn");
 const leaderboardStageButton = document.querySelector("#leaderboardStageBtn");
@@ -396,6 +396,7 @@ function renderAlbum() {
   const rareOwned = stickers.filter((sticker) => sticker.rarity !== "common" && collected.has(sticker.id)).length;
   const rareTotal = stickers.filter((sticker) => sticker.rarity !== "common").length;
   teamTitle.textContent = teams[activeTeam];
+  teamLogo.src = `assets/${teams[activeTeam]}.svg`;
 
   collectedCount.textContent = owned;
   progressBar.style.width = `${(owned / stickers.length) * 100}%`;

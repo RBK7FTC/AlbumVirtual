@@ -1,18 +1,14 @@
-**Server Sent Events**
-- Trigger animations when:
-    Update leaderboard.
-
 **Front-end style**
 - Enhance animation when:
         Pack is obtained.
         Trade request received.
         Trade request accepted.
         Trade request rejected.
+        Update leaderboard.
 
 **User teams**
-- Automatically get a sticker of you team.
+- Automatically get a sticker of you team (Add team selection UI at registration).
 - Render team image next to username on leaderboard.
-- Add team logo image to album stage.
 
 **Obtaining packs**
 - Think on other ways to obtain packs.
