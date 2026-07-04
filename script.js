@@ -13,9 +13,9 @@ const stickers = [
   { id: 7, name: "Home Colors", rarity: "common", team: "DINAMITA", image: "assets/sticker-07.svg" },
   { id: 8, name: "Away Colors", rarity: "common", team: "DINAMITA", image: "assets/sticker-08.svg" },
   { id: 9, name: "Stadium Lights", rarity: "rare", team: "DINAMITA", image: "assets/sticker-09.svg" },
-  { id: 10, name: "Rising Star", rarity: "common", team: "ShadowFox", image: "assets/sticker-10.svg" },
-  { id: 11, name: "Derby Night", rarity: "epic", team: "ShadowFox", image: "assets/sticker-11.svg" },
-  { id: 12, name: "Trophy Lift", rarity: "legendary", team: "ShadowFox", image: "assets/sticker-12.svg" }
+  { id: 10, name: "Rising Star", rarity: "common", team: "SHADOWFOX", image: "assets/sticker-10.svg" },
+  { id: 11, name: "Derby Night", rarity: "epic", team: "SHADOWFOX", image: "assets/sticker-11.svg" },
+  { id: 12, name: "Trophy Lift", rarity: "legendary", team: "SHADOWFOX", image: "assets/sticker-12.svg" }
 ];
 
 const initialCollected = new Set([1, 2, 4, 7]);
@@ -560,8 +560,8 @@ function generateUsernameQRCode(){
   const container = document.getElementById("qrCode");
   container.innerHTML = "";
   const size = container.offsetWidth;
-  //const text = sessionStorage.getItem("album-user") || "NULL";
-  const text = '{"username": "pepe"}';
+  const username = sessionStorage.getItem("album-user") || "NULL";
+  const text = `{"username": "${username}"}`;
   const usernameQrCode = new QRCode(container, {
     text: text,
     width: size,
@@ -654,6 +654,8 @@ async function handleStartTrade(data){
 
     renderTradeCollection(ownContainer, ownStickerIndexes, false, 0);
 
+    console.log(data.username);
+    console.log(payload);
     const otherContainer = document.getElementById("other-collection-trade-container");
     const otherStickerIndexes = payload.collected;
 

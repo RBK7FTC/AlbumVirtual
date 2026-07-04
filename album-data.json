@@ -142,6 +142,29 @@
       "collected": [],
       "createdAt": "2026-06-29T16:50:24.139Z",
       "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+    "algo": {
+      "username": "algo",
+      "password": {
+        "salt": "4d642fa83c334fcb26c6d1b14c699000",
+        "hash": "a2ab765035416116288fd79c51d8493bc7c54d8ace08d2e86b6ba659758c719967111633e40ac48e6ccd871dafea6206e8bb95ba6bd73107a200ef30e1087076"
+      },
+      "isAdmin": false,
+      "availablePacks": 0,
+      "tradeRequests": [
+        {
+          "givesStickerIndex": "2",
+          "wantsStickerIndex": "9",
+          "username": "galo"
+        }
+      ],
+      "collected": [
+        3,
+        4,
+        9
+      ],
+      "createdAt": "2026-07-04T19:57:56.880Z",
+      "updatedAt": "2026-07-04T19:57:59.211Z"
     }
   }
 }

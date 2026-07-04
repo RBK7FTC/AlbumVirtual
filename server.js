@@ -448,16 +448,20 @@ async function handleStartTrade(request, response) {
       try {
         const payload = await readJsonRequest(request);
         const data = await readData();
-        const user = data.users[payload.username];
+        const targetUser = data.users[payload.username];
         
-        if(!user){
+        if(!targetUser){
           sendError(response, 401, "Unknow target user");
           return;
         }
         
+        console.log(payload);
+        console.log(targetUser);
+
         sendJson(response, 200, {
-          collected: user.collected
+          collected: targetUser.collected
         });
+
 
       } catch {
         sendError(response, 400, "Invalid collection payload");
