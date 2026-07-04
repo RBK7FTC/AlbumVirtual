@@ -15,7 +15,3 @@
 
 **Misc**
 - Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
-
-- Remove #test-button from trading-stage.
-- Check html5QrCode is paused before resume.
-- Fix notifications text.

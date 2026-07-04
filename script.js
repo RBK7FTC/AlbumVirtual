@@ -116,8 +116,6 @@ function startEvents() {
 
       const payload = JSON.parse(event.data);
 
-      console.log(payload);
-
       tradeRequests.push(payload);
       showEventFeedback("Trade request", "A new trade request arrived");
       updateNotificationsUI(payload);
@@ -127,8 +125,6 @@ function startEvents() {
   eventSource.addEventListener("pack-received", (event) => {
 
     const payload = JSON.parse(event.data);
-
-    console.log(payload);
 
     availablePacks = payload.availablePacks;
     showEventFeedback("Pack received", "You received a new pack");
@@ -140,8 +136,6 @@ function startEvents() {
 
     const payload = JSON.parse(event.data);
 
-    console.log("Collection updated");
-    console.log(payload);
     collected = new Set(payload);
     renderAlbum();
   });
@@ -150,13 +144,10 @@ function startEvents() {
 
     const payload = JSON.parse(event.data);
 
-    console.log("Trade request response");
-    console.log(payload);
-
     if(payload.accepted){
       showEventFeedback("Trade request response", "Trade request accepted");
     } else {
-      showEventFeedback("Pack received", "Trade request rejected");
+      showEventFeedback("Trade request response", "Trade request rejected");
     }
 
   });
@@ -165,8 +156,6 @@ function startEvents() {
 
     const payload = JSON.parse(event.data);
 
-    console.log("Leaderboard updated");
-    console.log(payload);
     updateLeaderboardUI(payload);
   });
 }
@@ -313,9 +302,6 @@ function renderTradeCollection(container, stickerIndexes, forceCollected = false
       const sourceImg = tradeSticker.querySelector('img');
       const sourceRect = sourceImg.getBoundingClientRect();
       const targetRect = slot.getBoundingClientRect();
-      
-      //console.log(sourceImage);
-      //console.log(slot);
 
       const scaleFactor = 1.5;
       const finalSourceSize = [sourceRect.width * scaleFactor, sourceRect.height * scaleFactor];
@@ -323,10 +309,6 @@ function renderTradeCollection(container, stickerIndexes, forceCollected = false
         targetRect.left - sourceRect.left + (targetRect.width / 2) - (finalSourceSize[0] / 2),
         targetRect.top - sourceRect.top - (targetRect.height / 2) + (finalSourceSize[1] / 2)
       ];
-
-      //console.log(sourceRect);
-      //console.log(targetRect);
-      //console.log(translation);
 
       clonedImage.style.position = "fixed";
       clonedImage.style.left = `${sourceRect.left}px`;
@@ -578,7 +560,8 @@ function startQRScanner(){
       
       html5QrCode.pause();
       setTimeout(() => {
-        if(html5QrCode)
+        const currentState = html5QrCode.getState();
+        if(currentState === html5QrCode.PAUSED)
           html5QrCode.resume();
       }, 1000);
 
@@ -606,8 +589,6 @@ async function handlePackQRCodeScanned(data){
     method: "PUT",
     body: JSON.stringify({ code: data.code })
   });
-
-  console.log(res);
 
   if(res.state == false){
     if(res.codeID == -1){
@@ -654,8 +635,6 @@ async function handleStartTrade(data){
 
     renderTradeCollection(ownContainer, ownStickerIndexes, false, 0);
 
-    console.log(data.username);
-    console.log(payload);
     const otherContainer = document.getElementById("other-collection-trade-container");
     const otherStickerIndexes = payload.collected;
 
@@ -911,11 +890,6 @@ getPackButton.addEventListener("click", async () => {
   document.addEventListener('click', closeDropdown);
 
 }
-
-document.getElementById("test-button").addEventListener('click', async () => {
-  const data = { code: "WIWIWIWIWIWIWIWIWIWIWIWIWI" };
-  handlePackQRCodeScanned(data);
-});
 
 document.querySelectorAll(".filter-button").forEach((button) => {
   button.addEventListener("click", () => {
