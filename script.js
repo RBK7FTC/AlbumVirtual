@@ -27,12 +27,14 @@ let availablePacks = sessionStorage.getItem("album-availablePacks");
 let tradeRequests = sessionStorage.getItem("album-tradeRequests");
 let eventSource;
 let eventFeedbackTimer;
+let activePackPlacement = null;
 
 const TRADE_PAGE_SIZE = 4;
 
 const grid = document.querySelector("#album-grid");
 const teamTitle = document.querySelector("#teams");
 const teamLogo = document.querySelector("#team-logo-stage-header");
+const albumStage = document.querySelector("#album-stage");
 const tradingStageButton = document.querySelector("#tradingStageBtn");
 const albumStageButton = document.querySelector("#albumStageBtn");
 const leaderboardStageButton = document.querySelector("#leaderboardStageBtn");
@@ -371,6 +373,89 @@ function filteredStickers() {
   });
 }
 
+function rgbToHex({ r, g, b }) {
+  return `#${[r, g, b].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function colorDistance(a, b) {
+  return Math.abs(a.r - b.r) + Math.abs(a.g - b.g) + Math.abs(a.b - b.b);
+}
+
+function isUsableLogoColor({ r, g, b, a }) {
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  const saturation = Math.max(r, g, b) - Math.min(r, g, b);
+
+  return a > 180 && brightness > 28 && brightness < 238 && saturation > 18;
+}
+
+function getLogoPalette(image) {
+  const canvas = document.createElement("canvas");
+  const sampleSize = 72;
+  canvas.width = sampleSize;
+  canvas.height = sampleSize;
+
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  context.drawImage(image, 0, 0, sampleSize, sampleSize);
+
+  const data = context.getImageData(0, 0, sampleSize, sampleSize).data;
+  const buckets = new Map();
+
+  for (let index = 0; index < data.length; index += 16) {
+    const color = {
+      r: data[index],
+      g: data[index + 1],
+      b: data[index + 2],
+      a: data[index + 3]
+    };
+
+    if (!isUsableLogoColor(color)) {
+      continue;
+    }
+
+    const key = [
+      Math.round(color.r / 24) * 24,
+      Math.round(color.g / 24) * 24,
+      Math.round(color.b / 24) * 24
+    ].join(",");
+
+    buckets.set(key, (buckets.get(key) || 0) + 1);
+  }
+
+  const colors = [...buckets.entries()]
+    .map(([key, count]) => {
+      const [r, g, b] = key.split(",").map(Number);
+      return { r, g, b, count };
+    })
+    .sort((a, b) => b.count - a.count);
+
+  const primary = colors[0] || { r: 0, g: 87, b: 184 };
+  const secondary =
+    colors.find((color) => colorDistance(color, primary) > 110) ||
+    colors[1] ||
+    { r: 201, g: 154, b: 46 };
+
+  return { primary, secondary };
+}
+
+function applyTeamLogoColors() {
+  if (!albumStage || !teamLogo.complete || !teamLogo.naturalWidth) {
+    return;
+  }
+
+  try {
+    const { primary, secondary } = getLogoPalette(teamLogo);
+    albumStage.style.setProperty("--team-primary", rgbToHex(primary));
+    albumStage.style.setProperty("--team-secondary", rgbToHex(secondary));
+    albumStage.style.setProperty("--team-primary-rgb", `${primary.r}, ${primary.g}, ${primary.b}`);
+    albumStage.style.setProperty("--team-secondary-rgb", `${secondary.r}, ${secondary.g}, ${secondary.b}`);
+  } catch {
+    albumStage.style.removeProperty("--team-primary");
+    albumStage.style.removeProperty("--team-secondary");
+    albumStage.style.removeProperty("--team-primary-rgb");
+    albumStage.style.removeProperty("--team-secondary-rgb");
+  }
+}
+
 function renderAlbum() {
   grid.innerHTML = filteredStickers().map((sticker) => cardTemplate(sticker)).join("");
 
@@ -378,7 +463,11 @@ function renderAlbum() {
   const rareOwned = stickers.filter((sticker) => sticker.rarity !== "common" && collected.has(sticker.id)).length;
   const rareTotal = stickers.filter((sticker) => sticker.rarity !== "common").length;
   teamTitle.textContent = teams[activeTeam];
+  teamLogo.onload = applyTeamLogoColors;
   teamLogo.src = `assets/${teams[activeTeam]}.svg`;
+  if (teamLogo.complete) {
+    applyTeamLogoColors();
+  }
 
   collectedCount.textContent = owned;
   progressBar.style.width = `${(owned / stickers.length) * 100}%`;
@@ -404,6 +493,273 @@ function pickPack() {
 async function persistAndRender() {
   collected = await saveCollectedCards([...collected]);
   renderAlbum();
+}
+
+function updateAlbumFilterState() {
+  document.querySelectorAll(".filter-button").forEach((button) => {
+    button.classList.remove("is-active");
+  });
+
+  const activeDirection = activeTeam < teams.length - 1 ? "next" : "prev";
+  document.querySelector(`.filter-button[data-filter="${activeDirection}"]`)?.classList.add("is-active");
+}
+
+function ensurePackOpeningLayer() {
+  let layer = document.querySelector("#pack-opening-layer");
+
+  if (layer) {
+    return layer;
+  }
+
+  layer = document.createElement("div");
+  layer.id = "pack-opening-layer";
+  layer.className = "pack-opening-layer";
+  layer.setAttribute("aria-hidden", "true");
+  layer.innerHTML = `
+    <div class="pack-opening-scrim"></div>
+    <section class="pack-opening-panel" aria-label="Sticker packet opening">
+      <button id="pack-opening-packet" class="pack-opening-packet" type="button" aria-label="Open sticker packet">
+        <span>2026</span>
+        <strong>Virtual packet</strong>
+      </button>
+      <div id="pack-opening-stickers" class="pack-opening-stickers" aria-live="polite"></div>
+    </section>
+  `;
+
+  document.body.appendChild(layer);
+  return layer;
+}
+
+function closePackOpeningLayer() {
+  const layer = document.querySelector("#pack-opening-layer");
+
+  if (!layer) {
+    return;
+  }
+
+  layer.classList.remove("is-opened");
+  layer.classList.remove("is-visible");
+  layer.setAttribute("aria-hidden", "true");
+  layer.style.pointerEvents = "none";
+  activePackPlacement = null;
+
+  const stickerContainer = layer.querySelector("#pack-opening-stickers");
+  if (stickerContainer) {
+    stickerContainer.innerHTML = "";
+  }
+
+  window.setTimeout(() => {
+    layer.remove();
+  }, 260);
+}
+
+function packStickerTemplate(sticker, index) {
+  return `
+    <article class="pack-reveal-sticker" data-sticker-id="${sticker.id}" style="--sticker-index: ${index}" role="button" tabindex="0" aria-label="Place ${sticker.name} in album">
+      <span class="card-number">#${String(sticker.id).padStart(2, "0")}</span>
+      <div class="sticker-image">
+        <img src="${sticker.image}" alt="${sticker.name}" draggable="false" />
+      </div>
+      <div class="sticker-meta">
+        <span class="rarity ${sticker.rarity}">${sticker.rarity}</span>
+        <h3>${sticker.name}</h3>
+        <p>${sticker.team}</p>
+      </div>
+    </article>
+  `;
+}
+
+function revealPackStickers(layer, pack) {
+  const stickerContainer = layer.querySelector("#pack-opening-stickers");
+  stickerContainer.innerHTML = pack.map((sticker, index) => packStickerTemplate(sticker, index)).join("");
+
+  stickerContainer.querySelectorAll(".pack-reveal-sticker").forEach((stickerCard) => {
+    const stickerIndex = Number(stickerCard.style.getPropertyValue("--sticker-index") || 0);
+    stickerCard.dataset.currentRotation = String((stickerIndex - 1) * -3);
+    stickerCard.addEventListener("click", handlePackStickerClick);
+    stickerCard.addEventListener("keydown", handlePackStickerKeydown);
+  });
+}
+
+function startPackOpening(pack) {
+  const existingLayer = document.querySelector("#pack-opening-layer");
+  if (existingLayer) {
+    existingLayer.remove();
+  }
+
+  const layer = ensurePackOpeningLayer();
+  const packet = layer.querySelector("#pack-opening-packet");
+
+  activePackPlacement = {
+    pack,
+    placed: new Set()
+  };
+
+  layer.classList.remove("is-opened");
+  layer.querySelector("#pack-opening-stickers").innerHTML = "";
+  layer.classList.add("is-visible");
+  layer.setAttribute("aria-hidden", "false");
+
+  const openPacket = () => {
+    layer.classList.add("is-opened");
+    packet.removeEventListener("click", openPacket);
+    revealPackStickers(layer, pack);
+  };
+
+  packet.addEventListener("click", openPacket);
+}
+
+async function handlePackStickerClick(event) {
+  const card = event.currentTarget;
+
+  if (card.classList.contains("is-placing") || card.classList.contains("is-placed")) {
+    return;
+  }
+
+  const sticker = getPackStickerById(Number(card.dataset.stickerId));
+
+  if (!sticker) {
+    return;
+  }
+
+  await placePackSticker(sticker, card);
+}
+
+async function handlePackStickerKeydown(event) {
+  if (event.key !== "Enter" && event.key !== " ") {
+    return;
+  }
+
+  event.preventDefault();
+  await handlePackStickerClick(event);
+}
+
+function getPackStickerById(stickerId) {
+  return activePackPlacement?.pack.find((sticker) => sticker.id === stickerId);
+}
+
+function wait(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+async function changeTeamPage(teamIndex, { animate = true, stickerId = null } = {}) {
+  if (teamIndex < 0 || teamIndex >= teams.length) {
+    return null;
+  }
+
+  if (teamIndex === activeTeam) {
+    updateAlbumFilterState();
+    await switchTo("album-stage");
+    renderAlbum();
+    return stickerId !== null ? grid.querySelector(`[data-sticker-index="${stickerId}"]`) : null;
+  }
+
+  if (animate) {
+    albumStage.classList.add("is-page-swapping");
+    albumStage.classList.add("is-page-turning");
+    await wait(140);
+  }
+
+  activeTeam = teamIndex;
+  updateAlbumFilterState();
+  await switchTo("album-stage");
+
+  renderAlbum();
+
+  if (animate) {
+    grid.classList.add("is-page-content-in");
+    albumStage.classList.remove("is-page-turning");
+    albumStage.classList.add("is-page-turning-back");
+
+    await wait(420);
+    albumStage.classList.remove("is-page-turning-back");
+    grid.classList.remove("is-page-content-in");
+  }
+
+  albumStage.classList.remove("is-page-swapping");
+
+  return stickerId !== null ? grid.querySelector(`[data-sticker-index="${stickerId}"]`) : null;
+}
+
+async function showStickerTeam(sticker) {
+  const stickerTeamIndex = teams.indexOf(sticker.team);
+
+  if (stickerTeamIndex === -1) {
+    return null;
+  }
+
+  return changeTeamPage(stickerTeamIndex, {
+    animate: stickerTeamIndex !== activeTeam,
+    stickerId: sticker.id
+  });
+}
+
+async function placePackSticker(sticker, sourceCard) {
+  if (!activePackPlacement || activePackPlacement.placed.has(sticker.id)) {
+    return;
+  }
+
+  const sourceRect = sourceCard.getBoundingClientRect();
+  const sourceRotation = Number(sourceCard.dataset.currentRotation || 0);
+  const flyingSticker = sourceCard.cloneNode(true);
+  flyingSticker.classList.add("is-flying-to-album");
+  flyingSticker.style.left = `${sourceRect.left}px`;
+  flyingSticker.style.top = `${sourceRect.top}px`;
+  flyingSticker.style.width = `${sourceRect.width}px`;
+  flyingSticker.style.height = `${sourceRect.height}px`;
+  flyingSticker.style.setProperty("--flight-rotation", `${sourceRotation}deg`);
+  document.body.appendChild(flyingSticker);
+  sourceCard.classList.add("is-placing");
+  sourceCard.classList.add("is-placed");
+  sourceCard.style.visibility = "hidden";
+  sourceCard.style.pointerEvents = "none";
+  flyingSticker.classList.add("is-lifting");
+
+  await wait(280);
+  const targetCard = await showStickerTeam(sticker);
+
+  if (!targetCard) {
+    flyingSticker.remove();
+    sourceCard.classList.remove("is-placing");
+    sourceCard.classList.remove("is-placed");
+    sourceCard.style.visibility = "";
+    sourceCard.style.pointerEvents = "";
+    return;
+  }
+
+  const targetRect = targetCard.getBoundingClientRect();
+  const scale = Math.min(targetRect.width / sourceRect.width, targetRect.height / sourceRect.height);
+  const x = targetRect.left + (targetRect.width - sourceRect.width) / 2 - sourceRect.left;
+  const y = targetRect.top + (targetRect.height - sourceRect.height) / 2 - sourceRect.top;
+  const arcLift = Math.min(140, Math.max(56, Math.abs(y) * 0.18));
+  const flightDuration = 620;
+
+  targetCard.classList.add("is-receiving-sticker");
+  targetCard.style.setProperty("--receive-color", `rgba(var(--team-secondary-rgb), 0.34)`);
+
+  window.setTimeout(() => {
+    flyingSticker.classList.remove("is-lifting");
+    flyingSticker.classList.add("is-in-flight");
+    flyingSticker.style.setProperty("--flight-x", `${x}px`);
+    flyingSticker.style.setProperty("--flight-y", `${y}px`);
+    flyingSticker.style.setProperty("--flight-arc-y", `${y - arcLift}px`);
+    flyingSticker.style.setProperty("--flight-scale", `${Math.max(scale * 1.04, scale + 0.02)}`);
+    flyingSticker.style.setProperty("--flight-scale-end", `${scale}`);
+    flyingSticker.style.setProperty("--flight-duration", `${flightDuration}ms`);
+  }, 120);
+
+  window.setTimeout(async () => {
+    collected.add(sticker.id);
+    collected = await saveCollectedCards([...collected]);
+    activePackPlacement?.placed.add(sticker.id);
+    flyingSticker.remove();
+    sourceCard.remove();
+    renderAlbum();
+
+    if (activePackPlacement && activePackPlacement.placed.size === activePackPlacement.pack.length) {
+      closePackOpeningLayer();
+    }
+  }, 860);
 }
 
 function updatePackUI() {
@@ -448,7 +804,7 @@ function setSignedOutState(message = "") {
   userPanel.classList.add("is-hidden");
   currentUsername.textContent = "";
   authMessage.textContent = message;
-  databaseStatus.textContent = "Sign in to save cards";
+  databaseStatus.textContent = "Sign in to save stickers";
   adminTools.classList.add("is-hidden");
   collected = new Set();
   setControlsEnabled(false);
@@ -527,10 +883,8 @@ openPackButton.addEventListener("click", async () => {
     updatePackUI();
 
     const pack = pickPack();
-    pack.forEach((sticker) => collected.add(sticker.id));
-    packResults.innerHTML = pack.map((sticker) => cardTemplate(sticker, true)).join("");
-    await persistAndRender();
-    packDialog.showModal();
+    await switchTo("album-stage");
+    startPackOpening(pack);
   } catch(error) {
     authMessage.textContent = error.message;
   }
@@ -541,7 +895,7 @@ var html5QrCode;
 function generateUsernameQRCode(){
   const container = document.getElementById("qrCode");
   container.innerHTML = "";
-  const size = container.offsetWidth;
+  const size = container.offsetWidth * 0.9;
   const username = sessionStorage.getItem("album-user") || "NULL";
   const text = `{"username": "${username}"}`;
   const usernameQrCode = new QRCode(container, {
@@ -667,11 +1021,16 @@ async function switchTo(targetId) {
     return Promise.resolve();
   }
 
-  const transition = document.startViewTransition(() => {
-    toggleVisibility(targetId);
-  });
+  try {
+    const transition = document.startViewTransition(() => {
+      toggleVisibility(targetId);
+    });
 
-  return transition.finished;   
+    return transition.finished.catch(() => undefined);
+  } catch {
+    toggleVisibility(targetId);
+    return Promise.resolve();
+  }
 }
 
 document.getElementById("trade-send-trade-button").addEventListener("click", async () => {
@@ -892,12 +1251,18 @@ getPackButton.addEventListener("click", async () => {
 }
 
 document.querySelectorAll(".filter-button").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelector(".filter-button.is-active").classList.remove("is-active");
-    button.classList.add("is-active");
-    if(button.dataset.filter === "next" && activeTeam<teams.length-1) activeTeam++; 
-    if(button.dataset.filter === "prev" && activeTeam>0) activeTeam--;
-    renderAlbum();
+  button.addEventListener("click", async () => {
+    const targetTeamIndex = button.dataset.filter === "next"
+      ? Math.min(activeTeam + 1, teams.length - 1)
+      : Math.max(activeTeam - 1, 0);
+
+    if (targetTeamIndex === activeTeam) {
+      updateAlbumFilterState();
+      renderAlbum();
+      return;
+    }
+
+    await changeTeamPage(targetTeamIndex);
   });
 });
 

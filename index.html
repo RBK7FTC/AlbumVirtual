@@ -10,14 +10,14 @@
     <main class="app-shell">
       <aside class="album-panel" aria-label="Album overview">
         <div class="brand-lockup">
-          <span class="brand-mark">VA</span>
+          <span class="brand-mark">26</span>
           <div>
-            <p class="eyebrow">Season 01</p>
-            <h1>Virtual Album</h1>
+            <p class="eyebrow">FTC - Mexico premier event</p>
+            <h1>Sticker album</h1>
           </div>
         </div>
 
-        <div class="">
+        <div class="stage-nav">
           <button id="albumStageBtn" class="primary-action" type="submit">Album</button>
           <button id="leaderboardStageBtn" class="primary-action" type="submit">Leaderboard</button>
           <button id="tradingStageBtn" class="primary-action">Trading</button>
@@ -25,7 +25,7 @@
 
         <section class="auth-panel" aria-label="Account">
           <div id="auth-form-panel">
-            <p class="eyebrow">Account</p>
+            <p class="eyebrow">Collector pass</p>
             <form id="auth-form" class="auth-form">
               <label>
                 Username
@@ -69,7 +69,7 @@
           </div>
           <p id="rarity-summary">Start your collection</p>
           <p id="database-status">
-              Sign in to save cards
+              Sign in to save stickers
           </p>
         </section>
 
@@ -81,7 +81,7 @@
             </div>
             <button id="open-pack" class="primary-action" type="button">
                 <span aria-hidden="true">+</span>
-                Open pack
+                Open packet
             </button>
         </div>
       </aside>
@@ -89,18 +89,18 @@
       <section id="album-stage" class="album-stage stage" aria-label="Sticker album">
         <header class="stage-header">
           <div>
-            <p class="eyebrow">Stickers</p>
-            <h2 id="teams" >Legends & Moments</h2>
+            <p class="eyebrow">Collection</p>
+            <h2 id="teams" >Team</h2>
           </div>
           <img id="team-logo-stage-header" alt="Team logo">
           <div id="admin-tools" class="view-tools is-hidden" aria-label="Album tools">
               <button id="complete-album" class="tool-button" type="button" title="Complete album">OK</button>
               <button id="reset-album" class="tool-button" type="button" title="Reset album">R</button>
               <button id="get-pack" class="tool-button" type="button" title="Get pack">P</button>
-          </div>
+          </div>  
           <nav class="filter-list" aria-label="Album filters">
-            <button class="filter-button is-active" type="button" data-filter="next">Next team</button>
             <button class="filter-button" type="button" data-filter="prev">Previous team</button>
+            <button class="filter-button is-active" type="button" data-filter="next">Next team</button>
           </nav>
         </header>
 
@@ -110,7 +110,7 @@
       <section id="leaderboard-stage" class="leaderboard-stage stage is-hidden">
         <header class="stage-header">
           <div>
-            <p class="eyebrow">Leaderboard</p>
+            <p class="eyebrow">Collectors table</p>
             <h2>Top Collectors</h2>
           </div>
         </header>
@@ -124,7 +124,7 @@
         <header class="stage-header">
           <div class="trading-stage-header">
             <div>
-              <p class="eyebrow">Scan QR code</p>
+              <p class="eyebrow">Sticker swap</p>
               <h2 >Trading</h2>
             </div>
             <button id="tradingNotificationsBtn">
@@ -141,15 +141,15 @@
       <section id="trade-stage" class="trade-stage stage is-hidden">
         <div class="trade-stage-header-card">
           <div>
-            <p class="eyebrow">Trade</p>
+            <p class="eyebrow">Collector market</p>
             <h2>Swap stickers</h2>
           </div>
         </div>
 
         <div class="trade-collection-panel">
-          <button class="trade-nav-button" type="button" data-direction="prev" aria-label="Previous stickers">‹</button>
+          <button class="trade-nav-button" type="button" data-direction="prev" aria-label="Previous stickers">&lsaquo;</button>
           <div class="trade-strickers-collection" id="own-collection-trade-container"></div>
-          <button class="trade-nav-button" type="button" data-direction="next" aria-label="Next stickers">›</button>
+          <button class="trade-nav-button" type="button" data-direction="next" aria-label="Next stickers">&rsaquo;</button>
           <p class="trade-collection-label">Your stickers</p>
         </div>
 
@@ -170,9 +170,9 @@
         </div>
 
         <div class="trade-collection-panel">
-          <button class="trade-nav-button" type="button" data-direction="prev" aria-label="Previous stickers">‹</button>
+          <button class="trade-nav-button" type="button" data-direction="prev" aria-label="Previous stickers">&lsaquo;</button>
           <div class="trade-strickers-collection" id="other-collection-trade-container"></div>
-          <button class="trade-nav-button" type="button" data-direction="next" aria-label="Next stickers">›</button>
+          <button class="trade-nav-button" type="button" data-direction="next" aria-label="Next stickers">&rsaquo;</button>
           <p class="trade-collection-label">Other stickers</p>
         </div>
       </section>
@@ -180,7 +180,7 @@
 
     <dialog id="pack-dialog" class="pack-dialog">
       <div class="dialog-head">
-        <p class="eyebrow">New pack</p>
+        <p class="eyebrow">Fresh packet</p>
         <button id="close-dialog" class="tool-button" type="button" aria-label="Close">x</button>
       </div>
       <div id="pack-results" class="pack-results"></div>
@@ -189,7 +189,7 @@
     <div id="event-feedback" class="event-feedback" aria-live="polite" aria-hidden="true">
       <div class="event-feedback__pulse"></div>
       <div class="event-feedback__content">
-        <span class="event-feedback__icon">✨</span>
+        <span class="event-feedback__icon">*</span>
         <strong id="event-feedback-title">New update</strong>
         <p id="event-feedback-message">Something happened</p>
       </div>

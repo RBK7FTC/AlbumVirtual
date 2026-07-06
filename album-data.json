@@ -16,15 +16,15 @@
         1,
         2,
         3,
-        9,
-        7,
-        1,
-        8,
         4,
-        7
+        7,
+        8,
+        10,
+        12,
+        9
       ],
       "createdAt": "2026-06-21T13:31:54.914Z",
-      "updatedAt": "2026-07-01T14:26:17.391Z"
+      "updatedAt": "2026-07-04T22:58:55.075Z"
     },
     "pepe": {
       "username": "pepe",
@@ -38,6 +38,11 @@
         {
           "givesStickerIndex": "4",
           "wantsStickerIndex": "12",
+          "username": "galo"
+        },
+        {
+          "givesStickerIndex": "5",
+          "wantsStickerIndex": "3",
           "username": "galo"
         }
       ],
@@ -161,7 +166,7 @@
       "collected": [
         3,
         4,
-        9
+        5
       ],
       "createdAt": "2026-07-04T19:57:56.880Z",
       "updatedAt": "2026-07-04T19:57:59.211Z"
