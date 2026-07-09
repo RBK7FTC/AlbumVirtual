@@ -1,8 +1,7 @@
 **Front-end style**
-- Add green icon.
-- Add cover image at page init with big title and logos.
 - Modify <aside> in mobile to not cover the first half of screen.
-- Add FTC/Mexico event logos.
+- Add cover image at page init with big title and logos.
+- Check what happen if leaderboard and stickers exceed height limits.
 - Add real sticker images (comic style?).
 - Enhance collection page turn animation.
 - Add animation when:

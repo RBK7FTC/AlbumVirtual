@@ -210,8 +210,7 @@ input {
   grid-template-rows: auto auto minmax(180px, 1fr) auto;
   gap: 16px;
   align-content: start;
-  height: 100%;
-  max-height: calc(100vh - 48px);
+  /*max-height: calc(100vh - 48px);*/
   min-height: 0;
   width: auto;
   overflow-y: auto;
