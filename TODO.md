@@ -1,9 +1,8 @@
 **Front-end style**
-- Make username QR fit into dashed box.
 - Add FTC/Mexico event logos.
-- Add real sticker images.
+- Add real sticker images (comic style?).
 - Enhance collection page turn animation.
-- Enhance animation when:
+- Add animation when:
         Pack is obtained.
         Trade request received.
         Trade request accepted.
@@ -16,7 +15,9 @@
 
 **Obtaining packs**
 - Think on other ways to obtain packs.
+- Give a QR code to obtain a pack to each team, enforcing teams to communicate with each other to obtain packs by scanning other teams QR code.
 
 **Misc**
+- Limit number of trades.
 - Check if collection is persisted at pack opening start.
 - Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.
