@@ -18,80 +18,82 @@
 
     <main class="app-shell">
       <aside id="album-panel" class="album-panel" aria-label="Album overview">
-        <div class="brand-lockup">
-          <img class="brand-mark" src="assets/WhiteLogo.svg">
-          <div>
-            <p class="eyebrow">FTC Mexico premier event</p>
-            <h1>Virtual Album</h1>
+        <div class="album-panel__content">
+          <div class="brand-lockup">
+            <img class="brand-mark" src="assets/WhiteLogo.svg">
+            <div>
+              <p class="eyebrow">FTC Mexico premier event</p>
+              <h1>Virtual Album</h1>
+            </div>
           </div>
-        </div>
 
-        <div class="stage-nav">
-          <button id="albumStageBtn" class="primary-action" type="submit">Album</button>
-          <button id="leaderboardStageBtn" class="primary-action" type="submit">Leaderboard</button>
-          <button id="tradingStageBtn" class="primary-action">Trading</button>
-        </div>
+          <div class="stage-nav">
+            <button id="albumStageBtn" class="primary-action" type="submit">Album</button>
+            <button id="leaderboardStageBtn" class="primary-action" type="submit">Leaderboard</button>
+            <button id="tradingStageBtn" class="primary-action">Trading</button>
+          </div>
 
-        <section class="auth-panel" aria-label="Account">
-          <div id="auth-form-panel">
-            <p class="eyebrow">Collector pass</p>
-            <form id="auth-form" class="auth-form">
-              <label>
-                Username
-                <input id="username-input" name="username" type="text" autocomplete="username" required />
-              </label>
-              <label>
-                Password
-                <input
-                  id="password-input"
-                  name="password"
-                  type="password"
-                  autocomplete="current-password"
-                  required
-                />
-              </label>
-              <div class="auth-actions">
-                <button id="login-button" class="primary-action" type="submit">Sign in</button>
-                <button id="register-button" class="secondary-action" type="button">Register</button>
+          <section class="auth-panel" aria-label="Account">
+            <div id="auth-form-panel">
+              <p class="eyebrow">Collector pass</p>
+              <form id="auth-form" class="auth-form">
+                <label>
+                  Username
+                  <input id="username-input" name="username" type="text" autocomplete="username" required />
+                </label>
+                <label>
+                  Password
+                  <input
+                    id="password-input"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                  />
+                </label>
+                <div class="auth-actions">
+                  <button id="login-button" class="primary-action" type="submit">Sign in</button>
+                  <button id="register-button" class="secondary-action" type="button">Register</button>
+                </div>
+                <p id="auth-message" class="auth-message" role="status"></p>
+              </form>
+            </div>
+
+            <div id="user-panel" class="user-panel is-hidden">
+              <p class="eyebrow">Signed in</p>
+              <div class="user-row">
+                <strong id="current-username"></strong>
+                <button id="logout-button" class="secondary-action" type="button">Sign out</button>
               </div>
-              <p id="auth-message" class="auth-message" role="status"></p>
-            </form>
-          </div>
-
-          <div id="user-panel" class="user-panel is-hidden">
-            <p class="eyebrow">Signed in</p>
-            <div class="user-row">
-              <strong id="current-username"></strong>
-              <button id="logout-button" class="secondary-action" type="button">Sign out</button>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section class="progress-block" aria-label="Collection progress">
-          <div class="progress-copy">
-            <span id="collected-count">0</span>
-            <span>of</span>
-            <span id="total-count">12</span>
-          </div>
-          <div class="progress-track" aria-hidden="true">
-            <span id="progress-bar"></span>
-          </div>
-          <p id="rarity-summary">Start your collection</p>
-          <p id="database-status">
-              Sign in to save stickers
-          </p>
-        </section>
-
-        <div class="pack">
-            <div class="pack-art" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
+          <section class="progress-block" aria-label="Collection progress">
+            <div class="progress-copy">
+              <span id="collected-count">0</span>
+              <span>of</span>
+              <span id="total-count">12</span>
             </div>
-            <button id="open-pack" class="primary-action" type="button">
-                <span aria-hidden="true">+</span>
-                Open packet
-            </button>
+            <div class="progress-track" aria-hidden="true">
+              <span id="progress-bar"></span>
+            </div>
+            <p id="rarity-summary">Start your collection</p>
+            <p id="database-status">
+                Sign in to save stickers
+            </p>
+          </section>
+
+          <div class="pack">
+              <div class="pack-art" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+              </div>
+              <button id="open-pack" class="primary-action" type="button">
+                  <span aria-hidden="true">+</span>
+                  Open packet
+              </button>
+          </div>
         </div>
       </aside>
 

@@ -1,5 +1,4 @@
 **Front-end style**
-- Can't scroll page when <aside> is visible on mobile.
 - Add cover image at page init with big title and logos.
 - Check what happen if leaderboard and stickers exceed height limits.
 - Add real sticker images (comic style?).

@@ -7,7 +7,7 @@
         "hash": "5a45e93f798e9e527a94a35344d3e252fedd18b9de2297f13dbdc6b7a416b2dc21779943e24dca84a91dfd84570062c4a199dedf656641c1696a1a216f0f31a2"
       },
       "isAdmin": true,
-      "availablePacks": 3,
+      "availablePacks": 2,
       "tradeRequests": [],
       "scannedQRCodes": [
         "3OZA6ZF0LJL5XGGZIP32LM73806Q32OC"
@@ -15,11 +15,13 @@
       "collected": [
         1,
         2,
+        3,
         4,
-        7
+        7,
+        12
       ],
       "createdAt": "2026-06-21T13:31:54.914Z",
-      "updatedAt": "2026-07-09T17:04:35.114Z"
+      "updatedAt": "2026-07-09T17:30:55.088Z"
     },
     "pepe": {
       "username": "pepe",
