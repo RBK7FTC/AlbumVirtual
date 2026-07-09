@@ -1,7 +1,7 @@
 **Front-end style**
-- Add cover image at page init with big title and logos.
 - Check what happen if leaderboard and stickers exceed height limits.
 - Add real sticker images (comic style?).
+- Enhance cover image.
 - Enhance collection page turn animation.
 - Add animation when:
         Pack is obtained.

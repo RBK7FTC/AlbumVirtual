@@ -50,6 +50,7 @@ const packDialog = document.querySelector("#pack-dialog");
 const mobileSidebarToggle = document.querySelector("#mobile-sidebar-toggle");
 const albumPanel = document.querySelector("#album-panel");
 const albumPanelOverlay = document.querySelector("#album-panel-overlay");
+const introCover = document.querySelector("#intro-cover");
 const packResults = document.querySelector("#pack-results");
 const authForm = document.querySelector("#auth-form");
 const authFormPanel = document.querySelector("#auth-form-panel");
@@ -138,6 +139,17 @@ function handlePanelSwipeEnd(event) {
 
 mobileSidebarToggle?.addEventListener("click", toggleAlbumPanel);
 albumPanelOverlay?.addEventListener("click", closeAlbumPanel);
+
+function dismissIntroCover() {
+  introCover?.classList.add("is-hidden");
+}
+
+introCover?.addEventListener("click", dismissIntroCover);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    dismissIntroCover();
+  }
+});
 document.addEventListener("touchstart", handlePanelSwipeStart, { passive: true });
 document.addEventListener("touchend", handlePanelSwipeEnd, { passive: true });
 window.addEventListener("resize", () => {
