@@ -47,6 +47,9 @@ const progressBar = document.querySelector("#progress-bar");
 const raritySummary = document.querySelector("#rarity-summary");
 const databaseStatus = document.querySelector("#database-status");
 const packDialog = document.querySelector("#pack-dialog");
+const mobileSidebarToggle = document.querySelector("#mobile-sidebar-toggle");
+const albumPanel = document.querySelector("#album-panel");
+const albumPanelOverlay = document.querySelector("#album-panel-overlay");
 const packResults = document.querySelector("#pack-results");
 const authForm = document.querySelector("#auth-form");
 const authFormPanel = document.querySelector("#auth-form-panel");
@@ -61,6 +64,87 @@ const resetAlbumButton = document.querySelector("#reset-album");
 const getPackButton = document.querySelector("#get-pack");
 
 totalCount.textContent = stickers.length;
+
+function openAlbumPanel() {
+  if (!albumPanel || !albumPanelOverlay) {
+    return;
+  }
+
+  albumPanel.classList.add("is-open");
+  albumPanelOverlay.classList.add("is-visible");
+  albumPanelOverlay.setAttribute("aria-hidden", "false");
+  mobileSidebarToggle?.setAttribute("aria-expanded", "true");
+  document.body.classList.add("is-panel-open");
+}
+
+function closeAlbumPanel() {
+  if (!albumPanel || !albumPanelOverlay) {
+    return;
+  }
+
+  albumPanel.classList.remove("is-open");
+  albumPanelOverlay.classList.remove("is-visible");
+  albumPanelOverlay.setAttribute("aria-hidden", "true");
+  mobileSidebarToggle?.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("is-panel-open");
+}
+
+function toggleAlbumPanel() {
+  if (!albumPanel) {
+    return;
+  }
+
+  if (albumPanel.classList.contains("is-open")) {
+    closeAlbumPanel();
+  } else {
+    openAlbumPanel();
+  }
+}
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchActive = false;
+
+function handlePanelSwipeStart(event) {
+  if (window.innerWidth > 840) {
+    return;
+  }
+
+  const touch = event.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+  touchActive = true;
+}
+
+function handlePanelSwipeEnd(event) {
+  if (!touchActive || window.innerWidth > 840) {
+    return;
+  }
+
+  const touch = event.changedTouches[0];
+  const deltaX = touch.clientX - touchStartX;
+  const deltaY = touch.clientY - touchStartY;
+
+  if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 60) {
+    if (deltaX > 0 && touchStartX < 48) {
+      openAlbumPanel();
+    } else if (deltaX < 0 && albumPanel?.classList.contains("is-open")) {
+      closeAlbumPanel();
+    }
+  }
+
+  touchActive = false;
+}
+
+mobileSidebarToggle?.addEventListener("click", toggleAlbumPanel);
+albumPanelOverlay?.addEventListener("click", closeAlbumPanel);
+document.addEventListener("touchstart", handlePanelSwipeStart, { passive: true });
+document.addEventListener("touchend", handlePanelSwipeEnd, { passive: true });
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 840) {
+    closeAlbumPanel();
+  }
+});
 
 async function apiRequest(path, options = {}) {
   const headers = {

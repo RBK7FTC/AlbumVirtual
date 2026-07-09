@@ -9,8 +9,15 @@
     <link rel="stylesheet" href="ftcStyles.css" />
   </head>
   <body>
+    <button id="mobile-sidebar-toggle" class="mobile-sidebar-toggle" type="button" aria-controls="album-panel" aria-expanded="false" aria-label="Open album panel">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div id="album-panel-overlay" class="album-panel-overlay" aria-hidden="true"></div>
+
     <main class="app-shell">
-      <aside class="album-panel" aria-label="Album overview">
+      <aside id="album-panel" class="album-panel" aria-label="Album overview">
         <div class="brand-lockup">
           <img class="brand-mark" src="assets/WhiteLogo.svg">
           <div>
