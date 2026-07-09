@@ -541,26 +541,6 @@ input {
   gap: 14px;
 }
 
-.brand-mark {
-  display: grid;
-  width: 54px;
-  aspect-ratio: 1;
-  place-items: center;
-  width: 66px;
-  /*
-  border: 2px solid var(--ink);
-  border: 2px solid rgba(255, 244, 189, 0.9);
-  border-radius: 50%;
-  background: var(--foil);
-  color: #171717;
-  box-shadow: inset 0 0 0 4px rgba(255, 250, 240, 0.42), 0 12px 24px rgba(0, 0, 0, 0.28);
-  font-size: 1.45rem;
-  letter-spacing: 0;
-  border-radius: 8px;
-  background: #ffd166;
-  font-weight: 900;*/
-}
-
 .auth-panel {
   display: grid;
   gap: 14px;
@@ -2357,5 +2337,834 @@ img#team-logo-stage-header {
 
   .pack-reveal-sticker .sticker-image img {
     max-width: 98px;
+  }
+}
+
+/* 2026 cover-art aesthetic */
+:root {
+  --wc26-ink: #07101f;
+  --wc26-navy: #00338d;
+  --wc26-blue: #004bd6;
+  --wc26-sky: #b7c9ff;
+  --wc26-cyan: #76e7df;
+  --wc26-pink: #e72d7f;
+  --wc26-red: #e51c23;
+  --wc26-orange: #ff6a13;
+  --wc26-yellow: #ffe600;
+  --wc26-lime: #8ee44a;
+  --wc26-mint: #c7f4bd;
+  --wc26-burgundy: #7b0f24;
+  --wc26-lavender: #d9c8ff;
+  --wc26-paper: #fffdf3;
+  --wc26-shadow: 0 28px 68px rgba(4, 18, 54, 0.2);
+  --paper: #ffffff;
+  --panel: #fffdf3;
+  --ink: var(--wc26-ink);
+  --muted: #59606f;
+  --line: rgba(7, 16, 31, 0.14);
+  --accent: var(--wc26-pink);
+  --accent-2: var(--wc26-blue);
+  --blue: var(--wc26-blue);
+  --gold: #c89522;
+  --foil: linear-gradient(135deg, #6b4808 0%, #f7cd50 22%, #fff3a5 42%, #c78516 68%, #5b3905 100%);
+  --shadow: var(--wc26-shadow);
+}
+
+body {
+  color: var(--wc26-ink);
+  background:
+    radial-gradient(circle at 0 10%, var(--wc26-orange) 0 78px, transparent 79px),
+    radial-gradient(circle at 0 25%, var(--wc26-yellow) 0 104px, transparent 105px),
+    radial-gradient(circle at 0 45%, var(--wc26-mint) 0 80px, transparent 81px),
+    radial-gradient(circle at 100% 18%, var(--wc26-burgundy) 0 86px, transparent 87px),
+    radial-gradient(circle at 100% 38%, var(--wc26-sky) 0 98px, transparent 99px),
+    radial-gradient(circle at 100% 64%, var(--wc26-red) 0 76px, transparent 77px),
+    linear-gradient(90deg, rgba(0, 51, 141, 0.06) 0 1px, transparent 1px),
+    linear-gradient(rgba(0, 51, 141, 0.05) 0 1px, transparent 1px),
+    #f8f8f4;
+  background-size: auto, auto, auto, auto, auto, auto, 34px 34px, 34px 34px, auto;
+}
+
+body::before {
+  content: "26";
+  top: -4vh;
+  right: 4vw;
+  z-index: -2;
+  color: rgba(7, 16, 31, 0.05);
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  font-size: clamp(15rem, 37vw, 38rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 0.8;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: auto 0 0;
+  z-index: -1;
+  height: 18vh;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--wc26-blue) 0 12%, var(--wc26-cyan) 12% 20%, var(--wc26-orange) 20% 32%, var(--wc26-yellow) 32% 43%, var(--wc26-red) 43% 53%, var(--wc26-lime) 53% 65%, var(--wc26-navy) 65% 78%, var(--wc26-lavender) 78% 90%, var(--wc26-burgundy) 90% 100%);
+  clip-path: polygon(0 70%, 100% 36%, 100% 100%, 0 100%);
+  opacity: 0.82;
+}
+
+.app-shell {
+  grid-template-columns: minmax(280px, 348px) minmax(0, 1fr);
+  gap: 30px;
+  max-width: 1460px;
+  padding: 30px;
+}
+
+.album-panel,
+.album-stage,
+.leaderboard-stage,
+.trading-stage,
+#trade-stage,
+.pack-dialog {
+  border: 0;
+  background: var(--wc26-paper);
+  box-shadow: var(--wc26-shadow);
+  backdrop-filter: none;
+}
+
+.album-panel,
+.leaderboard-stage,
+.trading-stage,
+.trade-stage,
+.album-stage,
+.pack-dialog {
+  border-radius: 6px;
+}
+
+.album-panel {
+  min-height: calc(100vh - 60px);
+  padding: 24px;
+  color: #fff;
+  background:
+    radial-gradient(circle at -8% 16%, var(--wc26-orange) 0 82px, transparent 83px),
+    radial-gradient(circle at 106% 5%, var(--wc26-burgundy) 0 78px, transparent 79px),
+    radial-gradient(circle at -5% 48%, var(--wc26-yellow) 0 98px, transparent 99px),
+    radial-gradient(circle at 102% 62%, var(--wc26-sky) 0 92px, transparent 93px),
+    linear-gradient(90deg, transparent 0 14px, var(--wc26-cyan) 14px 36px, transparent 36px calc(100% - 36px), var(--wc26-blue) calc(100% - 36px) calc(100% - 14px), transparent calc(100% - 14px)),
+    var(--wc26-pink);
+  isolation: isolate;
+}
+
+.album-panel::before {
+  content: "26";
+  position: absolute;
+  inset: 74px auto auto 50%;
+  z-index: -1;
+  color: #fff;
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  font-size: clamp(11rem, 23vw, 18rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 0.72;
+  transform: translateX(-50%);
+  text-shadow: 0 14px 0 rgba(0, 51, 141, 0.26);
+}
+
+.album-panel::after {
+  content: "";
+  position: absolute;
+  inset: 136px -42px auto -42px;
+  z-index: -1;
+  height: 220px;
+  border: 18px solid var(--wc26-blue);
+  border-right-color: var(--wc26-orange);
+  border-bottom-color: var(--wc26-yellow);
+  border-left-color: var(--wc26-lime);
+  border-radius: 46px;
+  box-shadow:
+    inset 0 0 0 14px var(--wc26-navy),
+    inset 0 0 0 28px var(--wc26-lavender);
+  transform: rotate(-8deg);
+}
+
+.brand-lockup {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-height: 92px;
+  padding: 0 0 20px;
+  border-bottom: 4px solid rgba(255, 255, 255, 0.82);
+}
+
+.brand-mark {
+  width: 100%;
+  height: auto;
+  padding: 8px;
+  border: 4px solid #fff;
+  border-radius: 40%;
+  background: var(--wc26-blue);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+
+  display: grid;
+  aspect-ratio: 1;
+  place-items: center;
+}
+
+.album-panel h1,
+h2 {
+  margin: 0;
+  color: inherit;
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  font-weight: 950;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.album-panel h1 {
+  max-width: 220px;
+  color: #fff;
+  font-size: clamp(2.5rem, 3.4vw, 3.55rem);
+  line-height: 0.86;
+  text-shadow: 0 5px 0 var(--wc26-navy);
+  overflow-wrap: normal;
+}
+
+.eyebrow {
+  color: var(--wc26-yellow);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.album-panel .eyebrow {
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.22);
+}
+
+.stage-nav {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.primary-action,
+.secondary-action,
+.filter-button,
+.tool-button,
+.trade-nav-button,
+.trade-submit-button {
+  min-height: 44px;
+  border: 3px solid var(--wc26-ink);
+  border-radius: 4px;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 5px 5px 0 var(--wc26-ink);
+  transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+}
+
+.primary-action {
+  background: var(--wc26-yellow);
+  color: var(--wc26-ink);
+}
+
+.primary-action span {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: var(--wc26-blue);
+  color: #fff;
+}
+
+.secondary-action,
+.filter-button,
+.tool-button,
+.trade-nav-button {
+  background: #fff;
+  color: var(--wc26-ink);
+}
+
+.primary-action:hover,
+.primary-action:focus-visible,
+.secondary-action:hover,
+.secondary-action:focus-visible,
+.filter-button:hover,
+.filter-button:focus-visible,
+.tool-button:hover,
+.tool-button:focus-visible,
+.trade-nav-button:hover,
+.trade-nav-button:focus-visible,
+.trade-submit-button:hover,
+.trade-submit-button:focus-visible {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--wc26-ink);
+  filter: saturate(1.08);
+}
+
+.primary-action:disabled,
+.primary-action.is-disabled {
+  opacity: 0.45;
+  transform: none;
+  box-shadow: 3px 3px 0 var(--wc26-ink);
+}
+
+.auth-panel,
+.progress-block,
+.pack {
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  background: rgba(0, 51, 141, 0.84);
+  box-shadow: 7px 7px 0 rgba(7, 16, 31, 0.24);
+}
+
+.auth-panel label,
+.auth-message,
+.user-row,
+.progress-copy,
+.album-panel #rarity-summary,
+#database-status {
+  color: #fff;
+}
+
+input {
+  border: 3px solid var(--wc26-ink);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--wc26-ink);
+  font-weight: 800;
+}
+
+.progress-copy span:first-child {
+  color: var(--wc26-yellow);
+  text-shadow: 0 3px 0 var(--wc26-ink);
+}
+
+.progress-track {
+  height: 15px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.progress-track span {
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, var(--wc26-yellow) 0 24%, var(--wc26-lime) 24% 47%, var(--wc26-cyan) 47% 68%, var(--wc26-orange) 68% 100%);
+}
+
+.pack-art {
+  min-height: 230px;
+  border: 4px solid var(--wc26-ink);
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 0 12%, var(--wc26-orange) 0 58px, transparent 59px),
+    radial-gradient(circle at 100% 24%, var(--wc26-burgundy) 0 52px, transparent 53px),
+    radial-gradient(circle at 0 58%, var(--wc26-yellow) 0 72px, transparent 73px),
+    radial-gradient(circle at 100% 75%, var(--wc26-lavender) 0 68px, transparent 69px),
+    linear-gradient(160deg, var(--wc26-blue) 0 38%, var(--wc26-cyan) 38% 52%, var(--wc26-orange) 52% 68%, var(--wc26-lime) 68% 100%);
+  box-shadow: 9px 9px 0 rgba(7, 16, 31, 0.28);
+}
+
+.pack-art::before {
+  content: "26";
+  inset: 22px auto auto 50%;
+  color: #fff;
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  font-size: 6.4rem;
+  line-height: 0.72;
+  letter-spacing: 0;
+  transform: translateX(-50%);
+  text-shadow: 0 7px 0 var(--wc26-navy);
+}
+
+.pack-art::after {
+  content: "STICKER PACK";
+  right: 16px;
+  bottom: 16px;
+  width: auto;
+  padding: 7px 10px;
+  border: 3px solid var(--wc26-ink);
+  background: var(--wc26-yellow);
+  color: var(--wc26-ink);
+  font-size: 0.68rem;
+  transform: none;
+}
+
+.pack-art span {
+  display: none;
+}
+
+#album-stage {
+  --team-primary: var(--wc26-blue);
+  --team-secondary: var(--wc26-pink);
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(7, 16, 31, 0.12), transparent 3.5%, transparent 96.5%, rgba(7, 16, 31, 0.12)),
+    linear-gradient(90deg, #fffaf0 0 49.3%, #d8caa5 49.3% 49.7%, #6d5c39 49.7% 50.05%, #efe1bc 50.05% 50.5%, #fffdf3 50.5% 100%);
+}
+
+#album-stage::before {
+  inset: 0 calc(50% - 17px);
+  width: 34px;
+  background:
+    radial-gradient(ellipse at center, rgba(7, 16, 31, 0.24), transparent 62%),
+    linear-gradient(90deg, transparent, rgba(7, 16, 31, 0.2), transparent);
+}
+
+#album-stage::after {
+  background:
+    radial-gradient(circle at 0 8%, var(--wc26-orange) 0 58px, transparent 59px),
+    radial-gradient(circle at 0 24%, var(--wc26-yellow) 0 70px, transparent 71px),
+    radial-gradient(circle at 0 44%, var(--wc26-mint) 0 56px, transparent 57px),
+    radial-gradient(circle at 100% 14%, var(--wc26-burgundy) 0 58px, transparent 59px),
+    radial-gradient(circle at 100% 38%, var(--wc26-sky) 0 72px, transparent 73px),
+    radial-gradient(circle at 100% 68%, var(--wc26-red) 0 58px, transparent 59px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.68), transparent 12% 88%, rgba(0, 0, 0, 0.04)),
+    repeating-linear-gradient(0deg, rgba(7, 16, 31, 0.026) 0 1px, transparent 1px 7px);
+  opacity: 0.96;
+}
+
+#album-stage .stage-header {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding: 28px 34px 24px;
+  background:
+    linear-gradient(90deg, rgba(var(--team-primary-rgb), 0.18), transparent 52%),
+    linear-gradient(180deg, #fffdf3, rgba(255, 253, 243, 0.78));
+}
+
+#album-stage .stage-header::before {
+  content: "26";
+  position: absolute;
+  right: 170px;
+  top: -18px;
+  z-index: -1;
+  color: rgba(7, 16, 31, 0.07);
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  font-size: clamp(5rem, 10vw, 9rem);
+  line-height: 0.8;
+  letter-spacing: 0;
+}
+
+#album-stage .stage-header::after {
+  height: 14px;
+  border-radius: 0;
+  background:
+    linear-gradient(90deg, var(--wc26-blue) 0 14%, var(--wc26-cyan) 14% 27%, var(--wc26-orange) 27% 41%, var(--wc26-yellow) 41% 55%, var(--wc26-pink) 55% 70%, var(--wc26-lime) 70% 84%, var(--wc26-burgundy) 84% 100%);
+  box-shadow: 0 4px 0 var(--wc26-ink);
+}
+
+#album-stage .eyebrow {
+  color: var(--team-primary);
+}
+
+#album-stage h2,
+.leaderboard-stage h2,
+.trading-stage h2,
+#trade-stage h2 {
+  color: var(--wc26-ink);
+  font-size: clamp(2.3rem, 6vw, 5.2rem);
+  line-height: 0.9;
+}
+
+#album-stage img#team-logo-stage-header {
+  width: 82px;
+  height: 82px;
+  max-height: none;
+  border: 4px solid var(--wc26-ink);
+  border-radius: 999px;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, var(--team-primary), var(--team-secondary)) border-box;
+  box-shadow: 6px 6px 0 rgba(var(--team-primary-rgb), 0.36);
+}
+
+#album-stage .filter-list {
+  gap: 10px;
+}
+
+#album-stage .filter-button {
+  min-width: 136px;
+  background: #fff;
+  border-color: var(--wc26-ink);
+  color: var(--wc26-ink);
+}
+
+#album-stage .filter-button.is-active {
+  background: var(--wc26-yellow);
+  border-color: var(--wc26-ink);
+  color: var(--wc26-ink);
+}
+
+#album-stage .album-grid {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: repeat(3, minmax(146px, 1fr));
+  gap: 26px 30px;
+  padding: 34px 42px 44px;
+  background:
+    linear-gradient(90deg, transparent 0 48.7%, rgba(7, 16, 31, 0.1) 48.7% 51.3%, transparent 51.3% 100%);
+}
+
+#album-stage .sticker-card,
+.pack-reveal-sticker,
+.trade-collection-panel .trade-strickers-collection .sticker-card.trade-card {
+  border: 3px solid var(--wc26-ink);
+  border-radius: 3px;
+  background:
+    linear-gradient(135deg, rgba(var(--team-primary-rgb, 0, 75, 214), 0.08) 0 24%, transparent 24% 100%),
+    #fff;
+  box-shadow: 7px 7px 0 rgba(7, 16, 31, 0.14);
+}
+
+#album-stage .sticker-card {
+  min-height: 292px;
+  border-style: dashed;
+  overflow: visible;
+}
+
+#album-stage .sticker-card::before {
+  inset: 10px;
+  border: 2px solid rgba(7, 16, 31, 0.14);
+  background:
+    linear-gradient(90deg, transparent 0 calc(50% - 1px), rgba(var(--team-primary-rgb), 0.25) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(transparent 0 calc(50% - 1px), rgba(var(--team-secondary-rgb), 0.2) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px));
+}
+
+#album-stage .sticker-card::after {
+  inset: auto 12px 12px auto;
+  width: 50px;
+  height: 28px;
+  border: 0;
+  background:
+    linear-gradient(90deg, var(--wc26-blue) 0 22%, var(--wc26-cyan) 22% 40%, var(--wc26-orange) 40% 58%, var(--wc26-yellow) 58% 76%, var(--wc26-pink) 76% 100%);
+  opacity: 0.7;
+}
+
+#album-stage .sticker-card.is-collected {
+  border-style: solid;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, var(--team-primary), var(--team-secondary)) border-box;
+  box-shadow: 8px 8px 0 rgba(var(--team-primary-rgb), 0.22);
+}
+
+#album-stage .sticker-image {
+  min-height: 206px;
+  padding: 22px 16px 8px;
+}
+
+#album-stage .sticker-image img {
+  max-width: 150px;
+  filter: drop-shadow(0 12px 11px rgba(7, 16, 31, 0.18));
+}
+
+#album-stage .is-missing .sticker-image img {
+  opacity: 0.04;
+}
+
+#album-stage .sticker-meta,
+.pack-reveal-sticker .sticker-meta {
+  border-top: 3px solid var(--wc26-ink);
+  background: #fffdf3;
+}
+
+#album-stage .sticker-meta h3,
+.pack-reveal-sticker .sticker-meta h3 {
+  color: var(--wc26-ink);
+  font-weight: 950;
+}
+
+#album-stage .sticker-meta p,
+.pack-reveal-sticker .sticker-meta p {
+  color: var(--team-primary, var(--wc26-blue));
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+#album-stage .card-number,
+.pack-reveal-sticker .card-number {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--wc26-ink);
+  background: var(--wc26-yellow);
+  color: var(--wc26-ink);
+  box-shadow: 4px 4px 0 var(--wc26-ink);
+}
+
+.rarity {
+  border: 2px solid var(--wc26-ink);
+  border-radius: 2px;
+  background: var(--wc26-lavender);
+  color: var(--wc26-ink);
+}
+
+.rarity.rare,
+.rarity.epic,
+.rarity.legendary {
+  background: var(--foil);
+  color: var(--wc26-ink);
+}
+
+.leaderboard-stage,
+.trading-stage,
+#trade-stage,
+.pack-dialog {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 0 12%, var(--wc26-orange) 0 72px, transparent 73px),
+    radial-gradient(circle at 100% 18%, var(--wc26-blue) 0 76px, transparent 77px),
+    linear-gradient(180deg, #fffdf3, #fffaf0);
+}
+
+.leaderboard-stage .stage-header,
+.trading-stage .stage-header,
+#trade-stage .trade-stage-header-card {
+  border-bottom: 14px solid transparent;
+  border-image: linear-gradient(90deg, var(--wc26-blue), var(--wc26-cyan), var(--wc26-orange), var(--wc26-yellow), var(--wc26-pink), var(--wc26-lime)) 1;
+}
+
+.ranking-item,
+.trade-collection-panel,
+.trade-stickers-selection,
+#qrCode,
+#notificationsDropdown,
+.event-feedback__content {
+  border: 3px solid var(--wc26-ink);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 6px 6px 0 rgba(7, 16, 31, 0.16);
+}
+
+.ranking-item .rank-number,
+.trade-panel-title {
+  color: var(--wc26-pink);
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.trade-submit-button {
+  background: var(--wc26-pink);
+  color: #fff;
+}
+
+.pack-opening-layer.is-visible {
+  background: linear-gradient(180deg, rgba(255, 253, 243, 0), rgba(255, 253, 243, 0.92));
+}
+
+.pack-opening-panel {
+  width: min(860px, calc(100vw - 28px));
+}
+
+.pack-opening-packet {
+  width: min(276px, 66vw);
+  border: 4px solid var(--wc26-ink);
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 0 14%, var(--wc26-orange) 0 58px, transparent 59px),
+    radial-gradient(circle at 100% 26%, var(--wc26-burgundy) 0 60px, transparent 61px),
+    radial-gradient(circle at 0 64%, var(--wc26-yellow) 0 74px, transparent 75px),
+    linear-gradient(150deg, var(--wc26-blue) 0 34%, var(--wc26-cyan) 34% 48%, var(--wc26-orange) 48% 63%, var(--wc26-pink) 63% 100%);
+  box-shadow: 12px 12px 0 rgba(7, 16, 31, 0.24), 0 30px 70px rgba(7, 16, 31, 0.28);
+}
+
+.pack-opening-packet::before,
+.pack-opening-packet::after {
+  height: 28px;
+  background:
+    repeating-linear-gradient(90deg, var(--wc26-ink) 0 8px, #fff 8px 16px),
+    #fff;
+}
+
+.pack-opening-packet span {
+  width: 118px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  font-size: 5.4rem;
+  line-height: 0.78;
+  text-shadow: 0 7px 0 var(--wc26-navy);
+  box-shadow: none;
+}
+
+.pack-opening-packet strong {
+  min-width: 168px;
+  padding: 8px 10px;
+  border: 3px solid var(--wc26-ink);
+  background: var(--wc26-yellow);
+  color: var(--wc26-ink);
+  font-size: 0.78rem;
+  text-shadow: none;
+  box-shadow: 4px 4px 0 var(--wc26-ink);
+}
+
+.pack-opening-stickers {
+  min-height: 370px;
+  gap: 22px;
+}
+
+.pack-reveal-sticker {
+  width: min(164px, 28vw);
+  min-height: 262px;
+  border-style: solid;
+  background:
+    radial-gradient(circle at 100% 0, var(--wc26-cyan) 0 34px, transparent 35px),
+    radial-gradient(circle at 0 100%, var(--wc26-yellow) 0 38px, transparent 39px),
+    #fff;
+  box-shadow: 9px 9px 0 rgba(7, 16, 31, 0.18), 0 26px 44px rgba(7, 16, 31, 0.2);
+}
+
+.pack-reveal-sticker::after {
+  content: "Click to place";
+  border: 3px solid var(--wc26-ink);
+  border-radius: 2px;
+  background: var(--wc26-yellow);
+  box-shadow: 4px 4px 0 var(--wc26-ink);
+}
+
+.pack-reveal-sticker:hover,
+.pack-reveal-sticker:focus-visible {
+  outline: 0;
+  transform: translateY(-10px) rotate(calc((var(--sticker-index) - 1) * -3deg)) scale(1.04);
+  box-shadow: 11px 11px 0 var(--wc26-ink), 0 32px 52px rgba(7, 16, 31, 0.22);
+}
+
+.pack-reveal-sticker.is-placing {
+  box-shadow: 12px 12px 0 var(--wc26-ink), 0 38px 72px rgba(7, 16, 31, 0.28);
+}
+
+.is-flying-to-album.is-in-flight {
+  box-shadow: 12px 12px 0 rgba(7, 16, 31, 0.22), 0 42px 72px rgba(7, 16, 31, 0.3);
+}
+
+#album-stage.is-page-swapping::after {
+  background:
+    linear-gradient(103deg, transparent 0 32%, rgba(255, 255, 255, 0.8) 43%, transparent 56% 100%),
+    linear-gradient(90deg, rgba(7, 16, 31, 0.2) 0, transparent 16%, transparent 84%, rgba(7, 16, 31, 0.16) 100%);
+}
+
+@media (max-width: 1040px) {
+  .app-shell {
+    grid-template-columns: minmax(250px, 320px) minmax(0, 1fr);
+    padding: 18px;
+  }
+
+  #album-stage .album-grid {
+    grid-template-columns: repeat(2, minmax(132px, 1fr));
+    padding-inline: 28px;
+  }
+}
+
+@media (max-width: 840px) {
+  body::after {
+    height: 12vh;
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .album-panel {
+    min-height: auto;
+    position: relative;
+  }
+
+  .album-panel h1 {
+    max-width: 210px;
+    font-size: clamp(2.15rem, 12vw, 3rem);
+    line-height: 1.04;
+  }
+
+  #album-stage .stage-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 22px 20px 18px;
+  }
+
+  #album-stage .stage-header::before {
+    right: 90px;
+    top: 4px;
+  }
+
+  #album-stage .filter-list {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    background:
+      radial-gradient(circle at 0 8%, var(--wc26-orange) 0 54px, transparent 55px),
+      radial-gradient(circle at 100% 16%, var(--wc26-blue) 0 60px, transparent 61px),
+      #f8f8f4;
+  }
+
+  .app-shell {
+    padding: 12px;
+  }
+
+  .brand-lockup {
+    grid-template-columns: 54px minmax(0, 1fr);
+  }
+
+  .album-panel::before {
+    top: 112px;
+    color: rgba(255, 255, 255, 0.74);
+    font-size: 9.5rem;
+  }
+
+  .album-panel h1 {
+    max-width: 198px;
+    font-size: clamp(2rem, 10.5vw, 2.55rem);
+    line-height: 1.06;
+    text-shadow: 0 3px 0 var(--wc26-navy);
+  }
+
+  #album-stage h2,
+  .leaderboard-stage h2,
+  .trading-stage h2,
+  #trade-stage h2 {
+    font-size: clamp(2rem, 17vw, 3.4rem);
+  }
+
+  #album-stage img#team-logo-stage-header {
+    width: 62px;
+    height: 62px;
+  }
+
+  #album-stage .album-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 14px;
+    padding: 20px 18px 28px;
+  }
+
+  #album-stage .sticker-card {
+    min-height: 244px;
+  }
+
+  #album-stage .sticker-image {
+    min-height: 152px;
+    padding-inline: 10px;
+  }
+
+  #album-stage .filter-button {
+    min-width: 0;
+  }
+
+  .pack-opening-stickers {
+    gap: 12px;
+  }
+
+  .pack-reveal-sticker {
+    width: min(136px, calc(50vw - 28px));
+    min-height: 226px;
   }
 }

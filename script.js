@@ -1015,22 +1015,8 @@ function toggleVisibility(targetId) {
 }
 
 async function switchTo(targetId) {
-
-  if (!document.startViewTransition) {
-    toggleVisibility(targetId);
-    return Promise.resolve();
-  }
-
-  try {
-    const transition = document.startViewTransition(() => {
-      toggleVisibility(targetId);
-    });
-
-    return transition.finished.catch(() => undefined);
-  } catch {
-    toggleVisibility(targetId);
-    return Promise.resolve();
-  }
+  toggleVisibility(targetId);
+  return Promise.resolve();
 }
 
 document.getElementById("trade-send-trade-button").addEventListener("click", async () => {
