@@ -546,10 +546,19 @@ input {
   width: 54px;
   aspect-ratio: 1;
   place-items: center;
+  width: 66px;
+  /*
   border: 2px solid var(--ink);
+  border: 2px solid rgba(255, 244, 189, 0.9);
+  border-radius: 50%;
+  background: var(--foil);
+  color: #171717;
+  box-shadow: inset 0 0 0 4px rgba(255, 250, 240, 0.42), 0 12px 24px rgba(0, 0, 0, 0.28);
+  font-size: 1.45rem;
+  letter-spacing: 0;
   border-radius: 8px;
   background: #ffd166;
-  font-weight: 900;
+  font-weight: 900;*/
 }
 
 .auth-panel {
@@ -1267,17 +1276,6 @@ body::before {
 .brand-lockup {
   padding-bottom: 18px;
   border-bottom: 1px solid rgba(246, 214, 117, 0.32);
-}
-
-.brand-mark {
-  width: 66px;
-  border: 2px solid rgba(255, 244, 189, 0.9);
-  border-radius: 50%;
-  background: var(--foil);
-  color: #171717;
-  box-shadow: inset 0 0 0 4px rgba(255, 250, 240, 0.42), 0 12px 24px rgba(0, 0, 0, 0.28);
-  font-size: 1.45rem;
-  letter-spacing: 0;
 }
 
 .album-panel h1 {

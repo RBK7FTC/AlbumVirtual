@@ -1,4 +1,7 @@
 **Front-end style**
+- Add green icon.
+- Add cover image at page init with big title and logos.
+- Modify <aside> in mobile to not cover the first half of screen.
 - Add FTC/Mexico event logos.
 - Add real sticker images (comic style?).
 - Enhance collection page turn animation.
@@ -16,6 +19,7 @@
 **Obtaining packs**
 - Think on other ways to obtain packs.
 - Give a QR code to obtain a pack to each team, enforcing teams to communicate with each other to obtain packs by scanning other teams QR code.
+- Publish FTC related questions with a 2 hour timer, if answer correct give a pack.
 
 **Misc**
 - Limit number of trades.
