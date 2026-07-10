@@ -2509,7 +2509,7 @@ body::before {
   background-size: auto 500px, auto 500px, auto 500px, auto 500px, auto 500px, auto 500px, 34px 500px, 34px 500px;
   background-repeat: repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y;
   background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
-  background-attachment: fixed;
+  /*background-attachment: fixed;*/
 }
 
 body::after {
@@ -3233,8 +3233,8 @@ input {
 @media (max-width: 560px) {
   body {
     background:
-      radial-gradient(circle at 0 8%, var(--wc26-orange) 0 54px, transparent 55px),
-      radial-gradient(circle at 100% 16%, var(--wc26-blue) 0 60px, transparent 61px),
+      radial-gradient(circle at 0 60px, var(--wc26-orange) 0 54px, transparent 55px),
+      radial-gradient(circle at 100% 100px, var(--wc26-blue) 0 60px, transparent 61px),
       #f8f8f4;
   }
 
