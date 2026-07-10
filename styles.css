@@ -2483,22 +2483,38 @@ img#team-logo-stage-header {
 }
 
 body {
+  position: relative;
+  min-height: 100vh;
   color: var(--wc26-ink);
-  background:
-    radial-gradient(circle at 0 10%, var(--wc26-orange) 0 78px, transparent 79px),
-    radial-gradient(circle at 0 25%, var(--wc26-yellow) 0 104px, transparent 105px),
-    radial-gradient(circle at 0 45%, var(--wc26-mint) 0 80px, transparent 81px),
-    radial-gradient(circle at 100% 18%, var(--wc26-burgundy) 0 86px, transparent 87px),
-    radial-gradient(circle at 100% 38%, var(--wc26-sky) 0 98px, transparent 99px),
-    radial-gradient(circle at 100% 64%, var(--wc26-red) 0 76px, transparent 77px),
-    linear-gradient(90deg, rgba(0, 51, 141, 0.06) 0 1px, transparent 1px),
-    linear-gradient(rgba(0, 51, 141, 0.05) 0 1px, transparent 1px),
-    #f8f8f4;
-  background-size: auto, auto, auto, auto, auto, auto, 34px 34px, 34px 34px, auto;
+  background-color: #f8f8f4;
+  overflow-x: hidden;
 }
 
 body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-color: #f8f8f4;
+  background-image:
+    radial-gradient(circle at 0px 110px, var(--wc26-orange) 0 78px, transparent 79px),
+    radial-gradient(circle at 0px 270px, var(--wc26-yellow) 0 104px, transparent 105px),
+    radial-gradient(circle at 0px 430px, var(--wc26-mint) 0 80px, transparent 81px),
+    radial-gradient(circle at 100% 120px, var(--wc26-burgundy) 0 86px, transparent 87px),
+    radial-gradient(circle at 100% 320px, var(--wc26-sky) 0 98px, transparent 99px),
+    radial-gradient(circle at 100% 420px, var(--wc26-red) 0 76px, transparent 77px),
+    linear-gradient(90deg, rgba(0, 51, 141, 0.06) 0 1px, transparent 1px),
+    linear-gradient(rgba(0, 51, 141, 0.05) 0 1px, transparent 1px);
+  background-size: auto 500px, auto 500px, auto 500px, auto 500px, auto 500px, auto 500px, 34px 500px, 34px 500px;
+  background-repeat: repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  background-attachment: fixed;
+}
+
+body::after {
   content: "26";
+  position: fixed;
   top: -4vh;
   right: 4vw;
   z-index: -2;
@@ -2508,6 +2524,7 @@ body::before {
   font-weight: 950;
   letter-spacing: 0;
   line-height: 0.8;
+  pointer-events: none;
 }
 
 body::after {
@@ -2556,12 +2573,16 @@ body::after {
   padding: 24px;
   color: #fff;
   background:
-    radial-gradient(circle at -8% 16%, var(--wc26-orange) 0 82px, transparent 83px),
-    radial-gradient(circle at 106% 5%, var(--wc26-burgundy) 0 78px, transparent 79px),
-    radial-gradient(circle at -5% 48%, var(--wc26-yellow) 0 98px, transparent 99px),
-    radial-gradient(circle at 102% 62%, var(--wc26-sky) 0 92px, transparent 93px),
+    radial-gradient(circle at -8% 130px, var(--wc26-orange) 0 82px, transparent 83px),
+    radial-gradient(circle at 106% 160px, var(--wc26-burgundy) 0 78px, transparent 79px),
+    radial-gradient(circle at -5% 350px, var(--wc26-yellow) 0 98px, transparent 99px),
+    radial-gradient(circle at 102% 400px, var(--wc26-sky) 0 92px, transparent 93px),
     linear-gradient(90deg, transparent 0 14px, var(--wc26-cyan) 14px 36px, transparent 36px calc(100% - 36px), var(--wc26-blue) calc(100% - 36px) calc(100% - 14px), transparent calc(100% - 14px)),
     var(--wc26-pink);
+  background-size: auto 500px, auto 500px, auto 500px, auto 500px, 34px 500px;
+  background-repeat: repeat-y, repeat-y, repeat-y, repeat-y, repeat-y;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+  /*background-attachment: fixed;*/
   isolation: isolate;
 }
 
@@ -2830,15 +2851,19 @@ input {
 
 #album-stage::after {
   background:
-    radial-gradient(circle at 0 8%, var(--wc26-orange) 0 58px, transparent 59px),
-    radial-gradient(circle at 0 24%, var(--wc26-yellow) 0 70px, transparent 71px),
-    radial-gradient(circle at 0 44%, var(--wc26-mint) 0 56px, transparent 57px),
-    radial-gradient(circle at 100% 14%, var(--wc26-burgundy) 0 58px, transparent 59px),
-    radial-gradient(circle at 100% 38%, var(--wc26-sky) 0 72px, transparent 73px),
-    radial-gradient(circle at 100% 68%, var(--wc26-red) 0 58px, transparent 59px),
+    radial-gradient(circle at 0 80px, var(--wc26-orange) 0 58px, transparent 59px),
+    radial-gradient(circle at 0 380px, var(--wc26-yellow) 0 70px, transparent 71px),
+    radial-gradient(circle at 0 680px, var(--wc26-mint) 0 56px, transparent 57px),
+    radial-gradient(circle at 100% 140px, var(--wc26-burgundy) 0 58px, transparent 59px),
+    radial-gradient(circle at 100% 240px, var(--wc26-sky) 0 72px, transparent 73px),
+    radial-gradient(circle at 100% 440px, var(--wc26-red) 0 58px, transparent 59px),
+    radial-gradient(circle at 100% 750px, var(--wc26-lavender) 0 58px, transparent 59px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.68), transparent 12% 88%, rgba(0, 0, 0, 0.04)),
     repeating-linear-gradient(0deg, rgba(7, 16, 31, 0.026) 0 1px, transparent 1px 7px);
   opacity: 0.96;
+  background-size: auto 1000px, auto 1000px, auto 1000px, auto 1000px, auto 1000px, auto 1000px, auto 1000px, 34px 1000px;
+  background-repeat: repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
 }
 
 #album-stage .stage-header {
