@@ -167,6 +167,118 @@
       ],
       "createdAt": "2026-07-04T19:57:56.880Z",
       "updatedAt": "2026-07-04T19:57:59.211Z"
+    },
+    "galito2": {
+      "username": "galito2",
+      "password": {
+        "salt": "08523f3a1827fd0a84292c7068e52482",
+        "hash": "d9f010e28b56567decfa980c13ab1b4313e201c7bef3e6dba87880ae823eeb1968038f826dfdb706123d10b6255f1d1085398991087083f02a000e8241baeefc"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "scannedQRCodes": [],
+      "collected": [],
+      "createdAt": "2026-06-29T16:50:24.139Z",
+      "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+    "galito3": {
+      "username": "galito3",
+      "password": {
+        "salt": "08523f3a1827fd0a84292c7068e52482",
+        "hash": "d9f010e28b56567decfa980c13ab1b4313e201c7bef3e6dba87880ae823eeb1968038f826dfdb706123d10b6255f1d1085398991087083f02a000e8241baeefc"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "scannedQRCodes": [],
+      "collected": [],
+      "createdAt": "2026-06-29T16:50:24.139Z",
+      "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+      "galito4": {
+      "username": "galito4",
+      "password": {
+        "salt": "08523f3a1827fd0a84292c7068e52482",
+        "hash": "d9f010e28b56567decfa980c13ab1b4313e201c7bef3e6dba87880ae823eeb1968038f826dfdb706123d10b6255f1d1085398991087083f02a000e8241baeefc"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "scannedQRCodes": [],
+      "collected": [],
+      "createdAt": "2026-06-29T16:50:24.139Z",
+      "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+    "galito5": {
+      "username": "galito5",
+      "password": {
+        "salt": "08523f3a1827fd0a84292c7068e52482",
+        "hash": "d9f010e28b56567decfa980c13ab1b4313e201c7bef3e6dba87880ae823eeb1968038f826dfdb706123d10b6255f1d1085398991087083f02a000e8241baeefc"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "scannedQRCodes": [],
+      "collected": [],
+      "createdAt": "2026-06-29T16:50:24.139Z",
+      "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+    "galito6": {
+      "username": "galito6",
+      "password": {
+        "salt": "08523f3a1827fd0a84292c7068e52482",
+        "hash": "d9f010e28b56567decfa980c13ab1b4313e201c7bef3e6dba87880ae823eeb1968038f826dfdb706123d10b6255f1d1085398991087083f02a000e8241baeefc"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "scannedQRCodes": [],
+      "collected": [],
+      "createdAt": "2026-06-29T16:50:24.139Z",
+      "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+    "galito7": {
+      "username": "galito7",
+      "password": {
+        "salt": "08523f3a1827fd0a84292c7068e52482",
+        "hash": "d9f010e28b56567decfa980c13ab1b4313e201c7bef3e6dba87880ae823eeb1968038f826dfdb706123d10b6255f1d1085398991087083f02a000e8241baeefc"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "scannedQRCodes": [],
+      "collected": [],
+      "createdAt": "2026-06-29T16:50:24.139Z",
+      "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+      "galito8": {
+      "username": "galito8",
+      "password": {
+        "salt": "08523f3a1827fd0a84292c7068e52482",
+        "hash": "d9f010e28b56567decfa980c13ab1b4313e201c7bef3e6dba87880ae823eeb1968038f826dfdb706123d10b6255f1d1085398991087083f02a000e8241baeefc"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "scannedQRCodes": [],
+      "collected": [],
+      "createdAt": "2026-06-29T16:50:24.139Z",
+      "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+    "galito9": {
+      "username": "galito9",
+      "password": {
+        "salt": "08523f3a1827fd0a84292c7068e52482",
+        "hash": "d9f010e28b56567decfa980c13ab1b4313e201c7bef3e6dba87880ae823eeb1968038f826dfdb706123d10b6255f1d1085398991087083f02a000e8241baeefc"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "scannedQRCodes": [],
+      "collected": [],
+      "createdAt": "2026-06-29T16:50:24.139Z",
+      "updatedAt": "2026-06-29T16:50:24.139Z"
     }
   }
 }

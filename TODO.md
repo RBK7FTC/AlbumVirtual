@@ -1,6 +1,5 @@
 **Front-end style**
 - Change page domain url.
-- Check what happen if leaderboard and stickers exceed height limits.
 - Add real sticker images (comic style?).
 - Enhance cover image.
 - Enhance collection page turn animation.
