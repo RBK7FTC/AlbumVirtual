@@ -1,8 +1,8 @@
 **Front-end style**
 - Change page domain url.
+- Enhance card-template rariry styles (common, rare, epic and legendary).
 - Add real sticker images (comic style?).
 - Enhance cover image.
-- Enhance collection page turn animation.
 - Add animation when:
         Pack is obtained.
         Trade request received.
