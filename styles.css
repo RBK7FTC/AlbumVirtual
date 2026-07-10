@@ -2241,31 +2241,34 @@ img#team-logo-stage-header {
   overflow: hidden;
 }
 
-#album-stage.is-page-turning .album-grid {
-  animation: album-page-turn 760ms cubic-bezier(0.16, 0.84, 0.24, 1) forwards;
-  transform-origin: left center;
+#album-stage.is-page-swapping .album-grid .sticker-card {
+  will-change: transform, opacity;
 }
 
-#album-stage.is-page-turning-back .album-grid {
-  animation: album-page-turn-back 680ms cubic-bezier(0.16, 0.84, 0.24, 1) forwards;
-  transform-origin: left center;
-}
-
-#album-stage.is-page-turning-back .album-grid.is-page-content-in {
-  animation: album-page-content-in 520ms cubic-bezier(0.16, 0.84, 0.24, 1) forwards;
-  transform-origin: left center;
-}
-
-#album-stage.is-page-swapping::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+#album-stage.is-page-swapping .album-grid .sticker-card.is-page-exiting {
   pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0, transparent 16%, transparent 84%, rgba(0, 0, 0, 0.14) 100%),
-    radial-gradient(circle at 0% 50%, rgba(0, 0, 0, 0.16), transparent 36%);
-  opacity: 0;
-  animation: album-page-sheen 780ms cubic-bezier(0.16, 0.84, 0.24, 1) forwards;
+  animation: album-page-slide-out 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--page-exit-delay, 0ms);
+}
+
+#album-stage.is-page-swapping .album-grid .sticker-card.is-page-entering {
+  pointer-events: none;
+  animation: album-page-slide-in 560ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--page-enter-delay, 0ms);
+}
+
+#album-stage.is-page-swapping #teams.is-page-exiting,
+#album-stage.is-page-swapping #team-logo-stage-header.is-page-exiting {
+  pointer-events: none;
+  animation: album-page-header-slide-out 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--page-exit-delay, 0ms);
+}
+
+#album-stage.is-page-swapping #teams.is-page-entering,
+#album-stage.is-page-swapping #team-logo-stage-header.is-page-entering {
+  pointer-events: none;
+  animation: album-page-header-slide-in 560ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--page-enter-delay, 0ms);
 }
 
 @keyframes packet-rise {
@@ -2334,87 +2337,51 @@ img#team-logo-stage-header {
   }
 }
 
-@keyframes album-page-turn {
+@keyframes album-page-slide-out {
   0% {
     opacity: 1;
-    transform: rotateY(0deg) translateX(0) scale(1);
+    transform: translateX(0) scale(1);
     filter: brightness(1);
-    box-shadow: 0 18px 40px rgba(20, 16, 8, 0.16);
-  }
-  30% {
-    opacity: 0.86;
-    transform: rotateY(-34deg) translateX(-14px) scale(0.985);
-    filter: brightness(0.95);
-    box-shadow: 0 18px 40px rgba(20, 16, 8, 0.22);
-  }
-  65% {
-    opacity: 0.95;
-    transform: rotateY(-10deg) translateX(8px) scale(1.008);
-    filter: brightness(1.02);
-    box-shadow: 0 18px 40px rgba(20, 16, 8, 0.18);
   }
   100% {
-    opacity: 1;
-    transform: rotateY(0deg) translateX(0) scale(1);
-    filter: brightness(1);
-    box-shadow: 0 18px 40px rgba(20, 16, 8, 0.16);
+    opacity: 0;
+    transform: translateX(calc(var(--page-exit-direction, 1) * 140%)) scale(0.9);
+    filter: brightness(0.88);
   }
 }
 
-@keyframes album-page-turn-back {
-  0% {
-    opacity: 1;
-    transform: rotateY(0deg) translateX(0) scale(1);
-    filter: brightness(1);
-    box-shadow: 0 18px 40px rgba(20, 16, 8, 0.16);
-  }
-  50% {
-    opacity: 0.94;
-    transform: rotateY(-10deg) translateX(5px) scale(1.003);
-    filter: brightness(1.01);
-    box-shadow: 0 18px 40px rgba(20, 16, 8, 0.17);
-  }
-  100% {
-    opacity: 1;
-    transform: rotateY(0deg) translateX(0) scale(1);
-    filter: brightness(1);
-    box-shadow: 0 18px 40px rgba(20, 16, 8, 0.16);
-  }
-}
-
-@keyframes album-page-content-in {
+@keyframes album-page-slide-in {
   0% {
     opacity: 0;
-    transform: rotateY(-14deg) translateX(18px) scale(0.985);
-    filter: brightness(0.94);
-  }
-  55% {
-    opacity: 0.96;
-    transform: rotateY(-4deg) translateX(6px) scale(1.002);
-    filter: brightness(1.01);
+    transform: translateX(calc(var(--page-enter-direction, 1) * 120%)) scale(0.94);
+    filter: brightness(0.88);
   }
   100% {
     opacity: 1;
-    transform: rotateY(0deg) translateX(0) scale(1);
+    transform: translateX(0) scale(1);
     filter: brightness(1);
   }
 }
 
-@keyframes album-page-sheen {
+@keyframes album-page-header-slide-out {
   0% {
-    opacity: 0;
-  }
-  24% {
-    opacity: 0.78;
-    background:
-      linear-gradient(103deg, transparent 0 34%, rgba(255, 255, 255, 0.72) 44%, transparent 56% 100%),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.7), transparent 10% 90%, rgba(82, 61, 20, 0.14)),
-      radial-gradient(circle at 22% 18%, rgba(var(--team-primary-rgb), 0.16), transparent 28%),
-      radial-gradient(circle at 78% 82%, rgba(var(--team-secondary-rgb), 0.16), transparent 32%),
-      repeating-linear-gradient(0deg, rgba(60, 47, 20, 0.028) 0 1px, transparent 1px 7px);
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
   100% {
     opacity: 0;
+    transform: translateX(calc(var(--page-exit-direction, 1) * 140%)) scale(0.9);
+  }
+}
+
+@keyframes album-page-header-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(calc(var(--page-enter-direction, 1) * 110%)) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 }
 
@@ -3188,12 +3155,6 @@ input {
 
 .is-flying-to-album.is-in-flight {
   box-shadow: 12px 12px 0 rgba(7, 16, 31, 0.22), 0 42px 72px rgba(7, 16, 31, 0.3);
-}
-
-#album-stage.is-page-swapping::after {
-  background:
-    linear-gradient(103deg, transparent 0 32%, rgba(255, 255, 255, 0.8) 43%, transparent 56% 100%),
-    linear-gradient(90deg, rgba(7, 16, 31, 0.2) 0, transparent 16%, transparent 84%, rgba(7, 16, 31, 0.16) 100%);
 }
 
 @media (max-width: 1040px) {

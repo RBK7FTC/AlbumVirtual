@@ -744,6 +744,52 @@ function wait(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
+function animatePageCards(cards, type) {
+  cards.forEach((card, index) => {
+    const direction = Math.random() > 0.5 ? 1 : -1;
+    card.style.setProperty(`--page-${type}-direction`, String(direction));
+    card.style.setProperty(`--page-${type}-delay`, `${index * 24}ms`);
+    card.classList.add(`is-page-${type}`);
+  });
+}
+
+function animatePageHeader(type) {
+  [teamTitle, teamLogo].forEach((element, index) => {
+    if (!element) {
+      return;
+    }
+
+    const direction = Math.random() > 0.5 ? 1 : -1;
+    element.style.setProperty(`--page-${type}-direction`, String(direction));
+    element.style.setProperty(`--page-${type}-delay`, `${index * 18}ms`);
+    element.classList.add(`is-page-${type}`);
+  });
+}
+
+function clearPageTransitionCards(cards) {
+  cards.forEach((card) => {
+    card.classList.remove("is-page-exiting", "is-page-entering");
+    card.style.removeProperty("--page-exit-direction");
+    card.style.removeProperty("--page-exit-delay");
+    card.style.removeProperty("--page-enter-direction");
+    card.style.removeProperty("--page-enter-delay");
+  });
+}
+
+function clearPageTransitionHeader() {
+  [teamTitle, teamLogo].forEach((element) => {
+    if (!element) {
+      return;
+    }
+
+    element.classList.remove("is-page-exiting", "is-page-entering");
+    element.style.removeProperty("--page-exit-direction");
+    element.style.removeProperty("--page-exit-delay");
+    element.style.removeProperty("--page-enter-direction");
+    element.style.removeProperty("--page-enter-delay");
+  });
+}
+
 async function changeTeamPage(teamIndex, { animate = true, stickerId = null } = {}) {
   if (teamIndex < 0 || teamIndex >= teams.length) {
     return null;
@@ -756,10 +802,12 @@ async function changeTeamPage(teamIndex, { animate = true, stickerId = null } = 
     return stickerId !== null ? grid.querySelector(`[data-sticker-index="${stickerId}"]`) : null;
   }
 
-  if (animate) {
+  if (animate && grid) {
     albumStage.classList.add("is-page-swapping");
-    albumStage.classList.add("is-page-turning");
-    await wait(140);
+    const exitingCards = [...grid.querySelectorAll(".sticker-card")];
+    animatePageCards(exitingCards, "exiting");
+    animatePageHeader("exiting");
+    await wait(420);
   }
 
   activeTeam = teamIndex;
@@ -768,14 +816,13 @@ async function changeTeamPage(teamIndex, { animate = true, stickerId = null } = 
 
   renderAlbum();
 
-  if (animate) {
-    grid.classList.add("is-page-content-in");
-    albumStage.classList.remove("is-page-turning");
-    albumStage.classList.add("is-page-turning-back");
-
-    await wait(420);
-    albumStage.classList.remove("is-page-turning-back");
-    grid.classList.remove("is-page-content-in");
+  if (animate && grid) {
+    const enteringCards = [...grid.querySelectorAll(".sticker-card")];
+    animatePageCards(enteringCards, "entering");
+    animatePageHeader("entering");
+    await wait(560);
+    clearPageTransitionCards(enteringCards);
+    clearPageTransitionHeader();
   }
 
   albumStage.classList.remove("is-page-swapping");
