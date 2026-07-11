@@ -285,6 +285,7 @@ async function handleUsersApi(request, response) {
       isAdmin: false,
       availablePacks: 1,
       tradeRequests: [],
+      scannedQRCodes: [],
       collected: initialCollected,
       createdAt: now,
       updatedAt: now
@@ -454,9 +455,6 @@ async function handleStartTrade(request, response) {
           sendError(response, 401, "Unknow target user");
           return;
         }
-        
-        console.log(payload);
-        console.log(targetUser);
 
         sendJson(response, 200, {
           collected: targetUser.collected
@@ -556,7 +554,6 @@ async function handlePostTradeRequest(request, response) {
         });
 
       } catch(error) {
-        console.log(error);
         sendError(response, 403, "server error");
       }
 
@@ -577,7 +574,6 @@ async function handleRequireTradeRequests(request, response){
     sendJson(response, 200, auth.user.tradeRequests);
 
   } catch(error) {
-    console.log(error);
     sendError(response, 403, "server error");
   }
   return;
@@ -734,7 +730,7 @@ async function handleQRCodeScanned(request, response) {
         sendJson(response, 200, {
           state: false,
           availablePacks: auth.user.availablePacks,
-          codeID: codeIndex
+          codeID: payload.code
         });
         return;
       }

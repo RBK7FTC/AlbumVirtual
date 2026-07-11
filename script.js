@@ -1060,7 +1060,7 @@ function startQRScanner(){
 
     const qrCodeSuccessCallback = async (decodedText, decodedResult) => {
       const data = JSON.parse(decodedText);
-      
+
       html5QrCode.pause();
       setTimeout(() => {
         const currentState = html5QrCode.getState();
@@ -1095,9 +1095,11 @@ async function handlePackQRCodeScanned(data){
 
   if(res.state == false){
     if(res.codeID == -1){
-      console.error("Invalid QR Code: ", data.code);
+      const msg = `Invalid QR Code: ${data.code}`; 
+      console.error(msg);
     } else {
-      console.error("QR Code: ", res.codeID ," already scanned");
+      const msg = `QR Code: ${res.codeID}, already scanned`; 
+      console.error(msg);
     }
     return;
   }

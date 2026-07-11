@@ -30,7 +30,7 @@
         "hash": "9879fca6bab3f83e4a05f6e785dfd882591e01b4f84994145fe49df6efd5e9fe73eec39c1909846e254abd9ab90485ddac6a50d02b45f836095bc692de13bded"
       },
       "isAdmin": false,
-      "availablePacks": 8,
+      "availablePacks": 9,
       "tradeRequests": [
         {
           "givesStickerIndex": "4",
@@ -196,7 +196,7 @@
       "createdAt": "2026-06-29T16:50:24.139Z",
       "updatedAt": "2026-06-29T16:50:24.139Z"
     },
-      "galito4": {
+    "galito4": {
       "username": "galito4",
       "password": {
         "salt": "08523f3a1827fd0a84292c7068e52482",
@@ -252,7 +252,7 @@
       "createdAt": "2026-06-29T16:50:24.139Z",
       "updatedAt": "2026-06-29T16:50:24.139Z"
     },
-      "galito8": {
+    "galito8": {
       "username": "galito8",
       "password": {
         "salt": "08523f3a1827fd0a84292c7068e52482",
@@ -279,6 +279,35 @@
       "collected": [],
       "createdAt": "2026-06-29T16:50:24.139Z",
       "updatedAt": "2026-06-29T16:50:24.139Z"
+    },
+    "admin": {
+      "username": "admin",
+      "password": {
+        "salt": "862b0228ebad5f4bc82898c280e3c7cb",
+        "hash": "d823f3944cfbc020c1a44b0bdf46328ff94c8974089768f960c93e871763cbd0b40b19bdf6d2eb248e06fb29325fc25af62c7ae9b0fa094402cc1a88866f26e0"
+      },
+      "isAdmin": false,
+      "availablePacks": 1,
+      "tradeRequests": [],
+      "collected": [],
+      "createdAt": "2026-07-11T01:53:08.238Z",
+      "updatedAt": "2026-07-11T01:53:08.238Z"
+    },
+    "pedro": {
+      "username": "pedro",
+      "password": {
+        "salt": "d13c9f8ba16e15e6bccecb9dd6191b01",
+        "hash": "1457ee2c603254f556816103a0e579e8f314586791f229d3b044973acd528536289e342e733fee61feb2c2381b18744ec3f347df5c94d81dd6277424225adb56"
+      },
+      "isAdmin": false,
+      "availablePacks": 2,
+      "tradeRequests": [],
+      "scannedQRCodes": [
+        "3OZA6ZF0LJL5XGGZIP32LM73806Q32OC"
+      ],
+      "collected": [],
+      "createdAt": "2026-07-11T01:54:51.529Z",
+      "updatedAt": "2026-07-11T01:54:51.529Z"
     }
   }
 }
