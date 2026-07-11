@@ -638,10 +638,6 @@ async function handleResponseToTradeRequests(request, response) {
           return;  
         }
 
-        if(!validateTradeRequest(payload.tradeRequest, targetUser, auth.user)){
-          return;
-        }
-
         let dataMyUser = auth.data.users[auth.username];
         let dataOtherUser = auth.data.users[payload.tradeRequest.username];
 
@@ -649,6 +645,9 @@ async function handleResponseToTradeRequests(request, response) {
 
         if(payload.accepted){
           {
+            if(!validateTradeRequest(payload.tradeRequest, targetUser, auth.user)){
+              return;
+            }
             const index = dataMyUser.collected.indexOf(Number(payload.tradeRequest.wantsStickerIndex));
 
             if (index > -1) {
