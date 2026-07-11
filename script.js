@@ -1064,7 +1064,7 @@ function startQRScanner(){
       html5QrCode.pause();
       setTimeout(() => {
         const currentState = html5QrCode.getState();
-        if(currentState === html5QrCode.PAUSED)
+        if(currentState === Html5QrcodeScannerState.PAUSED)
           html5QrCode.resume();
       }, 1000);
 
