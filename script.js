@@ -1096,10 +1096,10 @@ async function handlePackQRCodeScanned(data){
   if(res.state == false){
     if(res.codeID == -1){
       const msg = `Invalid QR Code: ${data.code}`; 
-      console.error(msg);
+      alert(msg);
     } else {
       const msg = `QR Code: ${res.codeID}, already scanned`; 
-      console.error(msg);
+      alert(msg);
     }
     return;
   }
