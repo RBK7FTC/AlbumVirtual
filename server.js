@@ -73,7 +73,60 @@ const mimeTypes = {
   ".svg": "image/svg+xml"
 };
 
+const stickers = [
+  { id: 1, name: "Opening Spark", rarity: "common", team: "RBK7FTC", image: "assets/sticker-01.svg" },
+  { id: 2, name: "Midfield Pulse", rarity: "common", team: "RBK7FTC", image: "assets/sticker-02.svg" },
+  { id: 3, name: "Golden Save", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-03.svg" },
+  { id: 4, name: "Street Captain", rarity: "common", team: "RBK7FTC", image: "assets/sticker-04.svg" },
+  { id: 5, name: "Final Whistle", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-05.svg" },
+  { id: 6, name: "Neon Striker", rarity: "epic", team: "RBK7FTC", image: "assets/sticker-06.svg" },
+  { id: 7, name: "Home Colors", rarity: "common", team: "DINAMITA", image: "assets/sticker-07.svg" },
+  { id: 8, name: "Away Colors", rarity: "common", team: "DINAMITA", image: "assets/sticker-08.svg" },
+  { id: 9, name: "Stadium Lights", rarity: "rare", team: "DINAMITA", image: "assets/sticker-09.svg" },
+  { id: 10, name: "Rising Star", rarity: "common", team: "SHADOWFOX", image: "assets/sticker-10.svg" },
+  { id: 11, name: "Derby Night", rarity: "epic", team: "SHADOWFOX", image: "assets/sticker-11.svg" },
+  { id: 12, name: "Trophy Lift", rarity: "legendary", team: "SHADOWFOX", image: "assets/sticker-12.svg" },
+  { id: 13, name: "Opening Spark", rarity: "common", team: "RBK7FTC", image: "assets/sticker-01.svg" },
+  { id: 14, name: "Midfield Pulse", rarity: "common", team: "RBK7FTC", image: "assets/sticker-02.svg" },
+  { id: 15, name: "Golden Save", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-03.svg" },
+  { id: 16, name: "Street Captain", rarity: "common", team: "RBK7FTC", image: "assets/sticker-04.svg" },
+  { id: 17, name: "Final Whistle", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-05.svg" },
+  { id: 18, name: "Neon Striker", rarity: "epic", team: "RBK7FTC", image: "assets/sticker-06.svg" },
+
+  { id: 19, name: "Opening Spark", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-01.svg" },
+  { id: 20, name: "Midfield Pulse", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-02.svg" },
+  { id: 21, name: "Golden Save", rarity: "rare", team: "MALBECROBOTICS", image: "assets/sticker-03.svg" },
+  { id: 22, name: "Street Captain", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-04.svg" },
+  { id: 23, name: "Final Whistle", rarity: "rare", team: "MALBECROBOTICS", image: "assets/sticker-05.svg" },
+  { id: 24, name: "Neon Striker", rarity: "epic", team: "MALBECROBOTICS", image: "assets/sticker-06.svg" },
+  { id: 25, name: "Home Colors", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-07.svg" },
+
+  { id: 26, name: "Opening Spark", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS01.svg" },
+  { id: 27, name: "Midfield Pulse", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS02.svg" },
+  { id: 28, name: "Golden Save", rarity: "rare", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS03.svg" },
+  { id: 29, name: "Street Captain", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS04.svg" },
+  { id: 30, name: "Final Whistle", rarity: "rare", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS05.svg" },
+  { id: 31, name: "Neon Striker", rarity: "epic", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS06.svg" },
+  { id: 32, name: "Home Colors", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS07.svg" }
+];
+
 let leaderboard;
+
+function pickPack(collected) {
+  const weighted = stickers.flatMap((sticker) => {
+    if (sticker.rarity === "epic") return [sticker];
+    if (sticker.rarity === "rare") return [sticker, sticker];
+    return [sticker, sticker, sticker, sticker];
+  });
+
+  const pack = new Map();
+  while (pack.size < 3) {
+    const sticker = weighted[Math.floor(Math.random() * weighted.length)];
+    pack.set(sticker.id, sticker);
+  }
+
+  return [...pack.values()];
+}
 
 function broadcastToUser(username, event, payload) {
   try{
@@ -250,6 +303,12 @@ function sendError(response, status, message) {
   sendJson(response, status, { error: message });
 }
 
+async function handleRequireStickers(request, response) {
+      sendJson(response, 201, {
+        stickers: stickers
+    });
+}
+
 async function handleUsersApi(request, response) {
   if (request.method !== "POST") {
     sendError(response, 405, "Method not allowed");
@@ -352,22 +411,6 @@ async function handleCollectionApi(request, response) {
     return;
   }
 
-  //TODO: Remove, users can query to update his collection
-  if (request.method === "PUT") {
-    try {
-      const payload = await readJsonRequest(request);
-      auth.user.collected = sanitizeCollection(payload.collected);
-      auth.user.updatedAt = new Date().toISOString();
-      auth.data.users[auth.username] = auth.user;
-      await writeData(auth.data);
-      broadcastLeaderboard(auth.data);
-      sendJson(response, 200, { collected: auth.user.collected });
-    } catch {
-      sendError(response, 400, "Invalid collection payload");
-    }
-    return;
-  }
-
   sendError(response, 405, "Method not allowed");
 }
 
@@ -390,10 +433,14 @@ async function handleOpenPackApi(request, response) {
 
     auth.data.users[auth.username] = auth.user;
 
+    const pack = pickPack(auth.user.collected);
+    pack.forEach( (sticker) => {auth.user.collected.push(sticker.id)});
+    
     await writeData(auth.data);
-
+    
     sendJson(response, 200, {
-        availablePacks: auth.user.availablePacks
+      availablePacks: auth.user.availablePacks,
+      pack: pack
     });
 }
 
@@ -881,6 +928,11 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/events") {
       await handleEventsApi(request, response);
+      return;
+    }
+
+    if (requestUrl.pathname === "/api/requireStickers") {
+      await handleRequireStickers(request, response);
       return;
     }
 

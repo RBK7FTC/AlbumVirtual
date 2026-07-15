@@ -1,7 +1,8 @@
 **Main**
-- Dont give repeated stickers or display number of repeated stickers on album stage.
 - Move stickers set to server database.
 - Pick pack on server side.
+- Remove saveCollection function from client side.
+- Dont give repeated stickers or display number of repeated stickers on album stage.
 - Add page to let teams add stickers.
 - Add sticker template cover over uploaded image.
 

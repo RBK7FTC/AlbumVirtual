@@ -3,44 +3,9 @@ const teams = [ "RBK7FTC",
     "SHADOWFOX",
     "MALBECROBOTICS",
     "IMPERIUMFONS"
-]
-
-const stickers = [
-  { id: 1, name: "Opening Spark", rarity: "common", team: "RBK7FTC", image: "assets/sticker-01.svg" },
-  { id: 2, name: "Midfield Pulse", rarity: "common", team: "RBK7FTC", image: "assets/sticker-02.svg" },
-  { id: 3, name: "Golden Save", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-03.svg" },
-  { id: 4, name: "Street Captain", rarity: "common", team: "RBK7FTC", image: "assets/sticker-04.svg" },
-  { id: 5, name: "Final Whistle", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-05.svg" },
-  { id: 6, name: "Neon Striker", rarity: "epic", team: "RBK7FTC", image: "assets/sticker-06.svg" },
-  { id: 7, name: "Home Colors", rarity: "common", team: "DINAMITA", image: "assets/sticker-07.svg" },
-  { id: 8, name: "Away Colors", rarity: "common", team: "DINAMITA", image: "assets/sticker-08.svg" },
-  { id: 9, name: "Stadium Lights", rarity: "rare", team: "DINAMITA", image: "assets/sticker-09.svg" },
-  { id: 10, name: "Rising Star", rarity: "common", team: "SHADOWFOX", image: "assets/sticker-10.svg" },
-  { id: 11, name: "Derby Night", rarity: "epic", team: "SHADOWFOX", image: "assets/sticker-11.svg" },
-  { id: 12, name: "Trophy Lift", rarity: "legendary", team: "SHADOWFOX", image: "assets/sticker-12.svg" },
-  { id: 13, name: "Opening Spark", rarity: "common", team: "RBK7FTC", image: "assets/sticker-01.svg" },
-  { id: 14, name: "Midfield Pulse", rarity: "common", team: "RBK7FTC", image: "assets/sticker-02.svg" },
-  { id: 15, name: "Golden Save", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-03.svg" },
-  { id: 16, name: "Street Captain", rarity: "common", team: "RBK7FTC", image: "assets/sticker-04.svg" },
-  { id: 17, name: "Final Whistle", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-05.svg" },
-  { id: 18, name: "Neon Striker", rarity: "epic", team: "RBK7FTC", image: "assets/sticker-06.svg" },
-
-  { id: 19, name: "Opening Spark", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-01.svg" },
-  { id: 20, name: "Midfield Pulse", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-02.svg" },
-  { id: 21, name: "Golden Save", rarity: "rare", team: "MALBECROBOTICS", image: "assets/sticker-03.svg" },
-  { id: 22, name: "Street Captain", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-04.svg" },
-  { id: 23, name: "Final Whistle", rarity: "rare", team: "MALBECROBOTICS", image: "assets/sticker-05.svg" },
-  { id: 24, name: "Neon Striker", rarity: "epic", team: "MALBECROBOTICS", image: "assets/sticker-06.svg" },
-  { id: 25, name: "Home Colors", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-07.svg" },
-
-  { id: 26, name: "Opening Spark", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS01.svg" },
-  { id: 27, name: "Midfield Pulse", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS02.svg" },
-  { id: 28, name: "Golden Save", rarity: "rare", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS03.svg" },
-  { id: 29, name: "Street Captain", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS04.svg" },
-  { id: 30, name: "Final Whistle", rarity: "rare", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS05.svg" },
-  { id: 31, name: "Neon Striker", rarity: "epic", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS06.svg" },
-  { id: 32, name: "Home Colors", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS07.svg" }
 ];
+
+let stickers = new Array();
 
 const initialCollected = new Set([1, 2, 4, 7]);
 let collected = new Set();
@@ -87,8 +52,6 @@ const openPackButton = document.querySelector("#open-pack");
 const completeAlbumButton = document.querySelector("#complete-album");
 const resetAlbumButton = document.querySelector("#reset-album");
 const getPackButton = document.querySelector("#get-pack");
-
-totalCount.textContent = stickers.length;
 
 function openAlbumPanel() {
   if (!albumPanel || !albumPanelOverlay) {
@@ -287,16 +250,6 @@ async function loadCollectedCards() {
   return new Set(payload.collected);
 }
 
-//TODO: Remove, users can use this url to auto update his collection
-async function saveCollectedCards(ids) {
-  const payload = await apiRequest("/api/collection", {
-    method: "PUT",
-    body: JSON.stringify({ collected: ids })
-  });
-
-  return new Set(payload.collected);
-}
-
 async function authenticate(path) {
   const username = usernameInput.value.trim();
   const password = passwordInput.value;
@@ -488,8 +441,7 @@ function handleTradeNavClick(event) {
 
 function filteredStickers() {
   return stickers.filter((sticker) => {
-    return (sticker.team === teams[activeTeam]); //collected.has(sticker.id) &&
-    return true;
+    return (sticker.team === teams[activeTeam]);
   });
 }
 
@@ -592,27 +544,6 @@ function renderAlbum() {
   collectedCount.textContent = owned;
   progressBar.style.width = `${(owned / stickers.length) * 100}%`;
   raritySummary.textContent = `${rareOwned}/${rareTotal} rare stickers collected`;
-}
-
-function pickPack() {
-  const weighted = stickers.flatMap((sticker) => {
-    if (sticker.rarity === "epic") return [sticker];
-    if (sticker.rarity === "rare") return [sticker, sticker];
-    return [sticker, sticker, sticker, sticker];
-  });
-
-  const pack = new Map();
-  while (pack.size < 3) {
-    const sticker = weighted[Math.floor(Math.random() * weighted.length)];
-    pack.set(sticker.id, sticker);
-  }
-
-  return [...pack.values()];
-}
-
-async function persistAndRender() {
-  collected = await saveCollectedCards([...collected]);
-  renderAlbum();
 }
 
 function updateAlbumFilterState() {
@@ -919,7 +850,6 @@ async function placePackSticker(sticker, sourceCard) {
 
   window.setTimeout(async () => {
     collected.add(sticker.id);
-    collected = await saveCollectedCards([...collected]);
     activePackPlacement?.placed.add(sticker.id);
     flyingSticker.remove();
     sourceCard.remove();
@@ -982,6 +912,10 @@ function setSignedOutState(message = "") {
 
 async function startAlbum() {
   switchTo("album-stage");
+
+  const payload = await apiRequest("/api/requireStickers");
+  stickers = payload.stickers;
+  totalCount.textContent = stickers.length;
 
   if (!authToken) {
     setSignedOutState();
@@ -1048,12 +982,10 @@ openPackButton.addEventListener("click", async () => {
     );
 
     availablePacks = payload.availablePacks;
-
     updatePackUI();
-
-    const pack = pickPack();
+    
     await switchTo("album-stage");
-    startPackOpening(pack);
+    startPackOpening(payload.pack);
   } catch(error) {
     authMessage.textContent = error.message;
   }
@@ -1301,14 +1233,14 @@ completeAlbumButton.addEventListener("click", async () => {
   if (!authToken) return;
 
   collected = new Set(stickers.map((sticker) => sticker.id));
-  await persistAndRender();
+  renderAlbum();
 });
 
 resetAlbumButton.addEventListener("click", async () => {
   if (!authToken) return;
 
   collected = new Set(initialCollected);
-  await persistAndRender();
+  renderAlbum();
 });
 
 getPackButton.addEventListener("click", async () => {
