@@ -30,19 +30,8 @@
         "hash": "9879fca6bab3f83e4a05f6e785dfd882591e01b4f84994145fe49df6efd5e9fe73eec39c1909846e254abd9ab90485ddac6a50d02b45f836095bc692de13bded"
       },
       "isAdmin": false,
-      "availablePacks": 9,
-      "tradeRequests": [
-        {
-          "givesStickerIndex": "4",
-          "wantsStickerIndex": "12",
-          "username": "galo"
-        },
-        {
-          "givesStickerIndex": "5",
-          "wantsStickerIndex": "3",
-          "username": "galo"
-        }
-      ],
+      "availablePacks": 8,
+      "tradeRequests": [],
       "scannedQRCodes": [
         "3OZA6ZF0LJL5XGGZIP32LM73806Q32OC"
       ],
@@ -59,7 +48,7 @@
         12
       ],
       "createdAt": "2026-06-21T15:24:31.791Z",
-      "updatedAt": "2026-07-03T19:17:26.713Z"
+      "updatedAt": "2026-07-15T08:46:59.599Z"
     },
     "pepito1234": {
       "username": "pepito1234",

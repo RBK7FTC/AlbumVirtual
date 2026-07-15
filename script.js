@@ -684,6 +684,8 @@ function revealPackStickers(layer, pack) {
 }
 
 function startPackOpening(pack) {
+  closeAlbumPanel();
+
   const existingLayer = document.querySelector("#pack-opening-layer");
   if (existingLayer) {
     existingLayer.remove();
