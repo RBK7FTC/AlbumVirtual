@@ -1227,6 +1227,7 @@ function updateNotificationsUI(data){
 }
 
 tradingStageButton.addEventListener("click", async () => {
+  closeAlbumPanel();
   switchToTradingStage();
 });
 
@@ -1241,6 +1242,7 @@ document.querySelector("#generateQRBtn").addEventListener("click", () => {
 });
 
 albumStageButton.addEventListener("click", async () => {
+  closeAlbumPanel();
   switchTo("album-stage");
 });
 
@@ -1261,6 +1263,7 @@ function updateLeaderboardUI(data){
 }
 
 leaderboardStageButton.addEventListener("click", async () => {
+  closeAlbumPanel();
   switchTo("leaderboard-stage");
 
   try {
