@@ -1,7 +1,13 @@
+**Main**
+- Dont give repeated stickers or display number of repeated stickers on album stage.
+- Move stickers set to server database.
+- Pick pack on server side.
+- Add page to let teams add stickers.
+- Add sticker template cover over uploaded image.
+
 **Front-end style**
-- Change page domain url.
+- Add real sticker images.
 - Enhance card-template rariry styles (common, rare, epic and legendary).
-- Add real sticker images (comic style?).
 - Enhance cover image.
 - Add animation when:
         Pack is obtained.
@@ -16,10 +22,8 @@
 - Publish FTC related questions with a 2 hour timer, if answer correct give a pack.
 
 **User teams**
-- Automatically get a sticker of you team (Add team selection UI at registration).
+- Automatically get a sticker of your team (Add team selection UI at registration).
 - Render team image next to username on leaderboard.
 
 **Misc**
 - Limit number of trades.
-- Check if collection is persisted at pack opening start.
-- Move stickers map to server and randomize the stickers obtained on server side instead of client side and send obtained to server.

@@ -8,7 +8,7 @@ const root = __dirname;
 const port = Number(process.env.PORT || 8000);
 const dataPath = path.join(root, "album-data.json");
 const initialCollected = [];
-const maxStickerId = 12;
+//const maxStickerId = 12; //No more hardcoded maxStickerId instead should keep stickers collection in server database
 const sessions = new Map();
 const eventClients = new Map();
 const masterQRCode = "WIWIWIWIWIWIWIWIWIWIWIWIWI";
@@ -200,7 +200,7 @@ function sanitizeCollection(cardIds) {
   }
 
   return [...new Set(cardIds.map(Number))]
-    .filter((cardId) => Number.isInteger(cardId) && cardId >= 1 && cardId <= maxStickerId)
+    .filter((cardId) => Number.isInteger(cardId) && cardId >= 1 /*&& cardId <= maxStickerId*/)
     .sort((a, b) => a - b);
 }
 

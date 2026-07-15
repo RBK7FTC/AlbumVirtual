@@ -1,6 +1,8 @@
 const teams = [ "RBK7FTC",
     "DINAMITA",
-    "SHADOWFOX"
+    "SHADOWFOX",
+    "MALBECROBOTICS",
+    "IMPERIUMFONS"
 ]
 
 const stickers = [
@@ -21,7 +23,23 @@ const stickers = [
   { id: 15, name: "Golden Save", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-03.svg" },
   { id: 16, name: "Street Captain", rarity: "common", team: "RBK7FTC", image: "assets/sticker-04.svg" },
   { id: 17, name: "Final Whistle", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-05.svg" },
-  { id: 18, name: "Neon Striker", rarity: "epic", team: "RBK7FTC", image: "assets/sticker-06.svg" }
+  { id: 18, name: "Neon Striker", rarity: "epic", team: "RBK7FTC", image: "assets/sticker-06.svg" },
+
+  { id: 19, name: "Opening Spark", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-01.svg" },
+  { id: 20, name: "Midfield Pulse", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-02.svg" },
+  { id: 21, name: "Golden Save", rarity: "rare", team: "MALBECROBOTICS", image: "assets/sticker-03.svg" },
+  { id: 22, name: "Street Captain", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-04.svg" },
+  { id: 23, name: "Final Whistle", rarity: "rare", team: "MALBECROBOTICS", image: "assets/sticker-05.svg" },
+  { id: 24, name: "Neon Striker", rarity: "epic", team: "MALBECROBOTICS", image: "assets/sticker-06.svg" },
+  { id: 25, name: "Home Colors", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-07.svg" },
+
+  { id: 26, name: "Opening Spark", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS01.svg" },
+  { id: 27, name: "Midfield Pulse", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS02.svg" },
+  { id: 28, name: "Golden Save", rarity: "rare", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS03.svg" },
+  { id: 29, name: "Street Captain", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS04.svg" },
+  { id: 30, name: "Final Whistle", rarity: "rare", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS05.svg" },
+  { id: 31, name: "Neon Striker", rarity: "epic", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS06.svg" },
+  { id: 32, name: "Home Colors", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS07.svg" }
 ];
 
 const initialCollected = new Set([1, 2, 4, 7]);
