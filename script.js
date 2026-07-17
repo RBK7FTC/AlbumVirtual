@@ -51,6 +51,9 @@ const userPanel = document.querySelector("#user-panel");
 const usernameInput = document.querySelector("#username-input");
 const passwordInput = document.querySelector("#password-input");
 const openPackButton = document.querySelector("#open-pack");
+const uploadForm = document.querySelector("#upload-form");
+const uploadInput = document.querySelector("#upload-input");
+const uploadMessage = document.querySelector("#upload-message");
 
 function openAlbumPanel() {
   if (!albumPanel || !albumPanelOverlay) {
@@ -146,9 +149,12 @@ window.addEventListener("resize", () => {
 
 async function apiRequest(path, options = {}) {
   const headers = {
-    "Content-Type": "application/json",
     ...(options.headers || {})
   };
+
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (authToken) {
     headers.Authorization = `Bearer ${authToken}`;
@@ -1232,6 +1238,37 @@ leaderboardStageButton.addEventListener("click", async () => {
 });
 
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());
+
+uploadForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!authToken) {
+    uploadMessage.textContent = "Sign in as an admin first";
+    return;
+  }
+
+  const file = uploadInput?.files?.[0];
+
+  if (!file) {
+    uploadMessage.textContent = "Choose an image before uploading";
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const payload = await apiRequest("/api/uploads", {
+      method: "POST",
+      body: formData
+    });
+
+    uploadMessage.textContent = `Uploaded successfully: ${payload.file}`;
+    uploadForm.reset();
+  } catch (error) {
+    uploadMessage.textContent = error.message;
+  }
+});
 
 {
 

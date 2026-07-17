@@ -194,11 +194,18 @@
             <p class="eyebrow">Upload stickers!</p>
             <h2>Admin tools</h2>
           </div>
-            <button class="primary-action" type="button">Upload sticker</button>
-            <button class="primary-action" type="button">Modify sticker</button>
-          
+          <button class="primary-action" type="button">Upload sticker</button>
+          <button class="primary-action" type="button">Modify sticker</button>
         </header>
 
+        <form id="upload-form" class="auth-form">
+          <label>
+            Image file
+            <input id="upload-input" name="file" type="file" accept="image/*" required />
+          </label>
+          <button class="primary-action" type="submit">Upload image</button>
+          <p id="upload-message" class="auth-message" role="status"></p>
+        </form>
       </section>
     </main>
 

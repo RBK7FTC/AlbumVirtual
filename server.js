@@ -3,8 +3,10 @@ const http = require("http");
 const fs = require("fs");
 const fsp = require("fs/promises");
 const path = require("path");
+const { parseMultipartFormData } = require("./upload-utils");
 
 const root = __dirname;
+const uploadsDir = path.join(root, "uploads");
 const port = Number(process.env.PORT || 8000);
 const dataPath = path.join(root, "album-data.json");
 const initialCollected = [];
@@ -67,10 +69,15 @@ const packQRCodes = [
 
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",
+  ".gif": "image/gif",
   ".html": "text/html; charset=utf-8",
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
-  ".svg": "image/svg+xml"
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".webp": "image/webp"
 };
 
 const stickers = [
@@ -281,27 +288,32 @@ function publicUser(user) {
   };
 }
 
-function readRequestBody(request) {
+function readRequestBody(request, maxBytes = 1024 * 1024) {
   return new Promise((resolve, reject) => {
-    let body = "";
+    const chunks = [];
+    let bytes = 0;
 
     request.on("data", (chunk) => {
-      body += chunk;
+      const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+      bytes += buffer.length;
 
-      if (body.length > 1024 * 1024) {
+      if (bytes > maxBytes) {
         request.destroy();
         reject(new Error("Request body is too large"));
+        return;
       }
+
+      chunks.push(buffer);
     });
 
-    request.on("end", () => resolve(body));
+    request.on("end", () => resolve(Buffer.concat(chunks)));
     request.on("error", reject);
   });
 }
 
 async function readJsonRequest(request) {
   const body = await readRequestBody(request);
-  return JSON.parse(body || "{}");
+  return JSON.parse(body.toString("utf8") || "{}");
 }
 
 function sendJson(response, status, payload) {
@@ -317,6 +329,90 @@ function sendJson(response, status, payload) {
 
 function sendError(response, status, message) {
   sendJson(response, status, { error: message });
+}
+
+async function ensureUploadsDirectory() {
+  await fsp.mkdir(uploadsDir, { recursive: true });
+}
+
+function sanitizeFilename(filename) {
+  const extension = path.extname(filename || "").toLowerCase();
+  const baseName = path.basename(filename || "", extension)
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || "upload";
+
+  return `${Date.now()}-${crypto.randomBytes(4).toString("hex")}-${baseName}${extension}`;
+}
+
+async function handleUploadApi(request, response) {
+  console.log("handleUploadApi");
+
+  const auth = await getAuthenticatedUser(request);
+
+  if (!auth || !auth.user.isAdmin) {
+    sendError(response, 403, "Admin access required");
+    return;
+  }
+
+  console.log("Authenticated");
+
+  const contentType = request.headers["content-type"] || "";
+
+  console.log(contentType);
+
+  if (!contentType.includes("multipart/form-data")) {
+    sendError(response, 400, "Expected a multipart upload");
+    return;
+  }
+
+  const boundaryMatch = contentType.match(/boundary=(.+)$/i);
+  const boundary = boundaryMatch ? boundaryMatch[1].trim() : "";
+
+  console.log("Match: ", boundaryMatch);
+  console.log("Boundary: ", boundary);
+
+  if (!boundary) {
+    sendError(response, 400, "Missing multipart boundary");
+    return;
+  }
+
+  try {
+
+    console.log("Reading body");
+
+    await ensureUploadsDirectory();
+    const body = await readRequestBody(request, 5 * 1024 * 1024);
+    const parts = parseMultipartFormData(body, boundary);
+    const filePart = parts.find((part) => part.filename);
+
+    console.log("Body: ", body);
+    console.log("filePart: ", filePart);
+
+    if (!filePart) {
+      sendError(response, 400, "No file was uploaded");
+      return;
+    }
+
+    const targetName = sanitizeFilename(filePart.filename);
+    const targetPath = path.join(uploadsDir, targetName);
+
+    console.log("targetName: ", targetName);
+    console.log("targetPath: ", targetPath);
+
+    await fsp.writeFile(targetPath, filePart.data);
+
+    console.log("File writed");
+
+    sendJson(response, 201, {
+      ok: true,
+      file: `/uploads/${targetName}`,
+      filename: targetName
+    });
+  } catch (error) {
+    console.log(error);
+    sendError(response, 400, error.message || "Unable to save the uploaded file");
+  }
 }
 
 async function handleRequireStickers(request, response) {
@@ -952,6 +1048,11 @@ const server = http.createServer(async (request, response) => {
 
     if (requestUrl.pathname === "/api/events") {
       await handleEventsApi(request, response);
+      return;
+    }
+
+    if (requestUrl.pathname === "/api/uploads") {
+      await handleUploadApi(request, response);
       return;
     }
 
