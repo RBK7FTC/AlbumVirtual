@@ -51,9 +51,6 @@ const userPanel = document.querySelector("#user-panel");
 const usernameInput = document.querySelector("#username-input");
 const passwordInput = document.querySelector("#password-input");
 const openPackButton = document.querySelector("#open-pack");
-const completeAlbumButton = document.querySelector("#complete-album");
-const resetAlbumButton = document.querySelector("#reset-album");
-const getPackButton = document.querySelector("#get-pack");
 
 function openAlbumPanel() {
   if (!albumPanel || !albumPanelOverlay) {
@@ -266,11 +263,11 @@ async function authenticate(path) {
 
     authToken = payload.token;
     currentUser = payload.user.username;
-    adminTools.classList.toggle("is-hidden", !payload.user.isAdmin);
     collected = new Set(payload.collected);
     availablePacks = payload.user.availablePacks;
     tradeRequests = payload.user.tradeRequests;
     passwordInput.value = "";
+    document.getElementById("adminStageBtn").classList.toggle("is-hidden", !payload.user.isAdmin);
 
     startEvents();
 
@@ -881,7 +878,7 @@ function updatePackUI() {
 }
 
 function setControlsEnabled(isEnabled) {
-  [openPackButton, completeAlbumButton, resetAlbumButton, getPackButton].forEach((button) => {
+  [openPackButton].forEach((button) => {
     button.disabled = !isEnabled;
     button.classList.toggle("is-disabled", !isEnabled);
   });
@@ -906,7 +903,7 @@ function setSignedOutState(message = "") {
   currentUsername.textContent = "";
   authMessage.textContent = message;
   databaseStatus.textContent = "Sign in to save stickers";
-  adminTools.classList.add("is-hidden");
+  document.getElementById("adminStageBtn").classList.add("is-hidden");
   collected = new Set();
   setControlsEnabled(false);
   renderAlbum();
@@ -929,6 +926,8 @@ async function startAlbum() {
     startEvents();
     setSignedInState();
     renderAlbum();
+    
+    document.getElementById("adminStageBtn").classList.toggle("is-hidden", !payload.isAdmin);
   } catch {
     authToken = "";
     currentUser = "";
@@ -971,8 +970,6 @@ document.querySelector("#logout-button").addEventListener("click", async () => {
     setSignedOutState();
   }
 });
-
-const adminTools = document.querySelector("#admin-tools");
 
 openPackButton.addEventListener("click", async () => {
   try{
@@ -1193,6 +1190,11 @@ document.querySelector("#generateQRBtn").addEventListener("click", () => {
   generateUsernameQRCode();
 });
 
+document.getElementById("adminStageBtn").addEventListener("click", async () => {
+  closeAlbumPanel();
+  switchTo("admin-stage");
+});
+
 albumStageButton.addEventListener("click", async () => {
   closeAlbumPanel();
   switchTo("album-stage");
@@ -1230,28 +1232,6 @@ leaderboardStageButton.addEventListener("click", async () => {
 });
 
 document.querySelector("#close-dialog").addEventListener("click", () => packDialog.close());
-
-completeAlbumButton.addEventListener("click", async () => {
-  if (!authToken) return;
-
-  collected = new Set(stickers.map((sticker) => sticker.id));
-  renderAlbum();
-});
-
-resetAlbumButton.addEventListener("click", async () => {
-  if (!authToken) return;
-
-  collected = new Set(initialCollected);
-  renderAlbum();
-});
-
-getPackButton.addEventListener("click", async () => {
-  if (!authToken) return;
-
-  const payload = await apiRequest("/api/get-pack");
-  availablePacks = payload.availablePacks;
-  updatePackUI();
-});
 
 {
 

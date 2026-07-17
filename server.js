@@ -319,9 +319,17 @@ function sendError(response, status, message) {
 }
 
 async function handleRequireStickers(request, response) {
-      sendJson(response, 201, {
-        stickers: stickers
-    });
+  const auth = await getAuthenticatedUser(request);
+  let isAdmin = false;
+
+  if (auth) {
+    isAdmin = auth.user.isAdmin;
+  }
+  
+  sendJson(response, 201, {
+      stickers: stickers,
+      isAdmin: isAdmin
+  });
 }
 
 async function handleUsersApi(request, response) {

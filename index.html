@@ -35,6 +35,7 @@
             <button id="albumStageBtn" class="primary-action" type="submit">Album</button>
             <button id="leaderboardStageBtn" class="primary-action" type="submit">Leaderboard</button>
             <button id="tradingStageBtn" class="primary-action">Trading</button>
+            <button id="adminStageBtn" class="primary-action is-hidden">Admin tools</button>
           </div>
 
           <section class="auth-panel" aria-label="Account">
@@ -107,12 +108,7 @@
             <p class="eyebrow">Collection</p>
             <h2 id="teams" >Team</h2>
           </div>
-          <img id="team-logo-stage-header" alt="Team logo">
-          <div id="admin-tools" class="view-tools is-hidden" aria-label="Album tools">
-              <button id="complete-album" class="tool-button" type="button" title="Complete album">OK</button>
-              <button id="reset-album" class="tool-button" type="button" title="Reset album">R</button>
-              <button id="get-pack" class="tool-button" type="button" title="Get pack">P</button>
-          </div>  
+          <img id="team-logo-stage-header" alt="Team logo"> 
           <nav class="filter-list" aria-label="Album filters">
             <button class="filter-button" type="button" data-filter="prev">Previous team</button>
             <button class="filter-button is-active" type="button" data-filter="next">Next team</button>
@@ -190,6 +186,19 @@
           <button class="trade-nav-button" type="button" data-direction="next" aria-label="Next stickers">&rsaquo;</button>
           <p class="trade-collection-label">Other stickers</p>
         </div>
+      </section>
+
+      <section id="admin-stage" class="admin-stage stage is-hidden">
+        <header class="stage-header">
+          <div>
+            <p class="eyebrow">Upload stickers!</p>
+            <h2>Admin tools</h2>
+          </div>
+            <button class="primary-action" type="button">Upload sticker</button>
+            <button class="primary-action" type="button">Modify sticker</button>
+          
+        </header>
+
       </section>
     </main>
 
