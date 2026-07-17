@@ -2,7 +2,9 @@ const teams = [ "RBK7FTC",
     "DINAMITA",
     "SHADOWFOX",
     "MALBECROBOTICS",
-    "IMPERIUMFONS"
+    "IMPERIUMFONS",
+    "DEVOLTDEIMOS",
+    "DEVOLTPHOBOS"
 ];
 
 let stickers = new Array();

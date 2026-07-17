@@ -107,7 +107,22 @@ const stickers = [
   { id: 29, name: "Street Captain", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS04.svg" },
   { id: 30, name: "Final Whistle", rarity: "rare", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS05.svg" },
   { id: 31, name: "Neon Striker", rarity: "epic", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS06.svg" },
-  { id: 32, name: "Home Colors", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS07.svg" }
+  { id: 32, name: "Home Colors", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS07.svg" },
+
+  { id: 33, name: "Opening Spark", rarity: "common", team: "DEVOLTDEIMOS", image:   "assets/DEVOLTDEIMOS01.svg" },
+  { id: 34, name: "Midfield Pulse", rarity: "common", team: "DEVOLTDEIMOS", image:  "assets/DEVOLTDEIMOS02.svg" },
+  { id: 35, name: "Golden Save", rarity: "rare", team: "DEVOLTDEIMOS", image:       "assets/DEVOLTDEIMOS03.svg" },
+  { id: 36, name: "Street Captain", rarity: "common", team: "DEVOLTDEIMOS", image:  "assets/DEVOLTDEIMOS04.svg" },
+  { id: 37, name: "Final Whistle", rarity: "rare", team: "DEVOLTDEIMOS", image:     "assets/DEVOLTDEIMOS05.svg" },
+  { id: 38, name: "Neon Striker", rarity: "epic", team: "DEVOLTDEIMOS", image:      "assets/DEVOLTDEIMOS06.svg" },
+  { id: 39, name: "Home Colors", rarity: "common", team: "DEVOLTDEIMOS", image:     "assets/DEVOLTDEIMOS07.svg" },
+  { id: 40, name: "Home Colors", rarity: "common", team: "DEVOLTDEIMOS", image:     "assets/DEVOLTDEIMOS08.svg" },
+
+  { id: 41, name: "Opening Spark", rarity: "common", team: "DEVOLTPHOBOS", image:   "assets/DEVOLTPHOBOS01.svg" },
+  { id: 42, name: "Midfield Pulse", rarity: "common", team: "DEVOLTPHOBOS", image:  "assets/DEVOLTPHOBOS02.svg" },
+  { id: 43, name: "Golden Save", rarity: "rare", team: "DEVOLTPHOBOS", image:       "assets/DEVOLTPHOBOS03.svg" },
+  { id: 44, name: "Street Captain", rarity: "common", team: "DEVOLTPHOBOS", image:  "assets/DEVOLTPHOBOS04.svg" },
+  { id: 45, name: "Final Whistle", rarity: "rare", team: "DEVOLTPHOBOS", image:     "assets/DEVOLTPHOBOS05.svg" }
 ];
 
 let leaderboard;
