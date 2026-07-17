@@ -137,7 +137,8 @@ function pickPack(collected) {
   const pack = new Map();
   while (pack.size < 3) {
     const sticker = weighted[Math.floor(Math.random() * weighted.length)];
-    pack.set(sticker.id, sticker);
+    if(!collected.includes(sticker.id))
+      pack.set(sticker.id, sticker);
   }
 
   return [...pack.values()];

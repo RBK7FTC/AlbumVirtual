@@ -1,6 +1,5 @@
 **Main**
 - Add About us section.
-- Dont give repeated stickers.
 - Add page to let teams add stickers.
 - Add sticker template cover over uploaded image.
 
