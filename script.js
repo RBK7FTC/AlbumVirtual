@@ -4,7 +4,8 @@ const teams = [ "RBK7FTC",
     "MALBECROBOTICS",
     "IMPERIUMFONS",
     "DEVOLTDEIMOS",
-    "DEVOLTPHOBOS"
+    "DEVOLTPHOBOS",
+    "MERINITOS"
 ];
 
 let stickers = new Array();

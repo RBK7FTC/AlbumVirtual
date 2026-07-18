@@ -93,13 +93,14 @@ const stickers = [
   { id: 17, name: "Final Whistle", rarity: "rare", team: "RBK7FTC", image: "assets/sticker-05.svg" },
   { id: 18, name: "Neon Striker", rarity: "epic", team: "RBK7FTC", image: "assets/sticker-06.svg" },
 
-  { id: 19, name: "Opening Spark", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-01.svg" },
-  { id: 20, name: "Midfield Pulse", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-02.svg" },
-  { id: 21, name: "Golden Save", rarity: "rare", team: "MALBECROBOTICS", image: "assets/sticker-03.svg" },
-  { id: 22, name: "Street Captain", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-04.svg" },
-  { id: 23, name: "Final Whistle", rarity: "rare", team: "MALBECROBOTICS", image: "assets/sticker-05.svg" },
-  { id: 24, name: "Neon Striker", rarity: "epic", team: "MALBECROBOTICS", image: "assets/sticker-06.svg" },
-  { id: 25, name: "Home Colors", rarity: "common", team: "MALBECROBOTICS", image: "assets/sticker-07.svg" },
+  { id: 19, name: "Opening Spark", rarity: "common", team: "MALBECROBOTICS",  image: "assets/MALBECROBOTICS01.svg" },
+  { id: 20, name: "Midfield Pulse", rarity: "common", team: "MALBECROBOTICS", image: "assets/MALBECROBOTICS02.svg" },
+  { id: 21, name: "Golden Save", rarity: "rare", team: "MALBECROBOTICS",      image: "assets/MALBECROBOTICS03.svg" },
+  { id: 22, name: "Street Captain", rarity: "common", team: "MALBECROBOTICS", image: "assets/MALBECROBOTICS04.svg" },
+  { id: 23, name: "Final Whistle", rarity: "rare", team: "MALBECROBOTICS",    image: "assets/MALBECROBOTICS05.svg" },
+  { id: 24, name: "Neon Striker", rarity: "epic", team: "MALBECROBOTICS",     image: "assets/MALBECROBOTICS06.svg" },
+  { id: 25, name: "Home Colors", rarity: "common", team: "MALBECROBOTICS",    image: "assets/MALBECROBOTICS07.svg" },
+  { id: 55, name: "Home Colors", rarity: "common", team: "MALBECROBOTICS",    image: "assets/MALBECROBOTICS08.svg" },
 
   { id: 26, name: "Opening Spark", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS01.svg" },
   { id: 27, name: "Midfield Pulse", rarity: "common", team: "IMPERIUMFONS", image: "assets/IMPERIUMFONS02.svg" },
@@ -122,7 +123,17 @@ const stickers = [
   { id: 42, name: "Midfield Pulse", rarity: "common", team: "DEVOLTPHOBOS", image:  "assets/DEVOLTPHOBOS02.svg" },
   { id: 43, name: "Golden Save", rarity: "rare", team: "DEVOLTPHOBOS", image:       "assets/DEVOLTPHOBOS03.svg" },
   { id: 44, name: "Street Captain", rarity: "common", team: "DEVOLTPHOBOS", image:  "assets/DEVOLTPHOBOS04.svg" },
-  { id: 45, name: "Final Whistle", rarity: "rare", team: "DEVOLTPHOBOS", image:     "assets/DEVOLTPHOBOS05.svg" }
+  { id: 45, name: "Final Whistle", rarity: "rare", team: "DEVOLTPHOBOS", image:     "assets/DEVOLTPHOBOS05.svg" },
+
+  { id: 46, name: "Opening Spark", rarity: "common", team: "MERINITOS", image:   "assets/MERINITOS01.svg" },
+  { id: 47, name: "Midfield Pulse", rarity: "common", team: "MERINITOS", image:  "assets/MERINITOS02.svg" },
+  { id: 48, name: "Golden Save", rarity: "rare", team: "MERINITOS", image:       "assets/MERINITOS03.svg" },
+  { id: 49, name: "Street Captain", rarity: "common", team: "MERINITOS", image:  "assets/MERINITOS04.svg" },
+  { id: 50, name: "Final Whistle", rarity: "rare", team: "MERINITOS", image:     "assets/MERINITOS05.svg" },
+  { id: 51, name: "Neon Striker", rarity: "epic", team: "MERINITOS", image:      "assets/MERINITOS06.svg" },
+  { id: 52, name: "Home Colors", rarity: "common", team: "MERINITOS", image:     "assets/MERINITOS07.svg" },
+  { id: 53, name: "Home Colors", rarity: "common", team: "MERINITOS", image:     "assets/MERINITOS08.svg" },
+  { id: 54, name: "Home Colors", rarity: "common", team: "MERINITOS", image:     "assets/MERINITOS08.svg" }
 ];
 
 let leaderboard;
