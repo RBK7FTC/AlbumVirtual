@@ -1,4 +1,4 @@
-const teams = [ "RBK7FTC",
+const teams = [ "RBK7",
     "DINAMITA",
     "SHADOWFOX",
     "MALBECROBOTICS",
