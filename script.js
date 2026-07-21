@@ -1,11 +1,11 @@
 const teams = [ "RBK7",
-    "DINAMITA",
-    "SHADOWFOX",
+    "AZTECBOT",
     "MALBECROBOTICS",
     "IMPERIUMFONS",
     "DEVOLTDEIMOS",
     "DEVOLTPHOBOS",
-    "MERINITOS"
+    "MERINITOS",
+    "ADELITAS"
 ];
 
 let stickers = new Array();
