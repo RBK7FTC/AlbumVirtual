@@ -152,7 +152,17 @@ const stickers = [
   { id: 68, name: "ADELITAS09", rarity: "epic",     team: "ADELITAS", image:  "assets/ADELITAS09.svg" },
   { id: 69, name: "ADELITAS10", rarity: "common",    team: "ADELITAS", image:  "assets/ADELITAS10.svg" },
   { id: 70, name: "ADELITAS11", rarity: "common",    team: "ADELITAS", image:  "assets/ADELITAS11.svg" },
-  { id: 71, name: "ADELITAS12", rarity: "common",    team: "ADELITAS", image:  "assets/ADELITAS12.svg" }
+  { id: 71, name: "ADELITAS12", rarity: "common",    team: "ADELITAS", image:  "assets/ADELITAS12.svg" },
+
+  { id: 72, name: "SHADOWFOX01", rarity: "common",  team: "SHADOWFOX",    image:  "assets/SHADOWFOX01.svg" },
+  { id: 73, name: "SHADOWFOX02", rarity: "common", team: "SHADOWFOX",     image:  "assets/SHADOWFOX02.svg" },
+  { id: 74, name: "SHADOWFOX03", rarity: "rare",      team: "SHADOWFOX",  image:  "assets/SHADOWFOX03.svg" },
+  { id: 75, name: "SHADOWFOX04", rarity: "common", team: "SHADOWFOX",     image:  "assets/SHADOWFOX04.svg" },
+  { id: 76, name: "SHADOWFOX05", rarity: "rare",    team: "SHADOWFOX",    image:  "assets/SHADOWFOX05.svg" },
+  { id: 77, name: "SHADOWFOX06", rarity: "epic",     team: "SHADOWFOX",   image:  "assets/SHADOWFOX06.svg" },
+  { id: 78, name: "SHADOWFOX07", rarity: "common",    team: "SHADOWFOX",  image:  "assets/SHADOWFOX07.svg" },
+  { id: 79, name: "SHADOWFOX08", rarity: "common",    team: "SHADOWFOX",  image:  "assets/SHADOWFOX08.svg" },
+  { id: 80, name: "SHADOWFOX09", rarity: "epic",     team: "SHADOWFOX",   image:  "assets/SHADOWFOX09.svg" }
 ];
 
 let leaderboard;
